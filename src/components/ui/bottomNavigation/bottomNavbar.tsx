@@ -8,7 +8,7 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import ShoppingBag from "@mui/icons-material/ShoppingBag";
 import Home from "@mui/icons-material/Home";
 import Wallet from "@mui/icons-material/Wallet";
-import { Link, PersonOutline } from "@mui/icons-material";
+import { PersonOutline } from "@mui/icons-material";
 import Paper from "@mui/material/Paper";
 import CustomVideoIcon from "@/components/ui/bottomNavigation/customVideoIcon";
 
@@ -63,7 +63,6 @@ export default function BottomNavbar() {
               },
             }}
           />
-
           <BottomNavigationAction icon={<CustomVideoIcon />} />
           <BottomNavigationAction
             label="Wallet"
