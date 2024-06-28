@@ -50,21 +50,19 @@ export default function BottomNavbar() {
               },
             }}
           />
-          <Link href="/shop">
-            <BottomNavigationAction
-              label="Shop"
-              icon={<ShoppingBag />}
-              sx={{
+          <BottomNavigationAction
+            label="Shop"
+            icon={<ShoppingBag />}
+            sx={{
+              color: value === 1 ? "white" : "grey", // white when selected, else grey
+              "& .MuiBottomNavigationAction-label": {
                 color: value === 1 ? "white" : "grey", // white when selected, else grey
-                "& .MuiBottomNavigationAction-label": {
-                  color: value === 1 ? "white" : "grey", // white when selected, else grey
-                },
-                "&.Mui-selected": {
-                  color: "white",
-                },
-              }}
-            />
-          </Link>
+              },
+              "&.Mui-selected": {
+                color: "white",
+              },
+            }}
+          />
 
           <BottomNavigationAction icon={<CustomVideoIcon />} />
           <BottomNavigationAction
