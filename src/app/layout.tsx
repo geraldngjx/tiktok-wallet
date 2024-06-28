@@ -34,6 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
