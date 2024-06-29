@@ -1,7 +1,3 @@
 export default function Shop() {
-  return (
-    <div>
-      <h1>Shop</h1>
-    </div>
-  );
+  return <h1 className={"text-white text-5xl bold "}>Shop</h1>;
 }

@@ -1,9 +1,9 @@
-import BottomNavbar from "@/components/ui/bottomNavigation/bottomNavbar";
+import VideoScreen from "@/components/ui/videoScreen/VideoScreen";
 
 export default function Home() {
   return (
     <main>
-      <BottomNavbar />
+      <VideoScreen />
     </main>
   );
 }

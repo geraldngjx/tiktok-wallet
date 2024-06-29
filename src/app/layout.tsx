@@ -1,7 +1,8 @@
-import "@styles/globals.css";
+import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import type { Metadata, Viewport } from "next";
+import BottomNavbar from "@/components/ui/bottomNavigation/bottomNavbar";
 
 const APP_NAME = "PWA App";
 const APP_DEFAULT_TITLE = "My Awesome PWA App";
@@ -44,6 +45,7 @@ export default function RootLayout({
         )}
       >
         {children}
+        <BottomNavbar />
       </body>
     </html>
   );
