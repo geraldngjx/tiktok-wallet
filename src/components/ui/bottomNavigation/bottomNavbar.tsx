@@ -11,6 +11,7 @@ import Wallet from "@mui/icons-material/Wallet";
 import { PersonOutline } from "@mui/icons-material";
 import Paper from "@mui/material/Paper";
 import CustomVideoIcon from "@/components/ui/bottomNavigation/customVideoIcon";
+import Link from "next/link";
 
 export default function BottomNavbar() {
   const [value, setValue] = React.useState(0);
@@ -38,6 +39,8 @@ export default function BottomNavbar() {
           }}
         >
           <BottomNavigationAction
+            component={Link}
+            href="/"
             label="Home"
             icon={<Home />}
             sx={{
@@ -51,6 +54,8 @@ export default function BottomNavbar() {
             }}
           />
           <BottomNavigationAction
+            component={Link}
+            href="/shop"
             label="Shop"
             icon={<ShoppingBag />}
             sx={{
@@ -65,6 +70,8 @@ export default function BottomNavbar() {
           />
           <BottomNavigationAction icon={<CustomVideoIcon />} />
           <BottomNavigationAction
+            component={Link}
+            href="/wallet"
             label="Wallet"
             icon={<Wallet />}
             sx={{
