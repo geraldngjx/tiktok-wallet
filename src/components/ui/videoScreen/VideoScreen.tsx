@@ -86,6 +86,7 @@ export default function VideoScreen() {
                 {videoData.songName}
               </div>
             </div>
+            {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
             <div className="w-24 flex flex-col items-center space-y-6 mb-20">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white">
                 <img
