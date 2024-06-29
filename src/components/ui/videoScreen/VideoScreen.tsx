@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import { Favorite, Comment, Share } from "@mui/icons-material";
 
@@ -21,59 +21,91 @@ interface VideoData {
 const mockVideoList: VideoData[] = [
   {
     id: "1",
-    videoUrl: "/videos/typo_1.mp4",
+    videoUrl: "/typo_1.mp4",
     username: "user1",
     caption: "Sample caption",
     songName: "Sample Song",
-    profilePhoto: "/images/sample_profile.jpg",
-    likes: [], // Add or modify this list to simulate different like states
+    profilePhoto: "/sample_profile.jpg",
+    likes: [],
     commentCount: 10,
     shareCount: 5,
   },
-  // Add more videos as needed
 ];
 
-// Mock function to get the current user ID
 const getCurrentUserId = () => "currentUserId";
 
 export default function VideoScreen() {
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [videos, setVideos] = useState(mockVideoList);
-  const videoData = videos[currentVideoIndex];
+  const [videoState, setVideoState] = useState({
+    currentVideoIndex: 0,
+    videos: mockVideoList,
+  });
+  const [hasWindow, setHasWindow] = useState(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setHasWindow(true);
+    }
+  }, []);
+
+  const videoData = videoState.videos[videoState.currentVideoIndex];
   const currentUserId = getCurrentUserId();
 
-  const handleLike = (id: string) => {
-    const updatedVideos = videos.map((video) => {
-      if (video.id === id) {
-        const hasLiked = video.likes.includes(currentUserId);
-        const newLikes = hasLiked
-          ? video.likes.filter((like) => like !== currentUserId)
-          : [...video.likes, currentUserId];
+  useEffect(() => {
+    // Disable scrolling on body and html
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
-        return {
-          ...video,
-          likes: newLikes,
-        };
-      }
-      return video;
+    // Ensure the container takes up full viewport height
+    document.documentElement.style.height = "100%";
+    document.body.style.height = "100%";
+
+    // Cleanup function to re-enable scrolling
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.height = "";
+      document.body.style.height = "";
+    };
+  }, []);
+
+  const handleLike = (id: string) => {
+    setVideoState((prevState) => {
+      const updatedVideos = prevState.videos.map((video) => {
+        if (video.id === id) {
+          const hasLiked = video.likes.includes(currentUserId);
+          const newLikes = hasLiked
+            ? video.likes.filter((like) => like !== currentUserId)
+            : [...video.likes, currentUserId];
+
+          return {
+            ...video,
+            likes: newLikes,
+          };
+        }
+        return video;
+      });
+
+      return {
+        ...prevState,
+        videos: updatedVideos,
+      };
     });
-    setVideos(updatedVideos);
   };
 
   const isLiked = videoData.likes.includes(currentUserId);
 
   return (
-    <div className="relative h-screen overflow-hidden">
-      <ReactPlayer
-        url={videoData.videoUrl}
-        playing
-        loop
-        width="100%"
-        height="100%"
-        style={{ position: "absolute", top: 0, left: 0, objectFit: "cover" }}
-      />
+    <div className="relative h-screen w-screen overflow-hidden">
+      {hasWindow && (
+        <ReactPlayer
+          url={videoData.videoUrl}
+          playing
+          loop
+          width="100%"
+          height="100%"
+          style={{ position: "absolute", top: 0, left: 0, objectFit: "cover" }}
+        />
+      )}
       <div className="absolute inset-0 flex flex-col justify-between p-4">
-        {/* Video Info */}
         <div className="flex flex-col justify-end h-full">
           <div className="flex items-end justify-between">
             <div className="flex-1 space-y-4">
@@ -81,14 +113,11 @@ export default function VideoScreen() {
                 {videoData.username}
               </div>
               <div className="text-white text-base">{videoData.caption}</div>
-              <div className="flex items-center text-white text-base">
-                <span className="mr-2">🎵</span>
-                {videoData.songName}
-              </div>
             </div>
             {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
             <div className="w-24 flex flex-col items-center space-y-6 mb-20">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={videoData.profilePhoto}
                   alt="Profile"
