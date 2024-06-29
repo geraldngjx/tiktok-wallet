@@ -108,11 +108,18 @@ export default function VideoScreen() {
       <div className="absolute inset-0 flex flex-col justify-between p-4">
         <div className="flex flex-col justify-end h-full">
           <div className="flex items-end justify-between">
-            <div className="flex-1 space-y-4">
+            {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
+            <div className="flex-1 space-y-4 mb-20">
               <div className="text-white font-bold text-2xl">
                 {videoData.username}
               </div>
-              <div className="text-white text-base">{videoData.caption}</div>
+              <div className="flex items-center text-white text-base">
+                {videoData.caption}
+              </div>
+              <div className="flex items-center text-white text-base">
+                <span className="mr-2">🎵</span>
+                {videoData.songName}
+              </div>
             </div>
             {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
             <div className="w-24 flex flex-col items-center space-y-6 mb-20">
