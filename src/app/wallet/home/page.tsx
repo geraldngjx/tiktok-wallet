@@ -1,5 +1,5 @@
 "use client";
-import { Card } from "@mui/material";
+import { Button, Card } from "@mui/material";
 import Balance from "@/components/ui/walletHome/balance";
 import TransactionList from "@/components/ui/walletHome/transactionList";
 import {
@@ -8,11 +8,23 @@ import {
   Send,
   Wallet,
 } from "@mui/icons-material";
+import { signout } from "@/lib/auth";
+import { createClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 export default function WalletHome() {
-  const tags = Array.from({ length: 50 }).map(
-    (_, i, a) => `v1.2.0-beta.${a.length - i}`
-  );
+  useEffect(() => {
+    async function authenticate() {
+      const supabase = createClient();
+      const user = await supabase.auth.getUser();
+      if (!user) {
+        redirect("/wallet/login");
+      }
+    }
+    authenticate();
+  }, []);
+
   return (
     <div className="flex flex-col gap-4">
       <Balance />
@@ -53,6 +65,7 @@ export default function WalletHome() {
           </div>
         </Card>
       </div>
+      <Button onClick={() => signout()}>Sign Out</Button>
       {/* Use the gap utility to add space between the cards instead of adding margin vertically*/}
       <div className="flex flex-col gap-2">
         <TransactionList />
