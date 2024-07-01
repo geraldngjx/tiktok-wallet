@@ -21,8 +21,8 @@ export async function login(formData: FormData) {
     redirect('/error')
   }
 
-  revalidatePath('/wallet/home', 'layout')
-  redirect('/wallet/home')
+  revalidatePath('/wallet', 'layout')
+  redirect('/wallet')
 }
 
 export async function signup(formData: FormData) {
@@ -45,8 +45,8 @@ export async function signup(formData: FormData) {
     redirect('/error')
   }
 
-  revalidatePath('/wallet/home', 'layout')
-  redirect('/wallet/home')
+  revalidatePath('/wallet', 'layout')
+  redirect('/wallet')
 }
 
 export async function signout() {
@@ -58,6 +58,6 @@ export async function signout() {
       redirect('/error')
     }
   
-    revalidatePath('/wallet/home', 'layout')
+    revalidatePath('/wallet', 'layout')
     redirect('/wallet/login')
   }

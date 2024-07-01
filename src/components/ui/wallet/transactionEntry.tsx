@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TableRow } from "@/components/ui/table";
+import { Card } from "@mui/material";
 
 interface TransactionEntryProps {
   value: string;
@@ -21,7 +21,7 @@ export default function TransactionEntry({ value }: TransactionEntryProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <TableRow className="p-4">{value}</TableRow>
+        <Card className="p-4">{value}</Card>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
