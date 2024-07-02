@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "./button";
 
 export default function TopNavigation() {
-    const router = useRouter();
+  const router = useRouter();
 
-    return (
-        <div className="flex items-center w-full h-fit p-2 bg-transparent">
-            <Button variant="ghost" className="pl-2" onClick={() => router.back()}>
-                <ChevronLeftIcon />
-                <span>Back</span>
-            </Button>
-        </div>
-    );
+  return (
+    <div className="flex items-center w-full h-fit p-2 bg-black shadow-lg z-[999]">
+      <Button variant="ghost" className="pl-2" onClick={() => router.back()}>
+        <ChevronLeftIcon />
+        <span>Back</span>
+      </Button>
+    </div>
+  );
 }

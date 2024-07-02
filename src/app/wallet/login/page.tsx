@@ -9,19 +9,6 @@ const LoginWalletPage = () => {
                 <h2 className="line-clamp-1 font-bold text-2xl">Login to Your Wallet</h2>
             </div>
 
-            {/* <Card className="flex flex-col gap-4 p-4" raised={true}>
-                    <div>
-                        <Label htmlFor="email">Your Email Address</Label>
-                        <Input type="email" name="email" />
-                    </div>
-                    <div>
-                        <Label htmlFor="password">Your Password</Label>
-                        <Input type="password" name="password" />
-                    </div>
-                    <Button formAction={login} type="submit">
-                        Submit
-                    </Button>
-                </Card> */}
             <AuthForm type="login" />
         </div>
     );

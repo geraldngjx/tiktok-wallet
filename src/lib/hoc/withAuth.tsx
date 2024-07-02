@@ -38,4 +38,35 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
   return AuthenticatedComponent;
 };
 
-export default withAuth;
+const withAuthMagic = <P extends object>(
+  WrappedComponent: ComponentType<P>,
+) => {
+  const AuthenticatedComponent = (props: P) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
+
+    useEffect(() => {
+      const token = localStorage.getItem("token") ?? "";
+
+      if (token === "") {
+        router.push("/wallet");
+      } else {
+        setIsLoading(false);
+      }
+    }, [router]);
+
+    if (isLoading) {
+      return (
+        <Box className="flex items-center justify-center min-h-screen">
+          <CircularProgress />
+        </Box>
+      );
+    }
+
+    return <WrappedComponent {...props} />;
+  };
+
+  return AuthenticatedComponent;
+};
+
+export { withAuth, withAuthMagic };

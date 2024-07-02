@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useMagic } from "@/providers/MagicProvider";
+import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { saveToken } from "@/utils/common";
 import { LoginProps } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +21,9 @@ const loginFormSchema = z.object({
     email: z.string().email(),
 });
 
-export default function EmailOTP({ token, setToken }: LoginProps) {
+export default function EmailOTP() {
+    const { token, setToken } = useMagicTokenStore();
+
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
@@ -38,7 +41,9 @@ export default function EmailOTP({ token, setToken }: LoginProps) {
     const handleLogin = async (values: z.infer<typeof loginFormSchema>) => {
         try {
             setLoginInProgress(true);
-            const token = await magic?.auth.loginWithEmailOTP({ email: values.email });
+            const token = await magic?.auth.loginWithEmailOTP({
+                email: values.email,
+            });
             if (token) {
                 saveToken(token, setToken, "EMAIL");
                 form.setValue("email", "");
@@ -65,7 +70,7 @@ export default function EmailOTP({ token, setToken }: LoginProps) {
     };
 
     return (
-        <Card className="p-4 space-y-4">
+        <Card className="p-4 space-y-4 rounded-[var(--card-content-radius)]">
             <div className="flex flex-col items-center space-y-2">
                 <Image src="/tiktok_logo_circle.png" alt="Tiktok Logo" width={40} height={40} />
                 <h2 className="line-clamp-1 font-bold text-2xl">TikTok Wallet</h2>

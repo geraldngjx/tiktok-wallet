@@ -1,32 +1,22 @@
-import UserInfo from "@/components/wallet/user-info";
-import Balance from "@/components/wallet/balance";
-import TransactionList from "@/components/wallet/transactionList";
-import { signout } from "@/lib/auth";
-import { LoginProps } from "@/utils/types";
-import {
-  AccountCircle,
-  QrCodeScanner,
-  Send,
-  Wallet,
-} from "@mui/icons-material";
-import { Button, Card } from "@mui/material";
-import Link from "next/link";
-import DotPattern from "@/components/magicui/dot-pattern";
-import { cn } from "@/lib/utils";
-import Core from "./core";
 import { Separator } from "@/components/ui/separator";
+import TransactionList from "@/components/wallet/transactionList";
+import { useMagicTokenStore } from "@/store/magicTokenStore";
+import Core from "./core";
+import { withAuthMagic } from "@/lib/hoc/withAuth";
 
-export default function WalletDashboard({ token, setToken }: LoginProps) {
-  return (
-    <div className="flex flex-col h-full w-full bg-[#010101]">
-      <Core />
+function WalletDashboard() {
+    const { token, setToken } = useMagicTokenStore();
 
-      <Separator className="bg-neutral-500" />
+    return (
+        <div className="flex flex-col h-full w-full bg-[#010101]">
+            <Core />
 
-      <TransactionList />
-      {/* Wallet Navigation Links */}
-      {/* <UserInfo token={token} setToken={setToken} /> */}
-      {/* <div>
+            <Separator className="bg-neutral-500" />
+
+            <TransactionList />
+            {/* Wallet Navigation Links */}
+            {/* <UserInfo token={token} setToken={setToken} /> */}
+            {/* <div>
                 <Card className="flex mx-8 gap-4 justify-around items-center">
                     <Link href="/wallet/topup" className="flex m-4 flex-col items-center">
                         <Wallet />
@@ -65,6 +55,8 @@ export default function WalletDashboard({ token, setToken }: LoginProps) {
             <div className="flex flex-col gap-2">
                 <TransactionList />
             </div> */}
-    </div>
-  );
+        </div>
+    );
 }
+
+export default withAuthMagic(WalletDashboard);

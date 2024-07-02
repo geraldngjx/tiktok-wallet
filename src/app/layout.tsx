@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next";
 import BottomNavbar from "@/components/ui/bottomNavigation/bottomNavbar";
 import MagicProvider from "@/providers/MagicProvider";
 import { Toaster } from "@/components/ui/toaster";
+import SolanaProvider from "@/providers/SolanaProvider";
 
 const APP_NAME = "TikTok Wallet";
 const APP_DEFAULT_TITLE = "My TikTok Wallet";
@@ -42,11 +43,13 @@ export default function RootLayout({
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <MagicProvider>
-                <body className={cn("min-h-screen w-screen bg-background font-sans antialiased", fontSans.variable)}>
-                    <Toaster />
-                    <main className="h-[calc(100vh-56px)] overflow-y-hidden">{children}</main>
-                    <BottomNavbar />
-                </body>
+                <SolanaProvider>
+                    <body className={cn("min-h-screen w-screen bg-background font-sans antialiased", fontSans.variable)}>
+                        <Toaster />
+                        <main className="h-[calc(100vh-56px)] overflow-y-hidden">{children}</main>
+                        <BottomNavbar />
+                    </body>
+                </SolanaProvider>
             </MagicProvider>
         </html>
     );
