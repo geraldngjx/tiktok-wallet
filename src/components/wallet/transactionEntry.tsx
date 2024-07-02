@@ -21,7 +21,9 @@ export default function TransactionEntry({ value }: TransactionEntryProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className="p-4">{value}</Card>
+        <div className="p-4 bg-neutral-500/20 rounded-md text-white">
+          {value}
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
