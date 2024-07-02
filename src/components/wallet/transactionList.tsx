@@ -45,17 +45,6 @@ export default function TransactionList() {
             <DotPattern cx={1} cy={1} cr={1} className={cn("[mask-image:linear-gradient(to_bottom,white,transparent,transparent)] bg-transparent")} />
 
             <div className="w-full text-white overflow-y-auto">
-                <div className="flex justify-between items-center p-4">
-                    <h1>Recent Transactions</h1>
-                    <Button variant="ghost" className="text-white">
-                        View All
-                    </Button>
-                </div>
-
-                {/* {JSON.stringify(txs)} */}
-
-                <Separator />
-
                 <div className="flex flex-col space-y-1 w-full">
                     {txs.map((tx, index) => (
                         <TransactionEntry tx={tx} key={index} />

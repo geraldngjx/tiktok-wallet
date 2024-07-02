@@ -1,11 +1,10 @@
-import "./globals.css";
-import { Inter as FontSans } from "next/font/google";
-import { cn } from "@/lib/utils";
-import type { Metadata, Viewport } from "next";
 import BottomNavbar from "@/components/ui/bottomNavigation/bottomNavbar";
-import MagicProvider from "@/providers/MagicProvider";
 import { Toaster } from "@/components/ui/toaster";
-import SolanaProvider from "@/providers/SolanaProvider";
+import { cn } from "@/lib/utils";
+import Providers from "@/providers/providers";
+import type { Metadata, Viewport } from "next";
+import { Inter as FontSans } from "next/font/google";
+import "./globals.css";
 
 const APP_NAME = "TikTok Wallet";
 const APP_DEFAULT_TITLE = "My TikTok Wallet";
@@ -38,19 +37,18 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <head>
-                <meta name="viewport" content="initial-scale=1, width=device-width" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            </head>
-            <MagicProvider>
-                <SolanaProvider>
-                    <body className={cn("min-h-screen w-screen bg-background font-sans antialiased", fontSans.variable)}>
-                        <Toaster />
-                        <main className="h-[calc(100vh-56px)] overflow-y-hidden">{children}</main>
-                        <BottomNavbar />
-                    </body>
-                </SolanaProvider>
-            </MagicProvider>
+            <Providers>
+                <head>
+                    <meta name="viewport" content="initial-scale=1, width=device-width" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                </head>
+
+                <body className={cn("min-h-screen w-screen bg-background font-sans antialiased", fontSans.variable)}>
+                    <Toaster />
+                    <main className="h-[calc(100vh-56px)] overflow-y-hidden">{children}</main>
+                    <BottomNavbar />
+                </body>
+            </Providers>
         </html>
     );
 }
