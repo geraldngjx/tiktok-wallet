@@ -1,37 +1,55 @@
 import React from "react";
 import { Card, CardMedia, CardContent, Typography } from "@mui/material";
+import Link from "next/link";
 
 interface ShopItemProps {
+  id: string;
   image: string;
+  price: string;
+  name: string;
+  rating: number;
+  deals: string;
   description: string;
 }
 
-const ShopItem = ({ image, description }: ShopItemProps) => {
+const ShopItem = ({
+  id,
+  image,
+  price,
+  name,
+  rating,
+  deals,
+  description,
+}: ShopItemProps) => {
   return (
-    <Card
-      style={{
-        border: "1px solid #BBB", // Thicker and darker border
-        borderRadius: "2px",
-        overflow: "hidden",
-        height: "100%",
-        display: "flex",
-        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-        flexDirection: "column",
+    <Link
+      href={{
+        pathname: `/shop/${id}`,
+        query: {
+          image,
+          price,
+          name,
+          rating,
+          deals,
+          description,
+        },
       }}
+      passHref
     >
-      {" "}
-      <CardMedia
-        component="img"
-        sx={{ height: "70%", width: "100%" }}
-        image={image}
-        alt="shop item"
-      />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary">
-          {description}
-        </Typography>
-      </CardContent>
-    </Card>
+      <Card className="border border-gray-300 rounded-sm overflow-hidden h-full flex flex-col shadow-md cursor-pointer no-underline">
+        <CardMedia
+          component="img"
+          sx={{ height: "70%", width: "100%" }}
+          image={image}
+          alt="shop item"
+        />
+        <CardContent>
+          <Typography variant="body2" className="text-gray-600">
+            {description}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 

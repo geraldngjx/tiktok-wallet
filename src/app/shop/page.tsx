@@ -11,10 +11,8 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
-  Card,
   Grid,
   Tab,
-  Tabs,
   TextField,
 } from "@mui/material";
 import { Ticket } from "lucide-react";
@@ -52,21 +50,42 @@ const images = [
   "https://images.unsplash.com/photo-1505144808419-1957a94ca61e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3070&q=80",
 ];
 
-const mockShopItems = images.map((image, index) => ({
+const mockShopItems = images.slice(0, 10).map((image, index) => ({
   image: image,
+  price: `$${(index + 1) * 10}.99`, // Generating price dynamically for each item
+  name: `Amazing Product ${index + 1}`,
+  rating: 4.0 + (index % 2) * 0.5, // Alternate rating between 4.0 and 4.5
+  deals: `${(index + 1) * 10}% off when you buy 2 or more!`,
   description: `This is a description for item ${index + 1}.`,
+  reviews: [
+    {
+      icon: "mdi:star",
+      rating: 5,
+      description: "Excellent product! Worth every penny.",
+    },
+    {
+      icon: "mdi:star",
+      rating: 4,
+      description: "Good quality but a bit expensive.",
+    },
+    {
+      icon: "mdi:star",
+      rating: 4,
+      description: "Great value for money.",
+    },
+  ],
+  id: index.toString(), // Unique id for each item
 }));
 
 export default function Shop() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState("0");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
   return (
     <div className="flex flex-col">
       <div className="flex gap-2 m-4 rounded-md border-solid items-center">
-        {/* Can use Aceternity UI "Placeholder and Vanish Input" */}
         <TextField
           id="outlined-size-small"
           placeholder="Tiktok Shop"
@@ -86,7 +105,9 @@ export default function Shop() {
           <BottomNavigationAction label="History" icon={<History />} />
         </BottomNavigation>
       </Box>
-      <Box>
+      <Box
+        sx={{ flexGrow: 1, overflowY: "auto", height: "calc(100vh - 100px)" }}
+      >
         <TabContext value={value}>
           <Box>
             <TabList
@@ -103,7 +124,7 @@ export default function Shop() {
               <Tab
                 label="All"
                 sx={{
-                  color: value === 0 ? "black" : "grey",
+                  color: value === "0" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="0"
@@ -111,7 +132,7 @@ export default function Shop() {
               <Tab
                 label="Beauty"
                 sx={{
-                  color: value === 1 ? "black" : "grey",
+                  color: value === "1" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="1"
@@ -119,7 +140,7 @@ export default function Shop() {
               <Tab
                 label="Toys"
                 sx={{
-                  color: value === 2 ? "black" : "grey",
+                  color: value === "2" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="2"
@@ -127,7 +148,7 @@ export default function Shop() {
               <Tab
                 label="Jewelry"
                 sx={{
-                  color: value === 3 ? "black" : "grey",
+                  color: value === "3" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="3"
@@ -135,7 +156,7 @@ export default function Shop() {
               <Tab
                 label="Food"
                 sx={{
-                  color: value === 4 ? "black" : "grey",
+                  color: value === "4" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="4"
@@ -143,7 +164,7 @@ export default function Shop() {
               <Tab
                 label="Household"
                 sx={{
-                  color: value === 5 ? "black" : "grey",
+                  color: value === "5" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="5"
@@ -151,7 +172,7 @@ export default function Shop() {
               <Tab
                 label="Entertainment"
                 sx={{
-                  color: value === 6 ? "black" : "grey",
+                  color: value === "6" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="6"
@@ -159,18 +180,29 @@ export default function Shop() {
               <Tab
                 label="Accessories"
                 sx={{
-                  color: value === 7 ? "black" : "grey",
+                  color: value === "7" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="7"
               />
             </TabList>
           </Box>
-          <TabPanel value="0">
+          <TabPanel
+            value="0"
+            sx={{ overflowY: "auto", height: "calc(100vh - 180px)" }}
+          >
             <Grid container spacing={2}>
               {mockShopItems.map((item, index) => (
                 <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
-                  <ShopItem image={item.image} description={item.description} />
+                  <ShopItem
+                    id={item.id}
+                    image={item.image}
+                    price={item.price}
+                    name={item.name}
+                    rating={item.rating}
+                    deals={item.deals}
+                    description={item.description}
+                  />
                 </Grid>
               ))}
             </Grid>
