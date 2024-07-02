@@ -1,6 +1,6 @@
 "use client";
 import { login } from "@/lib/auth";
-import withAuth from "@/lib/hoc/withAuth";
+import { withAuthMagic } from "@/lib/hoc/withAuth";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,7 +15,7 @@ import {
 import { useState } from "react";
 import Image from "next/image";
 
-const TopUpPage: React.FC = () => {
+function TopUpPage() {
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -80,6 +80,6 @@ const TopUpPage: React.FC = () => {
       </form>
     </div>
   );
-};
+}
 
-export default withAuth(TopUpPage);
+export default withAuthMagic(TopUpPage);

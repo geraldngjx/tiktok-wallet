@@ -1,31 +1,24 @@
 "use client";
 
-import * as React from "react";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
+import CustomVideoIcon from "@/components/ui/bottomNavigation/customVideoIcon";
+import { PersonOutline } from "@mui/icons-material";
+import Home from "@mui/icons-material/Home";
+import ShoppingBag from "@mui/icons-material/ShoppingBag";
+import Wallet from "@mui/icons-material/Wallet";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import ShoppingBag from "@mui/icons-material/ShoppingBag";
-import Home from "@mui/icons-material/Home";
-import Wallet from "@mui/icons-material/Wallet";
-import { PersonOutline } from "@mui/icons-material";
 import Paper from "@mui/material/Paper";
-import CustomVideoIcon from "@/components/ui/bottomNavigation/customVideoIcon";
 import Link from "next/link";
+import * as React from "react";
 
 export default function BottomNavbar() {
   const [value, setValue] = React.useState(0);
   const ref = React.useRef<HTMLDivElement>(null);
 
   return (
-    <Box sx={{ pb: 7 }} ref={ref}>
-      <CssBaseline />
+    <div className="h-14 bottom-0 fixed left-0 right-0" ref={ref}>
       <Paper
         sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
           backgroundColor: "black",
         }}
         elevation={3}
@@ -85,7 +78,9 @@ export default function BottomNavbar() {
             }}
           />
           <BottomNavigationAction
+            href="/profile"
             label="Profile"
+            component={Link}
             icon={<PersonOutline />}
             sx={{
               color: value === 4 ? "white" : "grey", // white when selected, else grey
@@ -99,6 +94,6 @@ export default function BottomNavbar() {
           />
         </BottomNavigation>
       </Paper>
-    </Box>
+    </div>
   );
 }
