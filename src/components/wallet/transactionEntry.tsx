@@ -5,8 +5,6 @@ import { MoveDownLeftIcon, MoveUpRightIcon } from "lucide-react";
 export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMeta & { signature: string }) | null }) {
     const { publicAddress } = useMagicTokenStore();
 
-    const hash = tx?.signature;
-    const blockNumber = tx?.slot;
     const fromAddress = tx?.transaction?.message.accountKeys[0].pubkey.toBase58();
     const toAddress = tx?.transaction?.message.accountKeys[1].pubkey.toBase58();
     const amount = (tx?.meta!.postBalances[1]! - tx?.meta!.preBalances[1]!) / LAMPORTS_PER_SOL;
