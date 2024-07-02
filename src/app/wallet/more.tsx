@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
 import { useMagic } from "@/providers/MagicProvider";
@@ -31,6 +32,8 @@ export default function More() {
             </DrawerTrigger>
 
             <DrawerContent className="px-6 min-h-[50vh] bg-neutral-900 border-0">
+                <DialogTitle className="hidden">More</DialogTitle>
+
                 <div className="flex flex-col w-full space-y-2 mt-8">
                     <Link
                         href="/wallet/account"
