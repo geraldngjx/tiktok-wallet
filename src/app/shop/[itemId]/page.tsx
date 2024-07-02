@@ -11,36 +11,43 @@ const BOTTOM_NAVBAR_HEIGHT = "56px";
 const ShopItemPage = () => {
   const searchParams = useSearchParams();
 
+  const image = searchParams.get("image");
+  const price = searchParams.get("price");
+  const name = searchParams.get("name");
+  const rating = searchParams.get("rating");
+  const deals = searchParams.get("deals");
+
   return (
     <div
-      className="flex flex-col p-4 overflow-y-auto box-border mb-[56px]" // Use Tailwind CSS classes
+      className="flex flex-col p-4 overflow-y-auto"
       style={{
-        height: `calc(100vh - ${BOTTOM_NAVBAR_HEIGHT})`, // Adjust height to account for bottom margin
+        minHeight: `calc(100vh - ${BOTTOM_NAVBAR_HEIGHT})`,
+        flexGrow: 1,
       }}
     >
       {/* Full Width Image */}
       <CardMedia
         component="img"
         sx={{ height: "70%", width: "100%" }}
-        image={searchParams.get("image") || "/shop-item-placeholder.jpg"}
+        image={image || "/shop-item-placeholder.jpg"}
         alt="shop item"
       />
 
       {/* Price */}
       <Typography variant="h6" className="my-4">
-        {searchParams.get("price") || "-"}
+        {price || "-"}
       </Typography>
 
       {/* Item Name */}
       <Typography variant="h5" className="my-2">
-        {searchParams.get("name") || "-"}
+        {name || "-"}
       </Typography>
 
       {/* Rating */}
       <div className="flex items-center my-2">
         <StarIcon style={{ color: "#FFD700" }} />
         <Typography variant="body1" className="ml-2">
-          {searchParams.get("rating") || "-"} / 5
+          {rating || "-"} / 5
         </Typography>
       </div>
 
@@ -50,9 +57,7 @@ const ShopItemPage = () => {
           <Typography variant="h6" gutterBottom>
             Deals
           </Typography>
-          <Typography variant="body2">
-            {searchParams.get("deals") || "-"}
-          </Typography>
+          <Typography variant="body2">{deals || "-"}</Typography>
         </CardContent>
       </Card>
 
