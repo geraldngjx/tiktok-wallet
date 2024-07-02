@@ -9,6 +9,7 @@ import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { useMagic } from "@/providers/MagicProvider";
 import { useCallback, useEffect, useState } from "react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { createBrowserClient } from "@supabase/ssr";
 
 export default function Core() {
     const { token, setToken, publicAddress, setPublicAddress } = useMagicTokenStore();
@@ -21,6 +22,22 @@ export default function Core() {
 
     // const [publicAddress, setPublicAddress] = useState(localStorage.getItem("user"));
 
+    const saveToSupabase = useCallback(async ({ email, publicAddress }: { email: string; publicAddress: string }) => {
+        const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+        try {
+            const { data: user } = await supabase.from("user").select("*").eq("email", email).single();
+            if (user) {
+                // user already exists
+                return;
+            } else {
+                const res = await supabase.from("user").insert([{ email, publicAddress }]).select();
+                console.log("SUPABASE: ", res);
+            }
+        } catch (e) {
+            console.log("error in saving to supabase: " + e);
+        }
+    }, []);
+
     useEffect(() => {
         const checkLoginandGetBalance = async () => {
             const isLoggedIn = await magic?.user.isLoggedIn();
@@ -31,6 +48,10 @@ export default function Core() {
                         localStorage.setItem("user", metadata?.publicAddress!);
                         setPublicAddress(metadata?.publicAddress!);
                         setPublicAddress(metadata?.publicAddress!);
+
+                        if (metadata.email) {
+                            await saveToSupabase({ email: metadata.email, publicAddress: metadata.publicAddress! });
+                        }
                     }
                 } catch (e) {
                     console.log("error in fetching address: " + e);
@@ -38,7 +59,7 @@ export default function Core() {
             }
         };
         setTimeout(() => checkLoginandGetBalance(), 5000);
-    }, [magic?.user, setPublicAddress]);
+    }, [magic?.user, saveToSupabase, setPublicAddress]);
 
     const getBalance = useCallback(async () => {
         if (publicAddress && connection) {
