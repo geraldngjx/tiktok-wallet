@@ -1,5 +1,6 @@
 "use client";
 
+import Globe from "@/components/magicui/globe";
 import { Button } from "@/components/ui/button";
 import { DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
@@ -64,6 +65,9 @@ export default function More() {
                         <span>Log out</span>
                     </div>
                 </div>
+
+                <Globe className="top-64" />
+                <div className="pointer-events-none absolute inset-0 h-full bg-[radial-gradient(circle_at_50%_200%,rgba(0,0,0,0.2),rgba(255,255,255,0))]" />
             </DrawerContent>
         </Drawer>
     );
