@@ -7,9 +7,10 @@ import Link from "next/link";
 import More from "./more";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { useMagic } from "@/providers/MagicProvider";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { createBrowserClient } from "@supabase/ssr";
+import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 
 export default function Core() {
     const { token, setToken, publicAddress, setPublicAddress } = useMagicTokenStore();
@@ -21,9 +22,9 @@ export default function Core() {
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     // const [publicAddress, setPublicAddress] = useState(localStorage.getItem("user"));
+    const supabase = useContext(SupabaseBrowserContext);
 
     const saveToSupabase = useCallback(async ({ email, publicAddress }: { email: string; publicAddress: string }) => {
-        const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
         try {
             const { data: user } = await supabase.from("user").select("*").eq("email", email).single();
             if (user) {
