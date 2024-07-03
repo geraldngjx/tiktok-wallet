@@ -2,22 +2,19 @@
 
 import Meteors from "@/components/magicui/meteors";
 import { Button } from "@/components/ui/button";
-import { BellIcon, Disc3Icon, LoaderCircle, MoveDownLeftIcon, MoveUpRightIcon, RefreshCwIcon, ScanLineIcon } from "lucide-react";
-import Link from "next/link";
-import More from "./more";
-import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { useMagic } from "@/providers/MagicProvider";
-import { Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from "react";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import { createBrowserClient } from "@supabase/ssr";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
+import { useMagicTokenStore } from "@/store/magicTokenStore";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { Disc3Icon, MoveDownLeftIcon, MoveUpRightIcon, ScanLineIcon } from "lucide-react";
+import Link from "next/link";
+import { Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from "react";
+import More from "./more";
 
 export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: boolean; setIsRefreshing: Dispatch<SetStateAction<boolean>> }) {
-    const { publicAddress, setPublicAddress } = useMagicTokenStore();
+    const { balance, setBalance, publicAddress, setPublicAddress } = useMagicTokenStore();
 
     const { magic, connection } = useMagic();
-
-    const [balance, setBalance] = useState("...");
 
     const supabase = useContext(SupabaseBrowserContext);
 
@@ -98,7 +95,7 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
     }, [magic]);
 
     return (
-        <section className="h-[35%] flex flex-col p-4">
+        <section className="h-fit flex flex-col p-4 mb-4">
             {/* <Ripple /> */}
 
             <Meteors />
