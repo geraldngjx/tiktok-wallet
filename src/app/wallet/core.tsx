@@ -2,42 +2,42 @@
 
 import Meteors from "@/components/magicui/meteors";
 import { Button } from "@/components/ui/button";
-import { BellIcon, MoveDownLeftIcon, MoveUpRightIcon, RefreshCwIcon, ScanLineIcon } from "lucide-react";
+import { BellIcon, Disc3Icon, LoaderCircle, MoveDownLeftIcon, MoveUpRightIcon, RefreshCwIcon, ScanLineIcon } from "lucide-react";
 import Link from "next/link";
 import More from "./more";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { useMagic } from "@/providers/MagicProvider";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from "react";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { createBrowserClient } from "@supabase/ssr";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 
-export default function Core() {
-    const { token, setToken, publicAddress, setPublicAddress } = useMagicTokenStore();
+export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: boolean; setIsRefreshing: Dispatch<SetStateAction<boolean>> }) {
+    const { publicAddress, setPublicAddress } = useMagicTokenStore();
 
     const { magic, connection } = useMagic();
 
     const [balance, setBalance] = useState("...");
-    const [copied, setCopied] = useState("Copy");
-    const [isRefreshing, setIsRefreshing] = useState(false);
 
-    // const [publicAddress, setPublicAddress] = useState(localStorage.getItem("user"));
     const supabase = useContext(SupabaseBrowserContext);
 
-    const saveToSupabase = useCallback(async ({ email, publicAddress }: { email: string; publicAddress: string }) => {
-        try {
-            const { data: user } = await supabase.from("user").select("*").eq("email", email).single();
-            if (user) {
-                // user already exists
-                return;
-            } else {
-                const res = await supabase.from("user").insert([{ email, publicAddress }]).select();
-                console.log("SUPABASE: ", res);
+    const saveToSupabase = useCallback(
+        async ({ email, publicAddress }: { email: string; publicAddress: string }) => {
+            try {
+                const { data: user } = await supabase.from("user").select("*").eq("email", email).single();
+                if (user) {
+                    // user already exists
+                    return;
+                } else {
+                    const res = await supabase.from("user").insert([{ email, publicAddress }]).select();
+                    console.log("SUPABASE: ", res);
+                }
+            } catch (e) {
+                console.log("error in saving to supabase: " + e);
             }
-        } catch (e) {
-            console.log("error in saving to supabase: " + e);
-        }
-    }, []);
+        },
+        [supabase]
+    );
 
     useEffect(() => {
         const checkLoginandGetBalance = async () => {
@@ -75,12 +75,17 @@ export default function Core() {
     }, [connection, publicAddress]);
 
     const refresh = useCallback(async () => {
-        setIsRefreshing(true);
         await getBalance();
         setTimeout(() => {
             setIsRefreshing(false);
         }, 500);
-    }, [getBalance]);
+    }, [getBalance, setIsRefreshing]);
+
+    useEffect(() => {
+        if (isRefreshing) {
+            refresh();
+        }
+    }, [getBalance, isRefreshing, refresh, setIsRefreshing]);
 
     useEffect(() => {
         if (connection) {
@@ -99,7 +104,7 @@ export default function Core() {
             <Meteors />
 
             <div className="z-50">
-                <div className="w-full flex justify-end space-x-3">
+                {/* <div className="w-full flex justify-end space-x-3">
                     <Button size="icon" className="rounded-full size-10" onClick={refresh}>
                         <RefreshCwIcon size={20} className={isRefreshing ? "animate-spin" : "animate-none"} />
                     </Button>
@@ -107,12 +112,15 @@ export default function Core() {
                     <Button size="icon" className="rounded-full size-10 ">
                         <BellIcon size={20} />
                     </Button>
-                </div>
+                </div> */}
 
                 <div className="text-white w-full flex flex-col h-full justify-center items-center px-4 space-y-8">
                     <div className="flex flex-col space-y-2 justify-center items-center">
                         <h1>Your balance</h1>
-                        <span className="text-5xl font-semibold">{balance} SOL</span>
+
+                        <span className="text-5xl font-semibold flex items-center">
+                            {isRefreshing ? <Disc3Icon className="animate-spin mr-2" size={40} /> : balance} SOL
+                        </span>
                     </div>
 
                     <div className="flex items-center justify-center space-x-6 w-full">

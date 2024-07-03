@@ -25,11 +25,13 @@ export default function More() {
 
     return (
         <Drawer>
-            <DrawerTrigger className="flex flex-col space-y-1 justify-center items-center">
-                <Button size="icon" className="rounded-full size-12">
-                    <EllipsisIcon size={22} />
-                </Button>
-                <span className="text-sm">More</span>
+            <DrawerTrigger asChild>
+                <div className="flex flex-col space-y-1 justify-center items-center">
+                    <Button size="icon" className="rounded-full size-12">
+                        <EllipsisIcon size={22} />
+                    </Button>
+                    <span className="text-sm">More</span>
+                </div>
             </DrawerTrigger>
 
             <DrawerContent className="px-6 min-h-[50vh] bg-neutral-900 border-0">
