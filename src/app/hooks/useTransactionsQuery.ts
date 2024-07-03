@@ -73,35 +73,3 @@ export const useTransactionsQuery = ({ publicAddress }: { publicAddress: string 
         },
     };
 };
-
-export const useUSDCTokenTransactionQuery = ({ publicAddress }: { publicAddress: string }) => {
-    const { connection } = useContext(SolanaContext);
-
-    return {
-        queryKey: ["getUSDCTokenTransactionQuery", publicAddress],
-        queryFn: async () => {
-            const pubKey = new PublicKey("4vqHV141LFRPUmXwzhKuPxHKajhBHnR4hP9hZ6K2w9eY");
-
-            const signatures = await connection?.getSignaturesForAddress(pubKey, { limit: 10 }).then((res) => res.map((tx) => tx.signature));
-
-            if (signatures && signatures.length > 0) {
-                const txs = await Promise.all(
-                    signatures.map((signature) =>
-                        connection?.getParsedTransaction(signature, {
-                            maxSupportedTransactionVersion: 10,
-                        })
-                    )
-                );
-
-                // const txs = await connection?.getParsedTransactions(signatures);
-
-                console.log("here txs: ", txs);
-                if (txs) {
-                    console.log(txs);
-                    return txs.map((tx, i) => ({ ...tx, signature: signatures[i] } as ParsedTransactionWithMeta & { signature: string }));
-                }
-            }
-            return [];
-        },
-    };
-};
