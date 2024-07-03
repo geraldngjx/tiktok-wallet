@@ -1,14 +1,9 @@
 "use client";
 
-import { ChevronLeftIcon, SendIcon, ShoppingCart } from "lucide-react";
+import { ChevronLeftIcon, SendIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "../button";
-import {
-  More,
-  MoreHoriz,
-  ShoppingCartCheckout,
-  ShoppingCartOutlined,
-} from "@mui/icons-material";
+import { MoreHoriz, ShoppingCartOutlined } from "@mui/icons-material";
 
 export default function ShopTopNavigation() {
   const router = useRouter();

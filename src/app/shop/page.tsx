@@ -97,7 +97,21 @@ export default function Shop() {
           id="outlined-size-small"
           placeholder="Tiktok Shop"
           size="small"
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "red", // Red border color
+              },
+              "&:hover fieldset": {
+                borderColor: "darkred", // Darker red on hover (optional)
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "red", // Red border when focused
+              },
+            },
+          }}
           className="flex-1"
+          variant="outlined"
         />
         <div className="w-4">
           <ShoppingCartCheckout />
