@@ -7,7 +7,7 @@ export enum Network {
 export const getNetworkUrl = () => {
     switch (process.env.NEXT_PUBLIC_BLOCKCHAIN_NETWORK) {
         case Network.SOLANA_DEVNET:
-            return "https://api.devnet.solana.com";
+            return process.env.NEXT_PUBLIC_ALCHEMY_SOLANA_DEVNET_RPC as string;
         case Network.SOLANA_MAINNET_BETA:
             return "https://solana-mainnet.g.alchemy.com/v2/9nCoa06gjvDwYyTdV5ruBp2Qe4_wZnaO";
         case Network.SOLANA_TESTNET:
