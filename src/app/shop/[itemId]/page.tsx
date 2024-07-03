@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, Typography, CardMedia } from "@mui/material";
+import { Card, CardContent, Typography, CardMedia, Box } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { useSearchParams } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
+import { NavigateNext } from "@mui/icons-material";
 
-// Define the bottom margin for the fixed-bottom navbar
-const BOTTOM_NAVBAR_HEIGHT = "56px";
+const BOTTOM_NAV_HEIGHT = 56;
+const IMAGE_HEIGHT = `calc(70vh - ${BOTTOM_NAV_HEIGHT}px)`;
 
 const ShopItemPage = () => {
   const searchParams = useSearchParams();
@@ -17,52 +19,85 @@ const ShopItemPage = () => {
   const rating = searchParams.get("rating");
   const deals = searchParams.get("deals");
 
+  const displayValue = (value: any, fallback: any) => {
+    return value ? value : fallback;
+  };
+
   return (
-    <div
-      className="flex flex-col p-4 overflow-y-auto"
-      style={{
-        minHeight: `calc(100vh - ${BOTTOM_NAVBAR_HEIGHT})`,
-        flexGrow: 1,
-      }}
-    >
+    <Box sx={{ paddingBottom: `${BOTTOM_NAV_HEIGHT}px`, overflowY: "scroll" }}>
       {/* Full Width Image */}
       <CardMedia
         component="img"
-        sx={{ height: "70%", width: "100%" }}
+        sx={{ height: IMAGE_HEIGHT, width: "100%" }}
         image={image || "/shop-item-placeholder.jpg"}
         alt="shop item"
       />
 
-      {/* Price */}
-      <Typography variant="h6" className="my-4">
-        {price || "-"}
-      </Typography>
-
-      {/* Item Name */}
-      <Typography variant="h5" className="my-2">
-        {name || "-"}
-      </Typography>
-
-      {/* Rating */}
-      <div className="flex items-center my-2">
-        <StarIcon style={{ color: "#FFD700" }} />
-        <Typography variant="body1" className="ml-2">
-          {rating || "-"} / 5
-        </Typography>
-      </div>
-
-      {/* Deals Card */}
-      <Card className="w-full max-w-[600px] my-4">
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Deals
+      <div id="item-description" className="flex flex-col gap-2 p-4">
+        {/* Price */}
+        <div className="px-2">
+          <Typography variant="h6" fontWeight="900">
+            {displayValue(price, "Price not available")}
           </Typography>
-          <Typography variant="body2">{deals || "-"}</Typography>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Customer Reviews */}
-      {/* <div className="w-full max-w-[600px] mt-4">
+        {/* Item Name */}
+        <div className="px-2">
+          <Typography variant="h6">
+            {displayValue(name, "Name not available")}
+          </Typography>
+        </div>
+
+        {/* Rating */}
+        {/* Padding bottom to create gap between rating and deals card */}
+        <div className="flex items-center pb-2">
+          <StarIcon style={{ color: "#FFD700" }} />
+          <Typography variant="body1" className="ml-2">
+            {displayValue(rating, "Rating not available")} / 5
+          </Typography>
+        </div>
+
+        {/* Deals Card */}
+        <Card>
+          <CardContent className="flex flex-col gap-2">
+            <Typography variant="subtitle1" gutterBottom fontWeight="700">
+              Deals
+            </Typography>
+            <div>
+              <Separator />
+              {/* Can extract to be a separate component: DealEntry */}
+              <div id="deal-entry" className="flex my-2">
+                <Typography variant="subtitle1" fontWeight="700">
+                  {displayValue(deals, "No deals available")}
+                </Typography>
+                <NavigateNext className="ml-auto" />
+              </div>
+            </div>
+            <div>
+              <Separator />
+              {/* Can extract to be a separate component: DealEntry */}
+              <div id="deal-entry" className="flex my-2">
+                <Typography variant="subtitle1" fontWeight="700">
+                  {displayValue(deals, "No deals available")}
+                </Typography>
+                <NavigateNext className="ml-auto" />
+              </div>
+            </div>
+            <div>
+              <Separator />
+              {/* Can extract to be a separate component: DealEntry */}
+              <div id="deal-entry" className="flex my-2">
+                <Typography variant="subtitle1" fontWeight="700">
+                  {displayValue(deals, "No deals available")}
+                </Typography>
+                <NavigateNext className="ml-auto" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Customer Reviews */}
+        {/* <div className="w-full max-w-[600px] mt-4">
         <Typography variant="h6" gutterBottom>
           Customer Reviews ({reviews?.length})
         </Typography>
@@ -75,7 +110,8 @@ const ShopItemPage = () => {
           />
         ))}
       </div> */}
-    </div>
+      </div>
+    </Box>
   );
 };
 
