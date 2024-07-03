@@ -100,13 +100,13 @@ export default function Shop() {
           sx={{
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
-                borderColor: "red", // Red border color
+                borderColor: "red",
               },
               "&:hover fieldset": {
-                borderColor: "darkred", // Darker red on hover (optional)
+                borderColor: "darkred",
               },
               "&.Mui-focused fieldset": {
-                borderColor: "red", // Red border when focused
+                borderColor: "red",
               },
             },
           }}
