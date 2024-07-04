@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 
-type TColorProp = `#${string}` | `#${string}`[];
+export type TColorProp = `#${string}` | `#${string}`[];
 interface ShineBorderProps {
     borderRadius?: number;
     borderWidth?: number;

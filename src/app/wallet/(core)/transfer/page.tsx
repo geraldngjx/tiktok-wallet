@@ -8,7 +8,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 
-import ShineBorder from "@/components/magicui/shine-border";
+import ShineBorder, { TColorProp } from "@/components/magicui/shine-border";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -27,6 +27,7 @@ import Image from "next/image";
 function Transfer() {
     const supabase = useContext(SupabaseBrowserContext);
 
+    const [ringColor, setRingColor] = useState(["#2775CA", "#fff"]);
     const { publicAddress } = useMagicTokenStore();
     const { magic } = useMagic();
     const { toast } = useToast();
@@ -85,6 +86,22 @@ function Transfer() {
             setSearchResults([]);
         }
     }, [input, searchEmail]);
+
+    useEffect(() => {
+        switch (currency) {
+            case "Solana":
+                setRingColor(["#9945FF", "#14F195"]);
+                break;
+            case "USDC":
+                setRingColor(["#2775CA", "#fff"]);
+                break;
+            case "EURC":
+                setRingColor(["#2775CA", "#fff"]);
+                break;
+            default:
+                break;
+        }
+    }, [currency]);
 
     const sendTransaction = useCallback(async () => {
         const userPublicKey = new PublicKey(publicAddress as string);
@@ -279,13 +296,11 @@ function Transfer() {
             </Popover>
 
             {!isEmpty(toAddress) ? (
-                <div
-                    // className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col items-center"
-                    className="flex h-[80%] py-48 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0"
-                >
+                <div className="flex h-[80%] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
                     <div className="flex items-center w-full justify-between">
                         <Input
                             placeholder="0.00"
+                            type="number"
                             className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
                             onChange={(e) => setAmount(e.target.value)}
                         />
@@ -293,7 +308,7 @@ function Transfer() {
                         <Select defaultValue="USDC" value={currency} onValueChange={(value) => setCurrency(value)}>
                             <ShineBorder
                                 className="text-center min-w-[80px] p-0 pl-[3px] size-[86px] text-2xl font-bold capitalize"
-                                color={["#A07CFE", "#FE8FB5", "#FFBE7B"]}
+                                color={ringColor as TColorProp}
                                 borderWidth={2}
                             >
                                 <SelectTrigger className="size-[80px] border-0 flex flex-row justify-center items-center text-white focus:ring-0 focus:ring-offset-0 focus:border-0">
@@ -317,8 +332,8 @@ function Transfer() {
 
                     {toAddress && currency && (
                         <ShineBorder
-                            className="text-center min-w-12 min-h-12 w-18 h-18 p-[2px]"
-                            color={["#A07CFE", "#FE8FB5", "#FFBE7B"]}
+                            className="text-center min-w-12 min-h-12 w-18 h-18 p-1"
+                            color={ringColor as TColorProp}
                             borderWidth={2}
                             borderRadius={100}
                         >

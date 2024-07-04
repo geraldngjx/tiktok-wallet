@@ -11,6 +11,8 @@ import TransactionEntry from "./transactionEntry";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEURCTokenBalanceQuery, useUSDCTokenBalanceQuery } from "@/app/hooks/useTokenBalanceQuery";
 import Image from "next/image";
+import { useAccountBalanceStore } from "@/store/accountBalanceStore";
+import { isEmpty } from "lodash";
 
 export default function TransactionList({
     isRefreshing,
@@ -20,7 +22,8 @@ export default function TransactionList({
     setIsRefreshing: Dispatch<SetStateAction<boolean>>;
 }) {
     const { connection } = useContext(SolanaContext);
-    const { publicAddress, balance } = useMagicTokenStore();
+    const { publicAddress } = useMagicTokenStore();
+    const { solanaBalance } = useAccountBalanceStore();
 
     const {
         data: txs,
@@ -100,7 +103,7 @@ export default function TransactionList({
                         </div>
                     ) : (
                         <div className="flex flex-col space-y-1 w-full font-semibold text-md">
-                            {balance && (
+                            {solanaBalance && (
                                 <div className="p-4 bg-neutral-900/80 rounded-md text-white flex justify-between w-full items-center overflow-hidden h-20">
                                     <div className="flex h-[80%] w-fit items-center space-x-2">
                                         <div className="bg-black h-full aspect-square flex rounded-full items-center justify-center">
@@ -110,7 +113,7 @@ export default function TransactionList({
                                         <span>Solana</span>
                                     </div>
 
-                                    {<span>{balance} SOL</span>}
+                                    {<span>{solanaBalance} SOL</span>}
                                 </div>
                             )}
 
