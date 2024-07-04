@@ -1,43 +1,60 @@
 "use client";
 
-import { Button } from "../button";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { ChatBubbleOutline, Storefront } from "@mui/icons-material";
 import {
   Drawer,
-  DrawerTrigger,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
   DrawerDescription,
   DrawerFooter,
   DrawerClose,
-} from "../drawer";
-import { useState } from "react";
+} from "@/components/ui/drawer";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "../dialog";
+} from "@/components/ui/dialog";
+import OrdersForm from "@/components/ui/shop/OrderForm";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { cn } from "@/lib/utils";
-import { Label } from "../label";
-import { Input } from "../input";
+import { useTheme } from "@mui/material/styles";
 
 const ShopBottomNavigation = () => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const theme = useTheme(); // Get current theme
 
   return (
-    <div className="fixed bottom-0 left-0 w-full h-14 p-2 bg-white shadow-lg z-[999] flex items-center">
+    // Fixed h-14 height to match the bottom navigation height
+    <div
+      className="fixed bottom-0 left-0 w-full h-14 p-2 shadow-lg z-[999] flex items-center"
+      style={{
+        backgroundColor:
+          theme.palette.mode === "dark"
+            ? theme.palette.background.default
+            : "white",
+        color:
+          theme.palette.mode === "dark" ? theme.palette.text.primary : "black",
+      }}
+    >
       {/* Icons on the left */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" className="p-0">
+        <Button
+          variant="ghost"
+          className="p-0"
+          style={{ color: theme.palette.text.primary }}
+        >
           <Storefront />
         </Button>
-        <Button variant="ghost" className="p-0">
+        <Button
+          variant="ghost"
+          className="p-0"
+          style={{ color: theme.palette.text.primary }}
+        >
           <ChatBubbleOutline />
         </Button>
       </div>
@@ -46,7 +63,15 @@ const ShopBottomNavigation = () => {
       <div className="flex-grow items-center w-full ml-4">
         <Button
           variant="outline"
-          className="w-full text-center border-red-500 text-red-500 hover:bg-red-50"
+          className="w-full text-center"
+          style={{
+            borderColor: theme.palette.error.main,
+            color: theme.palette.error.main,
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? theme.palette.background.default
+                : "white",
+          }}
           onClick={() => setOpen(true)}
         >
           Buy Now
@@ -56,10 +81,20 @@ const ShopBottomNavigation = () => {
       {/* Dialog for Desktop */}
       {isDesktop && (
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent
+            className="sm:max-w-[425px]"
+            style={{
+              backgroundColor: theme.palette.background.default,
+              color: theme.palette.text.primary,
+            }}
+          >
             <DialogHeader>
-              <DialogTitle>Order Details</DialogTitle>
-              <DialogDescription>
+              <DialogTitle style={{ color: theme.palette.text.primary }}>
+                Order Details
+              </DialogTitle>
+              <DialogDescription
+                style={{ color: theme.palette.text.secondary }}
+              >
                 Review your order details and proceed with the purchase.
               </DialogDescription>
             </DialogHeader>
@@ -71,54 +106,40 @@ const ShopBottomNavigation = () => {
       {/* Drawer for Mobile */}
       {!isDesktop && (
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerContent>
+          <DrawerContent
+            style={{
+              backgroundColor: theme.palette.background.default,
+              color: theme.palette.text.primary,
+            }}
+          >
             <DrawerHeader className="text-left">
-              <DrawerTitle>Order Details</DrawerTitle>
-              <DrawerDescription>
+              <DrawerTitle style={{ color: theme.palette.text.primary }}>
+                Order Details
+              </DrawerTitle>
+              <DrawerDescription
+                style={{ color: theme.palette.text.secondary }}
+              >
                 Review your order details and proceed with the purchase.
               </DrawerDescription>
             </DrawerHeader>
             <OrdersForm className="px-4" />
             <DrawerFooter className="pt-2">
               <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button
+                  variant="outline"
+                  style={{
+                    borderColor: theme.palette.text.primary,
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  Cancel
+                </Button>
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
       )}
     </div>
-  );
-};
-
-const OrdersForm = ({ className }: React.ComponentProps<"form">) => {
-  return (
-    <form className={cn("grid items-start gap-4", className)}>
-      <div className="grid gap-2">
-        <Label htmlFor="orderId">Order ID</Label>
-        <Input type="text" id="orderId" defaultValue="123456" disabled />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="productName">Product Name</Label>
-        <Input
-          type="text"
-          id="productName"
-          defaultValue="Sample Product"
-          disabled
-        />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="quantity">Quantity</Label>
-        <Input type="number" id="quantity" defaultValue="1" disabled />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="price">Price</Label>
-        <Input type="text" id="price" defaultValue="$100" disabled />
-      </div>
-      <Button type="submit" className="bg-red-500 text-white hover:bg-red-600">
-        Purchase
-      </Button>
-    </form>
   );
 };
 

@@ -1,17 +1,17 @@
 {
     "id": 1,
-    "name": "My awesome PWA app",
-    "short_name": "PWA App",
+    "name": "ByteSecure",
+    "short_name": "ByteSecure",
     "icons": [
         {
-        "src": "/random.png",
+        "src": "/tiktok_logo_circle.png",
         "sizes": "512x512",
         "type": "image/png"
         }
     ],
     "theme_color": "#FFFFFF",
     "background_color": "#FFFFFF",
-    "start_url": "/",
-    "display": "fullscreen",
+    "display": "standalone",
+    "start_url": "/?standalone=true",
     "orientation": "portrait"
 }

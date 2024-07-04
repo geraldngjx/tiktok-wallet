@@ -12,43 +12,60 @@ const APP_TITLE_TEMPLATE = "%s - TikTok Wallet";
 const APP_DESCRIPTION = "Best PWA app in the world!";
 
 const fontSans = FontSans({
-    subsets: ["latin"],
-    variable: "--font-sans",
+  subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-    applicationName: APP_NAME,
-    title: {
-        default: APP_DEFAULT_TITLE,
-        template: APP_TITLE_TEMPLATE,
-    },
-    description: APP_DESCRIPTION,
-    manifest: "/manifest.json",
+  applicationName: APP_NAME,
+  title: {
+    default: APP_DEFAULT_TITLE,
+    template: APP_TITLE_TEMPLATE,
+  },
+  description: APP_DESCRIPTION,
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
-    themeColor: "#FFFFFF",
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en">
-            <head>
-                <meta name="viewport" content="initial-scale=1, width=device-width" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            </head>
+  return (
+    <html lang="en">
+      <head>
+        <head>
+          <meta
+            name="viewport"
+            content="width=device-width; initial-scale=1; viewport-fit=cover"
+          />
+          <meta name="mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+          ></meta>
+        </head>
+      </head>
 
-            <body className={cn("min-h-screen w-screen bg-background font-sans antialiased", fontSans.variable)}>
-                <Providers>
-                    <Toaster />
-                    <main className="h-[calc(100vh-56px)] overflow-y-hidden">{children}</main>
-                    <BottomNavbar />
-                </Providers>
-            </body>
-        </html>
-    );
+      <body
+        className={cn(
+          "min-h-screen w-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <Providers>
+          <Toaster />
+          <main className="h-[calc(100vh-56px)] overflow-y-hidden">
+            {children}
+          </main>
+          <BottomNavbar />
+        </Providers>
+      </body>
+    </html>
+  );
 }
