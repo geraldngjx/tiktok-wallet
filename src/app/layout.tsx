@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Providers>
+      <head>
         <head>
           <meta
             name="viewport"
@@ -50,20 +50,22 @@ export default function RootLayout({
             content="black-translucent"
           ></meta>
         </head>
+      </head>
 
-        <body
-          className={cn(
-            "min-h-screen w-screen bg-background font-sans antialiased",
-            fontSans.variable
-          )}
-        >
+      <body
+        className={cn(
+          "min-h-screen w-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <Providers>
           <Toaster />
           <main className="h-[calc(100vh-56px)] overflow-y-hidden">
             {children}
           </main>
           <BottomNavbar />
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }

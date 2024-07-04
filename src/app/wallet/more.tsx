@@ -27,8 +27,8 @@ export default function More() {
         <Drawer>
             <DrawerTrigger asChild>
                 <div className="flex flex-col space-y-1 justify-center items-center">
-                    <Button size="icon" className="rounded-full size-12">
-                        <EllipsisIcon size={22} />
+                    <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">
+                        <EllipsisIcon size={22} color="white" />
                     </Button>
                     <span className="text-sm">More</span>
                 </div>
@@ -60,7 +60,7 @@ export default function More() {
                     <Separator className="bg-muted/20" />
 
                     <div
-                        className="h-12 bg-transparent flex rounded-lg items-center justify-start text-destructive space-x-4 w-full"
+                        className="h-12 flex rounded-lg items-center justify-start text-red-600 space-x-4 w-full hover:bg-neutral-900/80"
                         onClick={disconnect}
                     >
                         <LogOutIcon strokeWidth={1} />

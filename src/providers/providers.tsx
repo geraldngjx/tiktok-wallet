@@ -5,6 +5,7 @@ import MagicProvider from "./MagicProvider";
 import SolanaProvider from "./SolanaProvider";
 import SupabaseBrowserProvider from "./SupabaseBrowserProvider";
 import ReactQueryProvider from "./ReactQueryProvider";
+import { ThemeProvider } from "./ThemeProvider";
 import { ShopProvider } from "./ShopProvider";
 
 export default function Providers({ children }: { children: ReactNode }) {
@@ -13,8 +14,15 @@ export default function Providers({ children }: { children: ReactNode }) {
       <SupabaseBrowserProvider>
         <MagicProvider>
           <SolanaProvider>
-            {/* ShopProvider to manage shop state */}
-            <ShopProvider>{children}</ShopProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem={false}
+              forcedTheme="dark"
+            >
+              {/* ShopProvider to manage shop state */}
+              <ShopProvider>{children}</ShopProvider>
+            </ThemeProvider>
           </SolanaProvider>
         </MagicProvider>
       </SupabaseBrowserProvider>
