@@ -30,6 +30,8 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
 
     const largestAmount = Math.max(solanaAmount, Math.abs(usdcAmount), Math.abs(eurcAmount));
 
+    if (largestAmount === 0) return null;
+
     switch (largestAmount) {
         case solanaAmount:
             amount = `${solanaAmount} SOL`;
