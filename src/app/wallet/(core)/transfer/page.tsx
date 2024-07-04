@@ -23,16 +23,13 @@ import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana
 import { isEmpty } from "lodash";
 import { ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
+import TransactionSuccess from "./success";
+import { useSendTransactionMutation } from "@/app/hooks/useSendTransactionMutation";
 
 function Transfer() {
     const supabase = useContext(SupabaseBrowserContext);
 
     const [ringColor, setRingColor] = useState(["#2775CA", "#fff"]);
-    const { publicAddress } = useMagicTokenStore();
-    const { magic } = useMagic();
-    const { toast } = useToast();
-
-    const { connection } = useContext(SolanaContext);
 
     const [searchResults, setSearchResults] = useState<
         {
@@ -46,13 +43,10 @@ function Transfer() {
     const [input, setInput] = useState("");
     const [open, setOpen] = useState(false);
     const [toAddress, setToAddress] = useState("");
-    const [currency, setCurrency] = useState("USDC");
+    const [currency, setCurrency] = useState<"Solana" | "USDC" | "EURC">("USDC");
 
-    const [toAddressError, setToAddressError] = useState(false);
     const [amount, setAmount] = useState("");
     const [loading, setLoading] = useState(false);
-    const [amountError, setAmountError] = useState(false);
-    const [disabled, setDisabled] = useState(!toAddress || !amount);
     const [transactionLoading, setTransactionLoadingLoading] = useState(false);
     const [hash, setHash] = useState("");
 
@@ -102,64 +96,6 @@ function Transfer() {
                 break;
         }
     }, [currency]);
-
-    const sendTransaction = useCallback(async () => {
-        const userPublicKey = new PublicKey(publicAddress as string);
-        const receiverPublicKey = new PublicKey(toAddress as string);
-        if (!PublicKey.isOnCurve(receiverPublicKey.toBuffer())) {
-            return setToAddressError(true);
-        }
-        if (isNaN(Number(amount))) {
-            return setAmountError(true);
-        }
-        setDisabled(true);
-
-        try {
-            setTransactionLoadingLoading(true);
-            const hash = await connection?.getLatestBlockhash();
-            if (!hash) return;
-
-            const transaction = new Transaction({
-                feePayer: userPublicKey,
-                ...hash,
-            });
-
-            const lamportsAmount = Number(amount) * LAMPORTS_PER_SOL;
-
-            console.log("amount: " + lamportsAmount);
-
-            const transfer = SystemProgram.transfer({
-                fromPubkey: userPublicKey,
-                toPubkey: receiverPublicKey,
-                lamports: lamportsAmount,
-            });
-
-            transaction.add(transfer);
-
-            const signedTransaction = await magic?.solana.signTransaction(transaction, {
-                requireAllSignatures: false,
-                verifySignatures: true,
-            });
-
-            const signature = await connection?.sendRawTransaction(Buffer.from(signedTransaction?.rawTransaction as unknown as string, "base64"));
-
-            setHash(signature ?? "");
-            toast({
-                title: `Transaction successful sig: ${signature}`,
-            });
-            setTransactionLoadingLoading(false);
-            setDisabled(false);
-            setToAddress("");
-            setAmount("");
-        } catch (e: any) {
-            setTransactionLoadingLoading(false);
-            setDisabled(false);
-            setToAddress("");
-            setAmount("");
-            toast({ title: "Transaction failed" });
-            console.log(e);
-        }
-    }, [publicAddress, toAddress, amount, connection, magic?.solana, toast]);
 
     const getIconByCurrency = (currency: string) => {
         switch (currency) {
@@ -245,123 +181,139 @@ function Transfer() {
         }
     };
 
+    const { mutateAsync: sendTransaction, isSuccess, isPending } = useSendTransactionMutation();
+
     return (
         <div className="flex flex-col w-full h-full space-y-10 items-center p-4">
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button variant="outline" role="combobox" aria-expanded={open} className="w-[80vw] justify-between">
-                        {toAddress !== "" ? searchResults.find((result) => result.publicAddress === toAddress)?.email : "Select recipient"}
-                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="p-0 w-[80vw] border-0">
-                    <Command>
-                        <CommandInput placeholder="Search user..." value={input} onValueChange={setInput} />
-
-                        <CommandList className="drop-shadow-xl">
-                            {loading ? (
-                                <CommandEmpty>Searching user...</CommandEmpty>
-                            ) : (
-                                <>
-                                    <CommandEmpty>No user found.</CommandEmpty>
-                                    <CommandGroup>
-                                        {searchResults.map((result) => (
-                                            <CommandItem
-                                                className="space-x-2"
-                                                key={result.id}
-                                                value={result.publicAddress}
-                                                onSelect={(currentValue) => {
-                                                    setToAddress(currentValue === toAddress ? "" : currentValue);
-                                                    setOpen(false);
-                                                }}
-                                            >
-                                                <Avatar>
-                                                    <AvatarFallback>{result.email.substring(0, 2)}</AvatarFallback>
-                                                </Avatar>
-                                                <span>{result.email}</span>
-                                                <CheckIcon
-                                                    className={cn(
-                                                        "ml-auto h-4 w-4",
-                                                        toAddress === result.publicAddress ? "opacity-100" : "opacity-0"
-                                                    )}
-                                                />
-                                            </CommandItem>
-                                        ))}
-                                    </CommandGroup>
-                                </>
-                            )}
-                        </CommandList>
-                    </Command>
-                </PopoverContent>
-            </Popover>
-
-            {!isEmpty(toAddress) ? (
-                <div className="flex h-[80%] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
-                    <div className="flex items-center w-full justify-between">
-                        <Input
-                            placeholder="0.00"
-                            type="number"
-                            className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
-                            onChange={(e) => setAmount(e.target.value)}
-                        />
-
-                        <Select defaultValue="USDC" value={currency} onValueChange={(value) => setCurrency(value)}>
-                            <ShineBorder
-                                className="text-center min-w-[80px] p-0 pl-[3px] size-[86px] text-2xl font-bold capitalize"
-                                color={ringColor as TColorProp}
-                                borderWidth={2}
-                            >
-                                <SelectTrigger className="size-[80px] border-0 flex flex-row justify-center items-center text-white focus:ring-0 focus:ring-offset-0 focus:border-0">
-                                    <SelectValue placeholder="Currency" />
-                                </SelectTrigger>
-                            </ShineBorder>
-
-                            <SelectContent className="min-w-[80px] w-[80px]" side="bottom">
-                                {["Solana", "USDC", "EURC"].map((currency) => (
-                                    <SelectItem
-                                        key={currency}
-                                        value={currency}
-                                        className="w-[80px] min-w-[80px] px-0 flex justify-center items-center"
-                                    >
-                                        {getIconByCurrency(currency)} <span>{currency}</span>
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {toAddress && currency && (
-                        <ShineBorder
-                            className="text-center min-w-12 min-h-12 w-18 h-18 p-1"
-                            color={ringColor as TColorProp}
-                            borderWidth={2}
-                            borderRadius={100}
-                        >
-                            <Button
-                                className="size-16 rounded-full bg-gray-950"
-                                variant="ghost"
-                                onClick={async () => {
-                                    await sendTransaction();
-                                }}
-                            >
-                                {transactionLoading ? (
-                                    <div className="w-full loading-container">
-                                        <CircularProgress />
-                                    </div>
-                                ) : (
-                                    <ChevronRightIcon size={24} />
-                                )}
-                            </Button>
-                        </ShineBorder>
-                    )}
-                </div>
+            {isSuccess ? (
+                <TransactionSuccess />
             ) : (
-                <span className="text-gray-500 line-clamp-1 w-full text-center absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-                    Send transaction by selecting a recipient
-                </span>
-            )}
+                <>
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" role="combobox" aria-expanded={open} className="w-[80vw] justify-between">
+                                {toAddress !== "" ? searchResults.find((result) => result.publicAddress === toAddress)?.email : "Select recipient"}
+                                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-0 w-[80vw] border-0">
+                            <Command>
+                                <CommandInput placeholder="Search user..." value={input} onValueChange={setInput} />
 
-            {hash ? <>{hash}</> : null}
+                                <CommandList className="drop-shadow-xl">
+                                    {loading ? (
+                                        <CommandEmpty>Searching user...</CommandEmpty>
+                                    ) : (
+                                        <>
+                                            <CommandEmpty>No user found.</CommandEmpty>
+                                            <CommandGroup>
+                                                {searchResults.map((result) => (
+                                                    <CommandItem
+                                                        className="space-x-2"
+                                                        key={result.id}
+                                                        value={result.publicAddress}
+                                                        onSelect={(currentValue) => {
+                                                            setToAddress(currentValue === toAddress ? "" : currentValue);
+                                                            setOpen(false);
+                                                        }}
+                                                    >
+                                                        <Avatar>
+                                                            <AvatarFallback>{result.email.substring(0, 2)}</AvatarFallback>
+                                                        </Avatar>
+                                                        <span>{result.email}</span>
+                                                        <CheckIcon
+                                                            className={cn(
+                                                                "ml-auto h-4 w-4",
+                                                                toAddress === result.publicAddress ? "opacity-100" : "opacity-0"
+                                                            )}
+                                                        />
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </>
+                                    )}
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+
+                    {!isEmpty(toAddress) ? (
+                        <div className="flex h-[80%] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
+                            <div className="flex items-center w-full justify-between">
+                                <Input
+                                    placeholder="0.00"
+                                    type="number"
+                                    className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
+                                    onChange={(e) => setAmount(e.target.value)}
+                                />
+
+                                <Select
+                                    defaultValue="USDC"
+                                    value={currency}
+                                    onValueChange={(value: "Solana" | "USDC" | "EURC") => setCurrency(value)}
+                                >
+                                    <ShineBorder
+                                        className="text-center min-w-[80px] p-0 pl-[3px] size-[86px] text-2xl font-bold capitalize"
+                                        color={ringColor as TColorProp}
+                                        borderWidth={2}
+                                    >
+                                        <SelectTrigger className="size-[80px] border-0 flex flex-row justify-center items-center text-white focus:ring-0 focus:ring-offset-0 focus:border-0">
+                                            <SelectValue placeholder="Currency" />
+                                        </SelectTrigger>
+                                    </ShineBorder>
+
+                                    <SelectContent className="min-w-[80px] w-[80px]" side="bottom">
+                                        {["Solana", "USDC", "EURC"].map((currency) => (
+                                            <SelectItem
+                                                key={currency}
+                                                value={currency}
+                                                className="w-[80px] min-w-[80px] px-0 flex justify-center items-center"
+                                            >
+                                                {getIconByCurrency(currency)} <span>{currency}</span>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {toAddress && currency && (
+                                <ShineBorder
+                                    className="text-center min-w-12 min-h-12 w-18 h-18 p-1"
+                                    color={ringColor as TColorProp}
+                                    borderWidth={2}
+                                    borderRadius={100}
+                                >
+                                    <Button
+                                        className="size-16 rounded-full bg-gray-950"
+                                        variant="ghost"
+                                        onClick={async () => {
+                                            await sendTransaction({
+                                                currency,
+                                                toAddress,
+                                                amount: parseFloat(amount),
+                                            });
+                                        }}
+                                    >
+                                        {transactionLoading ? (
+                                            <div className="w-full loading-container">
+                                                <CircularProgress />
+                                            </div>
+                                        ) : (
+                                            <ChevronRightIcon size={24} />
+                                        )}
+                                    </Button>
+                                </ShineBorder>
+                            )}
+                        </div>
+                    ) : (
+                        <span className="text-gray-500 line-clamp-1 w-full text-center absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
+                            Send transaction by selecting a recipient
+                        </span>
+                    )}
+
+                    {hash ? <>{hash}</> : null}
+                </>
+            )}
         </div>
     );
 }
