@@ -8,23 +8,18 @@ import { useCallback, useContext, useEffect, useState } from "react";
 
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 
+import { useSendTransactionMutation } from "@/app/hooks/useSendTransactionMutation";
 import ShineBorder, { TColorProp } from "@/components/magicui/shine-border";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import { useMagic } from "@/providers/MagicProvider";
-import { SolanaContext } from "@/providers/SolanaProvider";
-import { useMagicTokenStore } from "@/store/magicTokenStore";
-import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { isEmpty } from "lodash";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, Disc3Icon } from "lucide-react";
 import Image from "next/image";
 import TransactionSuccess from "./success";
-import { useSendTransactionMutation } from "@/app/hooks/useSendTransactionMutation";
 
 function Transfer() {
     const supabase = useContext(SupabaseBrowserContext);
@@ -42,13 +37,16 @@ function Transfer() {
 
     const [input, setInput] = useState("");
     const [open, setOpen] = useState(false);
-    const [toAddress, setToAddress] = useState("");
+    const [recipient, setRecipient] = useState({
+        email: "",
+        toAddress: "",
+    });
     const [currency, setCurrency] = useState<"Solana" | "USDC" | "EURC">("USDC");
 
     const [amount, setAmount] = useState("");
     const [loading, setLoading] = useState(false);
-    const [transactionLoading, setTransactionLoadingLoading] = useState(false);
-    const [hash, setHash] = useState("");
+
+    const [signature, setSignature] = useState("");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const searchEmail = useCallback(
@@ -64,14 +62,6 @@ function Transfer() {
         }, 300),
         [supabase]
     );
-
-    const onInputChange = debounce((value: string) => {
-        if (value !== "") {
-            searchEmail({ email: value });
-        } else {
-            setSearchResults([]);
-        }
-    }, 300);
 
     useEffect(() => {
         if (input !== "") {
@@ -181,18 +171,20 @@ function Transfer() {
         }
     };
 
-    const { mutateAsync: sendTransaction, isSuccess, isPending } = useSendTransactionMutation();
+    const { mutateAsync: sendTransaction, isSuccess, isPending } = useSendTransactionMutation({ setSignature });
 
     return (
         <div className="flex flex-col w-full h-full space-y-10 items-center p-4">
             {isSuccess ? (
-                <TransactionSuccess />
+                <TransactionSuccess signature={signature} toEmail={recipient.email} amount={amount} currency={currency} />
             ) : (
-                <>
+                <div className={isPending ? "grayscale" : ""}>
                     <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
-                            <Button variant="outline" role="combobox" aria-expanded={open} className="w-[80vw] justify-between">
-                                {toAddress !== "" ? searchResults.find((result) => result.publicAddress === toAddress)?.email : "Select recipient"}
+                            <Button variant="outline" role="combobox" aria-expanded={open} className="w-[80vw] justify-between" disabled={isPending}>
+                                {recipient.toAddress !== ""
+                                    ? searchResults.find((result) => result.publicAddress === recipient.toAddress)?.email
+                                    : "Select recipient"}
                                 <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                         </PopoverTrigger>
@@ -213,7 +205,17 @@ function Transfer() {
                                                         key={result.id}
                                                         value={result.publicAddress}
                                                         onSelect={(currentValue) => {
-                                                            setToAddress(currentValue === toAddress ? "" : currentValue);
+                                                            setRecipient(
+                                                                currentValue === recipient.toAddress
+                                                                    ? {
+                                                                          email: "",
+                                                                          toAddress: "",
+                                                                      }
+                                                                    : {
+                                                                          email: result.email,
+                                                                          toAddress: currentValue,
+                                                                      }
+                                                            );
                                                             setOpen(false);
                                                         }}
                                                     >
@@ -224,7 +226,7 @@ function Transfer() {
                                                         <CheckIcon
                                                             className={cn(
                                                                 "ml-auto h-4 w-4",
-                                                                toAddress === result.publicAddress ? "opacity-100" : "opacity-0"
+                                                                recipient.toAddress === result.publicAddress ? "opacity-100" : "opacity-0"
                                                             )}
                                                         />
                                                     </CommandItem>
@@ -237,9 +239,9 @@ function Transfer() {
                         </PopoverContent>
                     </Popover>
 
-                    {!isEmpty(toAddress) ? (
+                    {!isEmpty(recipient.toAddress) ? (
                         <div className="flex h-[80%] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
-                            <div className="flex items-center w-full justify-between">
+                            <div className={`flex items-center w-full justify-between ${isPending && "grayscale"}`}>
                                 <Input
                                     placeholder="0.00"
                                     type="number"
@@ -276,7 +278,7 @@ function Transfer() {
                                 </Select>
                             </div>
 
-                            {toAddress && currency && (
+                            {recipient.toAddress && currency && (
                                 <ShineBorder
                                     className="text-center min-w-12 min-h-12 w-18 h-18 p-1"
                                     color={ringColor as TColorProp}
@@ -289,18 +291,13 @@ function Transfer() {
                                         onClick={async () => {
                                             await sendTransaction({
                                                 currency,
-                                                toAddress,
+                                                toAddress: recipient.toAddress,
                                                 amount: parseFloat(amount),
                                             });
                                         }}
+                                        disabled={isPending}
                                     >
-                                        {transactionLoading ? (
-                                            <div className="w-full loading-container">
-                                                <CircularProgress />
-                                            </div>
-                                        ) : (
-                                            <ChevronRightIcon size={24} />
-                                        )}
+                                        {isPending ? <Disc3Icon className="animate-spin" size={24} /> : <ChevronRightIcon size={24} />}
                                     </Button>
                                 </ShineBorder>
                             )}
@@ -310,9 +307,7 @@ function Transfer() {
                             Send transaction by selecting a recipient
                         </span>
                     )}
-
-                    {hash ? <>{hash}</> : null}
-                </>
+                </div>
             )}
         </div>
     );

@@ -2,8 +2,19 @@ import Confetti, { ConfettiRef } from "@/components/magicui/confetti";
 import { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 import { Check } from "lucide-react";
+import { withAuthMagic } from "@/lib/hoc/withAuth";
 
-export default function TransactionSuccess({ signature, toEmail, amount }: { signature?: string; toEmail?: string; amount?: string }) {
+function TransactionSuccess({
+    signature,
+    toEmail,
+    amount,
+    currency,
+}: {
+    signature: string;
+    toEmail?: string;
+    amount: string;
+    currency: "Solana" | "USDC" | "EURC";
+}) {
     const confettiRef = useRef<ConfettiRef>(null);
 
     useEffect(() => {
@@ -37,12 +48,35 @@ export default function TransactionSuccess({ signature, toEmail, amount }: { sig
     }, []);
 
     return (
-        <div className="flex flex-col w-full h-full justify-center items-center">
+        <div className="flex flex-col w-full h-full justify-center items-center overflow-hidden">
             <Confetti ref={confettiRef} className="absolute left-0 top-0 z-0 h-full w-full" />
 
-            <div className="bg-green-600 size-20 rounded-full justify-center items-center flex">
-                <Check size={32} />
+            <div className="flex flex-col justify-center items-center px-10 w-full">
+                <div className="bg-green-600 size-20 rounded-full justify-center items-center flex">
+                    <Check size={32} />
+                </div>
+
+                <div className="text-lg mt-12 text-center items-center justify-center flex flex-col">
+                    <span>Congratulations, you have successfully sent</span>
+                    <div>
+                        <span className="font-bold mx-1">
+                            {amount} {currency}
+                        </span>
+                        to
+                    </div>
+
+                    <div>
+                        <span className="font-bold">{toEmail}</span>!
+                    </div>
+                </div>
+
+                <div className="text-xs mt-32 flex flex-col text-center w-full">
+                    <span className="font-semibold">Signature:</span>
+                    <span className="flex text-ellipsis">{signature}</span>
+                </div>
             </div>
         </div>
     );
 }
+
+export default withAuthMagic(TransactionSuccess);

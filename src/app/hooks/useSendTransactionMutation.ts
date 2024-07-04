@@ -2,11 +2,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { useMagic } from "@/providers/MagicProvider";
 import { SolanaContext } from "@/providers/SolanaProvider";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
-import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { useMutation } from "@tanstack/react-query";
-import { useContext } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 
-export function useSendTransactionMutation() {
+export function useSendTransactionMutation({ setSignature }: { setSignature: Dispatch<SetStateAction<string>> }) {
     const { connection } = useContext(SolanaContext);
     const { magic } = useMagic();
     const { publicAddress } = useMagicTokenStore();
@@ -76,13 +76,11 @@ export function useSendTransactionMutation() {
 
                 const signature = await connection?.sendRawTransaction(Buffer.from(signedTransaction?.rawTransaction as unknown as string, "base64"));
 
-                toast({
-                    title: `Transaction successful, signature: ${signature}`,
-                    style: {
-                        top: "50px",
-                        color: "green",
-                    },
-                });
+                if (!signature) {
+                    throw new Error("Transaction failed");
+                }
+
+                setSignature(signature);
             } catch (e: any) {
                 toast({
                     title: "Transaction failed",
