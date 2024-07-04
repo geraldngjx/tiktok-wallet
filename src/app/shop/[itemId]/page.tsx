@@ -8,6 +8,7 @@ import {
   CardMedia,
   Box,
   Skeleton,
+  useTheme,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { Separator } from "@/components/ui/separator";
@@ -25,6 +26,7 @@ const ShopItemPage = () => {
   const searchParams = useSearchParams();
   const itemId = searchParams.get("id");
   const supabase = useContext(SupabaseBrowserContext);
+  const theme = useTheme(); // Get current theme
 
   const itemIdString = typeof itemId === "string" ? itemId : "";
 
@@ -60,7 +62,14 @@ const ShopItemPage = () => {
   };
 
   return (
-    <Box sx={{ paddingBottom: `${BOTTOM_NAV_HEIGHT}px`, overflowY: "scroll" }}>
+    <Box
+      sx={{
+        paddingBottom: `${BOTTOM_NAV_HEIGHT}px`,
+        overflowY: "scroll",
+        bgcolor: theme.palette.background.default, // Background color based on theme
+        color: theme.palette.text.primary, // Text color based on theme
+      }}
+    >
       {!selectedItem ? (
         <Skeleton
           variant="rectangular"
@@ -82,7 +91,11 @@ const ShopItemPage = () => {
           {!selectedItem ? (
             <Skeleton variant="rectangular" animation="wave" />
           ) : (
-            <Typography variant="h6" fontWeight="900">
+            <Typography
+              variant="h6"
+              fontWeight="900"
+              sx={{ color: theme.palette.text.primary }} // Text color based on theme
+            >
               {displayValue(selectedItem?.price, "Price not available")}
             </Typography>
           )}
@@ -92,27 +105,38 @@ const ShopItemPage = () => {
           {!selectedItem ? (
             <Skeleton variant="rectangular" animation="wave" />
           ) : (
-            <Typography variant="h6">
+            <Typography
+              variant="h6"
+              sx={{ color: theme.palette.text.primary }} // Text color based on theme
+            >
               {displayValue(selectedItem?.name, "Name not available")}
             </Typography>
           )}
         </div>
         {/* Rating */}
-        {/* Padding bottom to create gap between rating and deals card */}
         <div className="px-2">
           {!selectedItem ? (
             <Skeleton variant="rectangular" animation="wave" />
           ) : (
             <div className="flex items-center pb-2">
               <StarIcon style={{ color: "#FFD700" }} />
-              <Typography variant="body1" className="ml-2">
+              <Typography
+                variant="body1"
+                className="ml-2"
+                sx={{ color: theme.palette.text.primary }} // Text color based on theme
+              >
                 {displayValue(selectedItem?.rating, "Rating not available")} / 5
               </Typography>
             </div>
           )}
         </div>
         {/* Deals Card */}
-        <Card>
+        <Card
+          sx={{
+            bgcolor: theme.palette.background.paper, // Card background color based on theme
+            color: theme.palette.text.primary, // Text color based on theme
+          }}
+        >
           <CardContent className="flex flex-col gap-2">
             <Typography variant="subtitle1" gutterBottom fontWeight="700">
               Deals
@@ -126,10 +150,17 @@ const ShopItemPage = () => {
                     <div key={index}>
                       <Separator />
                       <div className="flex mt-2">
-                        <Typography variant="subtitle1" fontWeight="700">
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="700"
+                          sx={{ color: theme.palette.text.primary }} // Text color based on theme
+                        >
                           {displayValue(deal.description, "No deals available")}
                         </Typography>
-                        <NavigateNext className="ml-auto" />
+                        <NavigateNext
+                          className="ml-auto"
+                          sx={{ color: theme.palette.text.primary }} // Icon color based on theme
+                        />
                       </div>
                     </div>
                   )
