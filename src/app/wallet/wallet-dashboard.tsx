@@ -16,16 +16,16 @@ function WalletDashboard() {
             <div className="w-full flex justify-end space-x-3 p-4">
                 <Button
                     size="icon"
-                    className="rounded-full size-10"
+                    className="rounded-full size-10 z-50 bg-[#0f172a] hover:bg-[#0f172a]/90"
                     onClick={() => {
                         setIsRefreshing(true);
                     }}
                 >
-                    <RefreshCwIcon size={20} className={isRefreshing ? "animate-spin" : "animate-none"} />
+                    <RefreshCwIcon size={20} color="white" className={isRefreshing ? "animate-spin" : "animate-none"} />
                 </Button>
 
-                <Button size="icon" className="rounded-full size-10 ">
-                    <BellIcon size={20} />
+                <Button size="icon" className="rounded-full size-10 z-50 bg-[#0f172a] hover:bg-[#0f172a]/90">
+                    <BellIcon color="white" size={20} />
                 </Button>
             </div>
 
