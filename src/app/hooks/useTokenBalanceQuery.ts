@@ -16,7 +16,7 @@ export const useSolanaTokenBalanceQuery = ({ publicAddress }: { publicAddress: s
 
             const balance = connection && (await connection.getBalance(pubKey));
 
-            setSolanaBalance(!balance || balance === 0 ? "0" : (balance / LAMPORTS_PER_SOL).toFixed(1));
+            setSolanaBalance(!balance || balance === 0 ? "0" : (balance / LAMPORTS_PER_SOL).toString());
             return balance;
         },
     };

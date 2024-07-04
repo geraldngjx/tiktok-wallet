@@ -6,12 +6,14 @@ import { MoveDownLeftIcon, MoveUpRightIcon } from "lucide-react";
 export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMeta & { signature: string }) | null }) {
     const { publicAddress } = useMagicTokenStore();
 
-    const fromAddress = tx?.transaction?.message.accountKeys[0].pubkey.toBase58();
-    const toAddress = tx?.transaction?.message.accountKeys[1].pubkey.toBase58();
+    const fromAddress = tx?.transaction?.message.accountKeys[0]?.pubkey.toBase58();
+    const toAddress = tx?.transaction?.message.accountKeys[1]?.pubkey.toBase58();
     const solanaAmount = (tx?.meta!.postBalances[1]! - tx?.meta!.preBalances[1]!) / LAMPORTS_PER_SOL;
 
     const usdcAmount = getTxBalance({ stableCoin: "usdc", tx: tx!, publicAddress: publicAddress! });
     const eurcAmount = getTxBalance({ stableCoin: "eurc", tx: tx!, publicAddress: publicAddress! });
+
+    if (!fromAddress || !toAddress) return null;
 
     // console.table({ "usdcAmount: ": usdcAmount, "eurcAmount: ": eurcAmount, "solanaAmount: ": solanaAmount });
 
@@ -25,22 +27,22 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
     //     amount = `${eurcAmount.toFixed(1)} EURC`;
     // }
 
-    const largestAmount = Math.max(solanaAmount, usdcAmount, eurcAmount);
+    const largestAmount = Math.max(solanaAmount, Math.abs(usdcAmount), Math.abs(eurcAmount));
 
     switch (largestAmount) {
         case solanaAmount:
-            amount = `${solanaAmount.toFixed(1)} SOL`;
+            amount = `${solanaAmount} SOL`;
             break;
-        case usdcAmount:
-            amount = `${usdcAmount.toFixed(1)} USDC`;
+        case Math.abs(usdcAmount):
+            amount = `${Math.abs(usdcAmount).toFixed(2)} USDC`;
             break;
-        case eurcAmount:
-            amount = `${eurcAmount.toFixed(1)} EURC`;
+        case Math.abs(eurcAmount):
+            amount = `${Math.abs(eurcAmount).toFixed(2)} EURC`;
             break;
     }
 
     return (
-        <div className="p-4 bg-neutral-900/80 rounded-md text-white flex justify-between w-full items-center overflow-hidden">
+        <div className="p-4 bg-neutral-900/80 h-32 rounded-md text-white flex justify-between w-full items-center overflow-hidden">
             <div className="flex flex-col max-w-[70%]">
                 <div>{new Date(tx?.blockTime! * 1000).toLocaleString()}</div>
 
