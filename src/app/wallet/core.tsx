@@ -69,7 +69,7 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
             }
             console.log("BALANCE: ", balance);
         }
-    }, [connection, publicAddress]);
+    }, [connection, publicAddress, setBalance]);
 
     const refresh = useCallback(async () => {
         await getBalance();
@@ -92,7 +92,7 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
 
     useEffect(() => {
         setBalance("...");
-    }, [magic]);
+    }, [magic, setBalance]);
 
     return (
         <section className="h-fit flex flex-col p-4 mb-4">

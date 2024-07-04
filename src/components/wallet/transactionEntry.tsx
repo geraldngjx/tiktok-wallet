@@ -13,18 +13,34 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
     const usdcAmount = getTxBalance({ stableCoin: "usdc", tx: tx!, publicAddress: publicAddress! });
     const eurcAmount = getTxBalance({ stableCoin: "eurc", tx: tx!, publicAddress: publicAddress! });
 
+    // console.table({ "usdcAmount: ": usdcAmount, "eurcAmount: ": eurcAmount, "solanaAmount: ": solanaAmount });
+
     let amount = "";
 
-    if (solanaAmount > 0) {
-        amount = `${solanaAmount.toFixed(1)} SOL`;
-    } else if (usdcAmount > 0) {
-        amount = `${usdcAmount.toFixed(1)} USDC`;
-    } else if (eurcAmount > 0) {
-        amount = `${eurcAmount.toFixed(1)} EURC`;
+    // if (solanaAmount > 0) {
+    //     amount = `${solanaAmount.toFixed(1)} SOL`;
+    // } else if (usdcAmount > 0) {
+    //     amount = `${usdcAmount.toFixed(1)} USDC`;
+    // } else if (eurcAmount > 0) {
+    //     amount = `${eurcAmount.toFixed(1)} EURC`;
+    // }
+
+    const largestAmount = Math.max(solanaAmount, usdcAmount, eurcAmount);
+
+    switch (largestAmount) {
+        case solanaAmount:
+            amount = `${solanaAmount.toFixed(1)} SOL`;
+            break;
+        case usdcAmount:
+            amount = `${usdcAmount.toFixed(1)} USDC`;
+            break;
+        case eurcAmount:
+            amount = `${eurcAmount.toFixed(1)} EURC`;
+            break;
     }
 
     return (
-        <div className="p-4 bg-neutral-500/20 rounded-md text-white flex justify-between w-full items-center overflow-hidden">
+        <div className="p-4 bg-neutral-900/80 rounded-md text-white flex justify-between w-full items-center overflow-hidden">
             <div className="flex flex-col max-w-[70%]">
                 <div>{new Date(tx?.blockTime! * 1000).toLocaleString()}</div>
 
