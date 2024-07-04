@@ -1,29 +1,32 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
-import { getNetworkName } from "@/lib/network";
-import { CircularProgress } from "@mui/material";
-import Image from "next/image";
-import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { Button } from "@/components/ui/button";
-import { CopyIcon } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 import { withAuthMagic } from "@/lib/hoc/withAuth";
+import { getNetworkName } from "@/lib/network";
+import { useMagicTokenStore } from "@/store/magicTokenStore";
+import { CopyIcon, Disc3Icon } from "lucide-react";
+import Image from "next/image";
 
 function Page() {
-    const [copied, setCopied] = useState("Copy");
+    const { toast } = useToast();
 
     const { publicAddress } = useMagicTokenStore();
 
     const copy = useCallback(() => {
-        if (publicAddress && copied === "Copy") {
-            setCopied("Copied!");
+        if (publicAddress) {
             navigator.clipboard.writeText(publicAddress);
-            setTimeout(() => {
-                setCopied("Copy");
-            }, 1000);
+            toast({
+                title: "Copied public address",
+                style: {
+                    top: "50px",
+                },
+                duration: 2000,
+            });
         }
-    }, [copied, publicAddress]);
+    }, [publicAddress, toast]);
 
     return (
         <div className="flex flex-col space-y-4">
@@ -42,15 +45,13 @@ function Page() {
                 <div className="flex flex-col w-full space-y-1">
                     <div className="flex items-center space-x-4">
                         <span className="font-semibold">Solana address</span>
-                        {copied === "Copied!" ? (
-                            copied
-                        ) : (
-                            <Button size="icon" className="size-4" onClick={copy}>
-                                <CopyIcon size={14} />
-                            </Button>
-                        )}
+                        <Button size="icon" className="size-fit bg-[#0f172a] hover:bg-[#0f172a]/90" onClick={copy}>
+                            <CopyIcon size={14} color="white" />
+                        </Button>
                     </div>
-                    <span className="w-full break-all">{publicAddress?.length == 0 ? <CircularProgress /> : publicAddress}</span>
+                    <span className="w-full break-all">
+                        {publicAddress?.length == 0 ? <Disc3Icon color="#ff0050" className="animate-spin mt-2 stroke-1" size={40} /> : publicAddress}
+                    </span>
                 </div>
             </div>
         </div>

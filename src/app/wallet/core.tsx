@@ -65,7 +65,7 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
             if (balance == 0) {
                 setBalance("0");
             } else {
-                setBalance((balance / LAMPORTS_PER_SOL).toString());
+                setBalance((balance / LAMPORTS_PER_SOL).toFixed(1));
             }
             console.log("BALANCE: ", balance);
         }
@@ -96,48 +96,36 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
 
     return (
         <section className="h-fit flex flex-col p-4 mb-4">
-            {/* <Ripple /> */}
-
             <Meteors />
 
             <div className="z-50">
-                {/* <div className="w-full flex justify-end space-x-3">
-                    <Button size="icon" className="rounded-full size-10" onClick={refresh}>
-                        <RefreshCwIcon size={20} className={isRefreshing ? "animate-spin" : "animate-none"} />
-                    </Button>
-
-                    <Button size="icon" className="rounded-full size-10 ">
-                        <BellIcon size={20} />
-                    </Button>
-                </div> */}
-
                 <div className="text-white w-full flex flex-col h-full justify-center items-center px-4 space-y-8">
                     <div className="flex flex-col space-y-2 justify-center items-center">
                         <h1>Your balance</h1>
 
-                        <span className="text-5xl font-semibold flex items-center">
+                        <span className="text-5xl font-semibold flex items-center text-center">
                             {isRefreshing ? <Disc3Icon className="animate-spin mr-2" size={40} /> : balance} SOL
                         </span>
                     </div>
 
                     <div className="flex items-center justify-center space-x-6 w-full">
                         <div className="flex flex-col space-y-1 justify-center items-center">
-                            <Button size="icon" className="rounded-full size-12">
-                                <ScanLineIcon size={22} />
+                            <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">
+                                <ScanLineIcon color="white" size={22} />
                             </Button>
                             <span className="text-sm">Scan</span>
                         </div>
 
                         <Link href="/wallet/transfer" className="flex flex-col space-y-1 justify-center items-center">
-                            <Button size="icon" className="rounded-full size-12">
-                                <MoveUpRightIcon size={22} />
+                            <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">
+                                <MoveUpRightIcon color="white" size={22} />
                             </Button>
                             <span className="text-sm">Send</span>
                         </Link>
 
                         <Link href="/wallet/topup" className="flex flex-col space-y-1 justify-center items-center">
-                            <Button size="icon" className="rounded-full size-12">
-                                <MoveDownLeftIcon size={22} />
+                            <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">
+                                <MoveDownLeftIcon color="white" size={22} />
                             </Button>
                             <span className="text-sm">Receive</span>
                         </Link>
