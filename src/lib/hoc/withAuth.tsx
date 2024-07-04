@@ -44,17 +44,15 @@ const withAuthMagic = <P extends object>(WrappedComponent: ComponentType<P>) => 
         const [isLoading, setIsLoading] = useState(true);
         const router = useRouter();
 
-        const { publicAddress } = useMagicTokenStore();
-
         useEffect(() => {
             const token = localStorage.getItem("token") ?? "";
 
-            if (token === "" || publicAddress === "") {
+            if (token === "") {
                 router.push("/wallet");
             } else {
                 setIsLoading(false);
             }
-        }, [publicAddress, router]);
+        }, [router]);
 
         if (isLoading) {
             return (

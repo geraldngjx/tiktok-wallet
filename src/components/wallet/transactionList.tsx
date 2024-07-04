@@ -34,6 +34,8 @@ export default function TransactionList({
         enabled: !!connection && !!publicAddress,
         placeholderData: keepPreviousData,
         refetchInterval: 20000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
     });
 
     const {
@@ -67,7 +69,7 @@ export default function TransactionList({
 
     return (
         <section className="flex flex-col w-full px-4 pt-12 relative h-full">
-            <Tabs defaultValue="transactionsHistory" className="overflow-y-hidden">
+            <Tabs defaultValue="transactionsHistory" className="overflow-y-auto">
                 <TabsList className="bg-gray-900 z-50 h-10 absolute left-4 right-4 top-2">
                     <TabsTrigger
                         className="w-full bg-transparent data-[state=active]:bg-gray-950 data-[state=active]:text-white"
@@ -85,13 +87,13 @@ export default function TransactionList({
                     cr={1}
                     className={cn("[mask-image:linear-gradient(to_bottom,white,transparent,transparent)] bg-transparent z-0")}
                 />
-                <TabsContent value="transactionsHistory" className="h-full w-full text-white overflow-y-auto">
+                <TabsContent value="transactionsHistory" className="w-full text-white">
                     {isRefreshing || isFetching ? (
                         <div className="w-full mt-[50%] flex justify-center items-center overflow-hidden">
                             <Disc3Icon className="animate-spin" size={32} />
                         </div>
                     ) : (
-                        <div className="flex flex-col space-y-1 w-full h-full mb-12">
+                        <div className="flex flex-col space-y-1 w-full h-full mb-12 overflow-y-auto">
                             {txs && txs.map((tx, index) => <TransactionEntry tx={tx} key={index} />)}
                         </div>
                     )}

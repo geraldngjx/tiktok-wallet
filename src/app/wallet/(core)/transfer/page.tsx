@@ -20,10 +20,12 @@ import { isEmpty } from "lodash";
 import { ChevronRightIcon, Disc3Icon } from "lucide-react";
 import Image from "next/image";
 import TransactionSuccess from "./success";
+import { useMagic } from "@/providers/MagicProvider";
 
 function Transfer() {
     const supabase = useContext(SupabaseBrowserContext);
 
+    const { magic } = useMagic();
     const [ringColor, setRingColor] = useState(["#2775CA", "#fff"]);
 
     const [searchResults, setSearchResults] = useState<
@@ -171,17 +173,23 @@ function Transfer() {
         }
     };
 
-    const { mutateAsync: sendTransaction, isSuccess, isPending } = useSendTransactionMutation({ setSignature });
+    const { mutateAsync: sendTransaction, isError, isSuccess, isPending } = useSendTransactionMutation({ setSignature });
 
     return (
         <div className="flex flex-col w-full h-full space-y-10 items-center p-4">
-            {isSuccess ? (
+            {isSuccess && !isError ? (
                 <TransactionSuccess signature={signature} toEmail={recipient.email} amount={amount} currency={currency} />
             ) : (
-                <div className={isPending ? "grayscale" : ""}>
+                <>
                     <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
-                            <Button variant="outline" role="combobox" aria-expanded={open} className="w-[80vw] justify-between" disabled={isPending}>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={open}
+                                className={`${isPending ? "grayscale" : ""} w-[80vw] justify-between`}
+                                disabled={isPending}
+                            >
                                 {recipient.toAddress !== ""
                                     ? searchResults.find((result) => result.publicAddress === recipient.toAddress)?.email
                                     : "Select recipient"}
@@ -303,11 +311,13 @@ function Transfer() {
                             )}
                         </div>
                     ) : (
-                        <span className="text-gray-500 line-clamp-1 w-full text-center absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-                            Send transaction by selecting a recipient
-                        </span>
+                        <>
+                            <span className="text-gray-500 line-clamp-1 w-full text-center absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
+                                Send transaction by selecting a recipient
+                            </span>
+                        </>
                     )}
-                </div>
+                </>
             )}
         </div>
     );
