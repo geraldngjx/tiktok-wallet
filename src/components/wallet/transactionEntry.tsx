@@ -6,14 +6,16 @@ import { MoveDownLeftIcon, MoveUpRightIcon } from "lucide-react";
 export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMeta & { signature: string }) | null }) {
     const { publicAddress } = useMagicTokenStore();
 
-    const fromAddress = tx?.transaction?.message.accountKeys[0].pubkey.toBase58();
-    const toAddress = tx?.transaction?.message.accountKeys[1].pubkey.toBase58();
+    const fromAddress = tx?.transaction?.message.accountKeys[0]?.pubkey.toBase58();
+    const toAddress = tx?.transaction?.message.accountKeys[1]?.pubkey.toBase58();
     const solanaAmount = (tx?.meta!.postBalances[1]! - tx?.meta!.preBalances[1]!) / LAMPORTS_PER_SOL;
 
     const usdcAmount = getTxBalance({ stableCoin: "usdc", tx: tx!, publicAddress: publicAddress! });
     const eurcAmount = getTxBalance({ stableCoin: "eurc", tx: tx!, publicAddress: publicAddress! });
 
     // console.table({ "usdcAmount: ": usdcAmount, "eurcAmount: ": eurcAmount, "solanaAmount: ": solanaAmount });
+
+    if (!fromAddress || !toAddress) return null;
 
     let amount = "";
 

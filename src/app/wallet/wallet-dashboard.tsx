@@ -38,4 +38,4 @@ function WalletDashboard() {
     );
 }
 
-export default withAuthMagic(WalletDashboard);
+export default WalletDashboard;
