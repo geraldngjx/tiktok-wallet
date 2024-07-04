@@ -6,6 +6,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { useSearchParams } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { NavigateNext } from "@mui/icons-material";
+import ShopBottomNavigation from "@/components/ui/shop/shop-bottom-navigation";
 
 const BOTTOM_NAV_HEIGHT = 56;
 const IMAGE_HEIGHT = `calc(70vh - ${BOTTOM_NAV_HEIGHT}px)`;
@@ -111,6 +112,7 @@ const ShopItemPage = () => {
         ))}
       </div> */}
       </div>
+      <ShopBottomNavigation />
     </Box>
   );
 };

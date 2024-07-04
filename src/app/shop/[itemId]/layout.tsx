@@ -8,7 +8,6 @@ export default function ShopItemLayout({ children }: { children: ReactNode }) {
     <div className="flex flex-col w-full h-screen">
       <ShopTopNavigation />
       {children}
-      <ShopBottomNavigation />
     </div>
   );
 }
