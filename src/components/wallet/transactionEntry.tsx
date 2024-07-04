@@ -42,7 +42,7 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
     }
 
     return (
-        <div className="p-4 bg-neutral-900/80 h-32 rounded-md text-white flex justify-between w-full items-center overflow-hidden">
+        <div className="p-4 bg-neutral-900/80 h-20 rounded-md text-white flex justify-between w-full items-center overflow-hidden">
             <div className="flex flex-col max-w-[70%]">
                 <div>{new Date(tx?.blockTime! * 1000).toLocaleString()}</div>
 

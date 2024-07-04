@@ -315,16 +315,6 @@ function Transfer() {
                             <span className="text-gray-500 line-clamp-1 w-full text-center absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
                                 Send transaction by selecting a recipient
                             </span>
-
-                            <Button
-                                onClick={async () => {
-                                    // await magic?.user.revealPrivateKey();
-                                    const res = await magic?.wallet.showAddress();
-                                    console.log(res);
-                                }}
-                            >
-                                Reveal
-                            </Button>
                         </>
                     )}
                 </>
