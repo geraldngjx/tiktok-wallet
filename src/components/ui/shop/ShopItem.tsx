@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardMedia, CardContent, Typography } from "@mui/material";
 import Link from "next/link";
+import StarIcon from "@mui/icons-material/Star";
 
 interface ShopItemProps {
   id: string;
@@ -8,31 +9,25 @@ interface ShopItemProps {
   price: string;
   name: string;
   rating: number;
-  deals: string;
-  description: string;
+  onClick: () => void;
 }
 
-const ShopItem = ({
+const ShopItemPanel = ({
   id,
   image,
   price,
   name,
   rating,
-  deals,
-  description,
+  onClick,
 }: ShopItemProps) => {
+  const displayValue = (value: any, fallback: any) => {
+    return value ? value : fallback;
+  };
   return (
     <Link
       href={{
         pathname: `/shop/${id}`,
-        query: {
-          image,
-          price,
-          name,
-          rating,
-          deals,
-          description,
-        },
+        query: { id },
       }}
       passHref
     >
@@ -43,14 +38,27 @@ const ShopItem = ({
           image={image}
           alt="shop item"
         />
-        <CardContent>
+        <CardContent className="flex flex-col gap-2">
           <Typography variant="body2" className="text-gray-600">
-            {description}
+            {name?.substring(0, 50) + "..."}
           </Typography>
+          <div>
+            <Typography variant="body1" className="text-red-700 font-bold">
+              S${price}
+            </Typography>
+            {/* Rating */}
+            {/* Padding bottom to create gap between rating and deals card */}
+            <div className="flex items-center">
+              <StarIcon style={{ color: "#FFD700", height: "15px" }} />
+              <div className="text-xs ml-1">
+                {displayValue(rating, "Rating not available")} / 5
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </Link>
   );
 };
 
-export default ShopItem;
+export default ShopItemPanel;

@@ -1,31 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "../button";
+import { Button } from "@/components/ui/button";
 import { ChatBubbleOutline, Storefront } from "@mui/icons-material";
 import {
   Drawer,
-  DrawerTrigger,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
   DrawerDescription,
   DrawerFooter,
   DrawerClose,
-} from "../drawer";
+} from "@/components/ui/drawer";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "../dialog";
+} from "@/components/ui/dialog";
+import OrdersForm from "@/components/ui/shop/OrderForm";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { cn } from "@/lib/utils";
-import { Label } from "../label";
-import { Input } from "../input";
-import Image from "next/image";
 
 const ShopBottomNavigation = () => {
   const [open, setOpen] = useState(false);
@@ -89,70 +84,6 @@ const ShopBottomNavigation = () => {
         </Drawer>
       )}
     </div>
-  );
-};
-
-const OrdersForm = ({ className }: React.ComponentProps<"form">) => {
-  const [quantity, setQuantity] = useState(1);
-  const price = 100; // Example price
-  const shipping = 1.5;
-  const totalPrice = price * quantity + shipping;
-
-  return (
-    <form className={cn("grid items-start gap-4", className)}>
-      <div className="flex items-center gap-4">
-        <Image
-          src="/path-to-image.jpg" // Replace with your image path
-          alt="Product Image"
-          width={80}
-          height={80}
-          className="rounded"
-        />
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="productName">Product Name</Label>
-          <Input
-            type="text"
-            id="productName"
-            defaultValue="Sample Product"
-            disabled
-          />
-        </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <Label htmlFor="quantity">Quantity</Label>
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={() => setQuantity(quantity - 1)}
-            disabled={quantity <= 1}
-          >
-            -
-          </Button>
-          <Input
-            type="number"
-            id="quantity"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            className="w-16 text-center"
-          />
-          <Button onClick={() => setQuantity(quantity + 1)}>+</Button>
-        </div>
-      </div>
-      <div className="flex items-center justify-between">
-        <Label>Subtotal</Label>
-        <span>${price * quantity}</span>
-      </div>
-      <div className="flex items-center justify-between">
-        <Label>Shipping</Label>
-        <span>${shipping}</span>
-      </div>
-      <div className="flex items-center justify-between font-bold">
-        <Label>Total</Label>
-        <span>${totalPrice.toFixed(2)}</span>
-      </div>
-      <Button type="submit" className="bg-red-500 text-white hover:bg-red-600">
-        Place Order
-      </Button>
-    </form>
   );
 };
 
