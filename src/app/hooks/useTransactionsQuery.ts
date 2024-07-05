@@ -1,8 +1,8 @@
 import { SolanaDevnetTokenAddress } from "@/constants/tokenAddress";
 import { SolanaContext } from "@/providers/SolanaProvider";
 import { ParsedTransactionWithMeta, PublicKey } from "@solana/web3.js";
+import { isEmpty, isNull, isUndefined, orderBy, uniqBy } from "lodash";
 import { useContext } from "react";
-import { isEmpty, isNull, isUndefined, orderBy, uniq, uniqBy } from "lodash";
 
 export const useTransactionsQuery = ({ publicAddress }: { publicAddress: string }) => {
     const { connection } = useContext(SolanaContext);
@@ -10,7 +10,6 @@ export const useTransactionsQuery = ({ publicAddress }: { publicAddress: string 
     return {
         queryKey: ["getTransactions", publicAddress],
         queryFn: async () => {
-            console.log("calling useTransactionsQuery on: ", publicAddress);
             const pubKey = new PublicKey(publicAddress);
 
             const stableCoinsOwnerAccounts = await Promise.all([
@@ -66,6 +65,36 @@ export const useTransactionsQuery = ({ publicAddress }: { publicAddress: string 
                 }
             }
             return [];
+        },
+    };
+};
+
+export const useTransactionQuery = ({ signature }: { signature: string }) => {
+    const { connection } = useContext(SolanaContext);
+
+    return {
+        queryKey: ["getTransaction", signature],
+        queryFn: async () => {
+            const tx = await connection?.getParsedTransaction(signature, {
+                maxSupportedTransactionVersion: 10,
+            });
+
+            return tx;
+        },
+    };
+};
+
+export const useTransactionStatusQuery = ({ signature }: { signature: string }) => {
+    const { connection } = useContext(SolanaContext);
+
+    return {
+        queryKey: ["getTransactionStatus", signature],
+        queryFn: async () => {
+            const status = await connection?.getSignatureStatus(signature, {
+                searchTransactionHistory: true,
+            });
+
+            return status;
         },
     };
 };
