@@ -10,6 +10,7 @@ import { getIconByCurrency } from "@/utils/currencyIcon";
 import { useQuery } from "@tanstack/react-query";
 import { Disc3Icon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 export default function Page({ params }: { params: { signature: string } }) {
@@ -104,7 +105,9 @@ export default function Page({ params }: { params: { signature: string } }) {
                             borderWidth={2}
                             borderRadius={100}
                         >
-                            <Button className="rounded-full z-50 w-full">View on Block Explorer</Button>
+                            <Link target="_blank" href={`https://solscan.io/tx/${params.signature}?cluster=devnet`}>
+                                <Button className="rounded-full z-50 w-full">View on Block Explorer</Button>
+                            </Link>
                         </ShineBorder>
                     </div>
                 </>
