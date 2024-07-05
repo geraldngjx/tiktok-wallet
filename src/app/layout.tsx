@@ -9,7 +9,7 @@ import "./globals.css";
 const APP_NAME = "TikTok Wallet";
 const APP_DEFAULT_TITLE = "My TikTok Wallet";
 const APP_TITLE_TEMPLATE = "%s - TikTok Wallet";
-const APP_DESCRIPTION = "Best PWA app in the world!";
+const APP_DESCRIPTION = "Your trusted and secure wallet application.";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -38,18 +38,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <head>
-          <meta
-            name="viewport"
-            content="width=device-width; initial-scale=1; viewport-fit=cover"
-          />
-          <meta name="mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta
-            name="apple-mobile-web-app-status-bar-style"
-            content="black-translucent"
-          ></meta>
-        </head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
       </head>
 
       <body
