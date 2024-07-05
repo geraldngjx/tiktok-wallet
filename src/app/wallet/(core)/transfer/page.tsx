@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { withAuthMagic } from "@/lib/hoc/withAuth";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
-import { CircularProgress, debounce } from "@mui/material";
+import { debounce } from "@mui/material";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
@@ -16,17 +16,14 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { getIconByCurrency } from "@/utils/currencyIcon";
 import { isEmpty } from "lodash";
 import { ChevronRightIcon, Disc3Icon } from "lucide-react";
-import Image from "next/image";
 import TransactionSuccess from "./success";
-import { useMagic } from "@/providers/MagicProvider";
-import { getIconByCurrency } from "@/utils/currencyIcon";
 
 function Transfer() {
     const supabase = useContext(SupabaseBrowserContext);
 
-    const { magic } = useMagic();
     const [ringColor, setRingColor] = useState(["#2775CA", "#fff"]);
 
     const [searchResults, setSearchResults] = useState<
@@ -47,6 +44,9 @@ function Transfer() {
     const [currency, setCurrency] = useState<"Solana" | "USDC" | "EURC">("USDC");
 
     const [amount, setAmount] = useState("");
+
+    const [memo, setMemo] = useState("");
+
     const [loading, setLoading] = useState(false);
 
     const [signature, setSignature] = useState("");
@@ -145,7 +145,7 @@ function Transfer() {
                                                         }}
                                                     >
                                                         <Avatar>
-                                                            <AvatarFallback>{result.email.substring(0, 2)}</AvatarFallback>
+                                                            <AvatarFallback className="bg-slate-600">{result.email.substring(0, 2)}</AvatarFallback>
                                                         </Avatar>
                                                         <span>{result.email}</span>
                                                         <CheckIcon
@@ -165,8 +165,8 @@ function Transfer() {
                     </Popover>
 
                     {!isEmpty(recipient.toAddress) ? (
-                        <div className="flex h-[80%] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
-                            <div className={`flex items-center w-full justify-between ${isPending && "grayscale"}`}>
+                        <div className="flex h-[80%] w-[80vw] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
+                            <div className={`flex items-center w-full space-x-1 justify-center ${isPending && "grayscale"}`}>
                                 <Input
                                     placeholder="0.00"
                                     type="number"
@@ -203,6 +203,12 @@ function Transfer() {
                                 </Select>
                             </div>
 
+                            <Input
+                                placeholder="Add a note"
+                                className="h-14 max-w-80 text-xl text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
+                                onChange={(e) => setMemo(e.target.value)}
+                            />
+
                             {recipient.toAddress && currency && (
                                 <ShineBorder
                                     className="text-center min-w-12 min-h-12 w-18 h-18 p-1"
@@ -211,18 +217,19 @@ function Transfer() {
                                     borderRadius={100}
                                 >
                                     <Button
-                                        className="size-16 rounded-full bg-background"
+                                        className="size-16 rounded-full bg-background disabled:bg-background"
                                         onClick={async () => {
                                             await sendTransaction({
                                                 currency,
                                                 toAddress: recipient.toAddress,
                                                 amount: parseFloat(amount),
+                                                memo,
                                             });
                                         }}
-                                        disabled={isPending}
+                                        disabled={isPending || amount === "" || parseFloat(amount) <= 0 || recipient.toAddress === ""}
                                     >
                                         {isPending ? (
-                                            <Disc3Icon className="animate-spin" color="white" size={24} />
+                                            <Disc3Icon className="animate-spin text-gray-400" size={24} />
                                         ) : (
                                             <ChevronRightIcon size={24} color="white" />
                                         )}

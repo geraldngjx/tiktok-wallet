@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { SolanaDevnetProgramAddress } from "@/constants/tokenAddress";
 
 export default function Page({ params }: { params: { signature: string } }) {
     const { publicAddress } = useMagicTokenStore();
@@ -27,6 +28,9 @@ export default function Page({ params }: { params: { signature: string } }) {
 
     const fromAddress = tx?.transaction?.message.accountKeys[0]?.pubkey.toBase58();
     const toAddress = tx?.transaction?.message.accountKeys[1]?.pubkey.toBase58();
+
+    // @ts-ignore
+    const memo = tx?.transaction.message.instructions.find((i) => i.programId.toBase58() === SolanaDevnetProgramAddress.MEMO)?.parsed;
 
     const { data: email, isPending: isPendingEmail } = useQuery({
         ...useTiktokWalletUserEmail({ publicAddress: publicAddress === fromAddress ? toAddress! : fromAddress! }),
@@ -45,8 +49,8 @@ export default function Page({ params }: { params: { signature: string } }) {
                 <Disc3Icon className="animate-spin w-10 h-10 text-white" />
             ) : (
                 <>
-                    <div className="flex flex-col h-full w-full items-center space-y-10">
-                        <div className="flex h-full flex-col justify-center items-center">
+                    <div className="flex flex-col h-full w-full items-center space-y-10 justify-start">
+                        <div className="flex h-full flex-col justify-center items-center max-h-36">
                             {currency !== "SOL" ? (
                                 getIconByCurrency(currency)
                             ) : (
@@ -133,10 +137,21 @@ export default function Page({ params }: { params: { signature: string } }) {
                                 <span className="text-gray-500">Network</span>
                                 <span className="text-white">{getNetworkName()}</span>
                             </div>
+
+                            {memo && (
+                                <>
+                                    <Separator className="bg-black" />
+
+                                    <div className="w-full flex flex-col items-start px-4">
+                                        <span className="text-gray-500">Note</span>
+                                        <span className="text-white">{memo}</span>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
 
-                    <div className="justify-end pb-8 flex h-full flex-col w-full">
+                    <div className="justify-end pb-8 flex h-fit flex-col w-full">
                         <ShineBorder
                             className="text-center min-w-10 min-h-10 w-full h-12 p-1"
                             color={["#A07CFE", "#FE8FB5", "#FFBE7B"]}
