@@ -10,7 +10,6 @@ export const useTransactionsQuery = ({ publicAddress }: { publicAddress: string 
     return {
         queryKey: ["getTransactions", publicAddress],
         queryFn: async () => {
-            console.log("calling useTransactionsQuery on: ", publicAddress);
             const pubKey = new PublicKey(publicAddress);
 
             const stableCoinsOwnerAccounts = await Promise.all([

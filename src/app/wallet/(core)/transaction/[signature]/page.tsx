@@ -94,7 +94,7 @@ export default function Page({ params }: { params: { signature: string } }) {
                             <div className="w-full flex items-center justify-between px-4 space-x-10">
                                 <span className="text-gray-500">{publicAddress === fromAddress ? "To" : "From"}</span>
 
-                                <div className="flex w-full justify-end h-full items-center space-x-2">
+                                <div className="flex w-full justify-end h-full items-center space-x-2 truncate">
                                     {email && (
                                         <TooltipProvider>
                                             <Tooltip>

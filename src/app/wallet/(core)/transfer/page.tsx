@@ -221,7 +221,11 @@ function Transfer() {
                                         }}
                                         disabled={isPending}
                                     >
-                                        {isPending ? <Disc3Icon className="animate-spin" size={24} /> : <ChevronRightIcon size={24} color="white" />}
+                                        {isPending ? (
+                                            <Disc3Icon className="animate-spin" color="white" size={24} />
+                                        ) : (
+                                            <ChevronRightIcon size={24} color="white" />
+                                        )}
                                     </Button>
                                 </ShineBorder>
                             )}
