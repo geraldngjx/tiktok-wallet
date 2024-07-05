@@ -204,7 +204,7 @@ function Transfer() {
                             </div>
 
                             <Input
-                                placeholder="Add a note"
+                                placeholder="Add a note (Optional)"
                                 className="h-14 max-w-80 text-xl text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
                                 onChange={(e) => setMemo(e.target.value)}
                             />
