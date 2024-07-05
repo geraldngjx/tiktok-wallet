@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { NavigateNext } from "@mui/icons-material";
 import { ShopItem, ShopItemDeal } from "@/utils/types/shop_types";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import ShopBottomNavigation from "@/components/ui/shop/shop-bottom-navigation";
 
 const BOTTOM_NAV_HEIGHT = 56;
@@ -23,8 +23,9 @@ const IMAGE_HEIGHT = `calc(70vh - ${BOTTOM_NAV_HEIGHT}px)`;
 
 const ShopItemPage = () => {
   const [selectedItem, setSelectedItem] = useState<ShopItem | null>(null);
-  const searchParams = useSearchParams();
-  const itemId = searchParams.get("id");
+  const pathname = usePathname();
+  // the resource after "shop" path
+  const itemId = pathname.split("/")[2];
   const supabase = useContext(SupabaseBrowserContext);
   const theme = useTheme(); // Get current theme
 

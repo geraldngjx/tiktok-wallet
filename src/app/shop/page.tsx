@@ -20,7 +20,7 @@ import { useContext, useEffect, useState } from "react";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
-import ShopItemPanel from "@/components/ui/shop/ShopItem";
+import ShopItemPanel from "@/components/ui/shop/ShopItemPanel";
 import { ShopContext } from "@/providers/ShopProvider";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { ShopItem } from "@/utils/types/shop_types";
