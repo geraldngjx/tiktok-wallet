@@ -30,8 +30,6 @@ function Page() {
     };
 
     useEffect(() => {
-        const tempVideoRef = videoRef.current;
-
         if (videoRef?.current && !scannerRef.current) {
             scannerRef.current = new QrScanner(videoRef?.current, onScanSuccess, {
                 onDecodeError: onScanFail,
@@ -50,8 +48,10 @@ function Page() {
         }
 
         return () => {
-            if (!tempVideoRef) {
+            if (!videoRef.current) {
+                setQrOn(false);
                 scannerRef?.current?.stop();
+                scannerRef?.current?.destroy();
             }
         };
     }, []);
@@ -89,18 +89,22 @@ function Page() {
     }, [router, scannedResult, toast]);
 
     return (
-        <div className="relative w-[430px] h-screen my-0 mx-auto sm:w-full">
-            <video ref={videoRef} className="h-full w-full object-cover" />
+        <div className="relative h-screen my-0 mx-auto w-full">
+            {qrOn && (
+                <>
+                    <video ref={videoRef} className="h-full w-full object-cover" />
 
-            <div ref={qrBoxRef} className="!w-full !left-0">
-                <Image
-                    src={qrFrame}
-                    alt="Qr Frame"
-                    width={256}
-                    height={256}
-                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 fill-none"
-                />
-            </div>
+                    <div ref={qrBoxRef} className="!w-full !left-0">
+                        <Image
+                            src={qrFrame}
+                            alt="Qr Frame"
+                            width={256}
+                            height={256}
+                            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 fill-none"
+                        />
+                    </div>
+                </>
+            )}
         </div>
     );
 }
