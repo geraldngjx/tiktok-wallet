@@ -98,15 +98,13 @@ function Transfer() {
 
     useEffect(() => {
         const getScanDetails = async () => {
-            console.log(searchParams.getAll("email"));
-
             if (searchParams.get("email")) {
                 const { data: users } = await supabase.rpc("search_users", { prefix: searchParams.get("email") });
 
-                console.log(users);
+                setInput(searchParams.get("email")!);
 
                 setRecipient({
-                    email: searchParams.get("recipient")!,
+                    email: searchParams.get("email")!,
                     toAddress: users[0].publicAddress,
                 });
             }
@@ -117,7 +115,10 @@ function Transfer() {
 
             if (searchParams.get("currencies")) {
                 const tempCurrency = searchParams.get("currencies")?.split(",");
+                console.log(tempCurrency);
+
                 setAvailableCurrencies(tempCurrency as ["Solana", "USDC", "EURC"]);
+                setCurrency(tempCurrency?.includes("USDC") ? "USDC" : (tempCurrency![0] as "Solana" | "USDC" | "EURC"));
             }
         };
 
@@ -139,7 +140,7 @@ function Transfer() {
                                 role="combobox"
                                 aria-expanded={open}
                                 className={`${isPending ? "grayscale" : ""} w-[80vw] justify-between`}
-                                disabled={isPending}
+                                disabled={isPending || searchParams.get("email") !== undefined}
                             >
                                 {recipient.toAddress !== ""
                                     ? searchResults.find((result) => result.publicAddress === recipient.toAddress)?.email
@@ -149,7 +150,12 @@ function Transfer() {
                         </PopoverTrigger>
                         <PopoverContent className="p-0 w-[80vw] border-0">
                             <Command>
-                                <CommandInput placeholder="Search user..." value={input} onValueChange={setInput} />
+                                <CommandInput
+                                    placeholder="Search user..."
+                                    value={input}
+                                    onValueChange={setInput}
+                                    disabled={isPending || searchParams.get("email") !== undefined}
+                                />
 
                                 <CommandList className="drop-shadow-xl">
                                     {loading ? (
@@ -205,6 +211,8 @@ function Transfer() {
                                     placeholder="0.00"
                                     type="number"
                                     className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
+                                    disabled={isPending || searchParams.get("amount") !== undefined}
+                                    value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
                                 />
 

@@ -54,11 +54,20 @@ function Page() {
     }, []);
 
     useEffect(() => {
-        const decoded = scannedResult?.split("&")[0].split("=");
-        if (!decoded) return;
+        if (!scannedResult) {
+            return;
+        }
 
-        if (decoded[0] === "byteSecure" && decoded[1] === "true") {
-            router.push(`/wallet/transfer?${scannedResult!}`);
+        const received = new URLSearchParams(decodeURIComponent(scannedResult!));
+
+        if (received.has("byteSecure") && received.get("byteSecure") === "true") {
+            const email = received.get("email");
+
+            if (email === "undefined" || !email) {
+                return;
+            }
+
+            router.push(`/wallet/transfer?${received.toString()}`);
         }
     }, [router, scannedResult]);
 
