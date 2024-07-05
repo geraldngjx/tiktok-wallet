@@ -33,7 +33,6 @@ const ShopItemPanel = ({
     <Link
       href={{
         pathname: `/shop/${id}`,
-        query: { id },
       }}
       passHref
     >
