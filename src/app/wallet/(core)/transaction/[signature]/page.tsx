@@ -23,7 +23,7 @@ export default function Page({ params }: { params: { signature: string } }) {
 
     const searchParams = useSearchParams();
     const amount = searchParams.get("amount")!;
-    const currency = amount.split(" ")[1] as CURRENCY;
+    const currency = amount.split(" ")[1] as CURRENCY | "SOL";
 
     const { data: tx, isPending: isPendingTx } = useQuery({ ...useTransactionQuery({ signature: params.signature }) });
 
@@ -50,12 +50,12 @@ export default function Page({ params }: { params: { signature: string } }) {
                 <>
                     <div className="flex flex-col h-full w-full items-center space-y-10 justify-start">
                         <div className="flex h-full flex-col justify-center items-center max-h-36">
-                            {currency !== CURRENCY.SOLANA ? (
-                                getIconByCurrency(currency)
-                            ) : (
-                                <div className="bg-gray-900 scale-90 h-full aspect-square flex rounded-full items-center justify-center">
+                            {currency === "SOL" ? (
+                                <div className="bg-gray-900 scale-[80%] h-full aspect-square flex rounded-full items-center justify-center">
                                     <Image src="/solana.svg" width={60} height={60} alt="Solana" />
                                 </div>
+                            ) : (
+                                getIconByCurrency(currency)
                             )}
 
                             <div
