@@ -17,9 +17,9 @@ function Page() {
     const [open, setOpen] = useState(false);
     const { email } = useMagicTokenStore();
     const [amount, setAmount] = useState("");
-    const [acceptedCurrencies, setAcceptedCurrencies] = useState(["SOL", "EURC", "USDC"]);
+    const [acceptedCurrencies, setAcceptedCurrencies] = useState(["Solana", "EURC", "USDC"]);
 
-    const [qrCodeValue, setQrCodeValue] = useState(`email=${email}`);
+    const [qrCodeValue, setQrCodeValue] = useState(`byteSecure=true&email=${email}`);
 
     return (
         <div className="flex flex-col w-full h-full space-y-32 justify-center items-center p-4" vaul-drawer-wrapper="">
@@ -37,7 +37,7 @@ function Page() {
                 onOpenChange={(open) => {
                     if (!open) {
                         setAmount("");
-                        setAcceptedCurrencies(["SOL", "EURC", "USDC"]);
+                        setAcceptedCurrencies(["Solana", "EURC", "USDC"]);
                     }
                     setOpen(open);
                 }}
@@ -56,11 +56,11 @@ function Page() {
                             <ToggleGroup
                                 type="multiple"
                                 className="space-x-2"
-                                defaultValue={["SOL", "EURC", "USDC"]}
+                                defaultValue={["Solana", "EURC", "USDC"]}
                                 value={acceptedCurrencies}
                                 onValueChange={(values) => setAcceptedCurrencies(values)}
                             >
-                                <ToggleGroupItem className="rounded-full pl-1 pr-2" value="SOL">
+                                <ToggleGroupItem className="rounded-full pl-1 pr-2" value="Solana">
                                     {getIconByCurrency("Solana")}Solana
                                 </ToggleGroupItem>
                                 <ToggleGroupItem className="rounded-full pl-0 pr-2" value="USDC">
@@ -84,7 +84,7 @@ function Page() {
                             disabled={amount === "" || isEmpty(acceptedCurrencies)}
                             onClick={() => {
                                 setOpen(false);
-                                setQrCodeValue(`email=${email}&amount=${amount}&currencies=${acceptedCurrencies.join(",")}`);
+                                setQrCodeValue(`byteSecure=true&email=${email}&amount=${amount}&currencies=${acceptedCurrencies.join(",")}`);
                             }}
                         >
                             Regenerate QR code

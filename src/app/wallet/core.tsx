@@ -101,12 +101,12 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
                     </div>
 
                     <div className="flex items-center justify-center space-x-6 w-full">
-                        <div className="flex flex-col space-y-1 justify-center items-center">
+                        <Link href="/wallet/scan" className="flex flex-col space-y-1 justify-center items-center">
                             <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">
                                 <ScanLineIcon color="white" size={22} />
                             </Button>
                             <span className="text-sm">Scan</span>
-                        </div>
+                        </Link>
 
                         <Link href="/wallet/transfer" className="flex flex-col space-y-1 justify-center items-center">
                             <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">

@@ -20,8 +20,11 @@ import { getIconByCurrency } from "@/utils/currencyIcon";
 import { isEmpty } from "lodash";
 import { ChevronRightIcon, Disc3Icon } from "lucide-react";
 import TransactionSuccess from "./success";
+import { useSearchParams } from "next/navigation";
 
 function Transfer() {
+    const searchParams = useSearchParams();
+
     const supabase = useContext(SupabaseBrowserContext);
 
     const [ringColor, setRingColor] = useState(["#2775CA", "#fff"]);
@@ -41,7 +44,10 @@ function Transfer() {
         email: "",
         toAddress: "",
     });
-    const [currency, setCurrency] = useState<"Solana" | "USDC" | "EURC">("USDC");
+
+    const [availableCurrencies, setAvailableCurrencies] = useState<["Solana", "USDC", "EURC"]>(["Solana", "USDC", "EURC"]);
+
+    const [currency, setCurrency] = useState<"Solana" | "USDC" | "EURC">(availableCurrencies.includes("USDC") ? "USDC" : availableCurrencies[0]);
 
     const [amount, setAmount] = useState("");
 
@@ -89,6 +95,34 @@ function Transfer() {
                 break;
         }
     }, [currency]);
+
+    useEffect(() => {
+        const getScanDetails = async () => {
+            console.log(searchParams.getAll("email"));
+
+            if (searchParams.get("email")) {
+                const { data: users } = await supabase.rpc("search_users", { prefix: searchParams.get("email") });
+
+                console.log(users);
+
+                setRecipient({
+                    email: searchParams.get("recipient")!,
+                    toAddress: users[0].publicAddress,
+                });
+            }
+
+            if (searchParams.get("amount")) {
+                setAmount(searchParams.get("amount")!);
+            }
+
+            if (searchParams.get("currencies")) {
+                const tempCurrency = searchParams.get("currencies")?.split(",");
+                setAvailableCurrencies(tempCurrency as ["Solana", "USDC", "EURC"]);
+            }
+        };
+
+        getScanDetails();
+    }, [searchParams, supabase]);
 
     const { mutateAsync: sendTransaction, isError, isSuccess, isPending } = useSendTransactionMutation({ setSignature });
 
@@ -190,7 +224,7 @@ function Transfer() {
                                     </ShineBorder>
 
                                     <SelectContent className="min-w-[80px] w-[80px]" side="bottom">
-                                        {["Solana", "USDC", "EURC"].map((currency) => (
+                                        {availableCurrencies.map((currency) => (
                                             <SelectItem
                                                 key={currency}
                                                 value={currency}
