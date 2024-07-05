@@ -69,7 +69,7 @@ export default function TransactionList({
 
     return (
         <section className="flex flex-col w-full px-4 pt-12 relative h-full">
-            <Tabs defaultValue="transactionsHistory" className="overflow-y-auto">
+            <Tabs defaultValue="transactionsHistory" className="h-full overflow-y-auto">
                 <TabsList className="bg-gray-900 z-50 h-10 absolute left-4 right-4 top-2">
                     <TabsTrigger
                         className="w-full bg-transparent data-[state=active]:bg-gray-950 data-[state=active]:text-white"
@@ -87,17 +87,17 @@ export default function TransactionList({
                     cr={1}
                     className={cn("[mask-image:linear-gradient(to_bottom,white,transparent,transparent)] bg-transparent z-0")}
                 />
-                <TabsContent value="transactionsHistory" className="w-full text-white">
+                <TabsContent value="transactionsHistory" className="w-full overflow-hidden text-white">
                     {isRefreshing || isFetching ? (
                         <div className="w-full mt-[50%] flex justify-center items-center overflow-hidden">
                             <Disc3Icon className="animate-spin" size={32} />
                         </div>
                     ) : (
-                        // <div className="flex flex-col space-y-1 w-full h-full overflow-y-auto last:mb-[700px]">
-                        <AnimatedList delay={100} className="gap-0 flex flex-col space-y-1 w-full h-full last:mb-[700px] overflow-y-auto">
+                        <div className="flex flex-col space-y-1 w-full h-full overflow-y-auto last:mb-[500px]">
+                            {/* <AnimatedList delay={100} className="gap-0 flex flex-col space-y-1 w-full h-full last:mb-[700px] overflow-y-auto"> */}
                             {txs && txs.map((tx, index) => <TransactionEntry tx={tx} key={index} />)}
-                        </AnimatedList>
-                        // </div>
+                            {/* </AnimatedList> */}
+                        </div>
                     )}
                 </TabsContent>
 

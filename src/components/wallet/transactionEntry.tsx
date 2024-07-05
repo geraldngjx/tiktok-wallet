@@ -6,6 +6,7 @@ import { LAMPORTS_PER_SOL, ParsedTransactionWithMeta } from "@solana/web3.js";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
+import { MoveDownLeftIcon, MoveUpRightIcon } from "lucide-react";
 
 export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMeta & { signature: string }) | null }) {
     const { publicAddress } = useMagicTokenStore();
@@ -38,7 +39,7 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
 
     switch (largestAmount) {
         case solanaAmount:
-            amount = `${solanaAmount} SOL`;
+            amount = `${solanaAmount.toFixed(2)} SOL`;
             break;
         case Math.abs(usdcAmount):
             amount = `${Math.abs(usdcAmount).toFixed(2)} USDC`;
@@ -82,8 +83,29 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
                 )}
             </div>
 
-            <div className={`flex w-full font-semibold justify-end ${publicAddress === fromAddress ? "text-red-400" : "text-green-400"}`}>
-                {publicAddress === fromAddress ? <span>- {amount}</span> : <span>+ {amount}</span>}
+            <div
+                className={`flex w-full font-semibold line-clamp-2 justify-end ${publicAddress === fromAddress ? "text-red-400" : "text-green-400"}`}
+            >
+                {publicAddress === fromAddress ? (
+                    <div className="flex text-center items-center justify-center space-x-1">
+                        {/* <MinusIcon size={20} /> */}
+                        <MoveUpRightIcon size={20} />
+                        <div className="flex flex-col text-center items-center justify-center leading-5">
+                            <span>{amount.split(" ")[0]}</span>
+                            <span>{amount.split(" ")[1]}</span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex text-center items-center justify-center space-x-1">
+                        {/* <PlusIcon size={20} /> */}
+                        <MoveDownLeftIcon size={20} />
+
+                        <div className="flex flex-col text-center items-center justify-center leading-5">
+                            <span>{amount.split(" ")[0]}</span>
+                            <span>{amount.split(" ")[1]}</span>
+                        </div>
+                    </div>
+                )}
             </div>
         </Link>
     );
