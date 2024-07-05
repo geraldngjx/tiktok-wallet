@@ -89,7 +89,7 @@ function Page() {
     }, [router, scannedResult, toast]);
 
     return (
-        <div className="relative w-[430px] h-screen my-0 mx-auto sm:w-full">
+        <div className="relative h-screen my-0 mx-auto w-full">
             <video ref={videoRef} className="h-full w-full object-cover" />
 
             <div ref={qrBoxRef} className="!w-full !left-0">
