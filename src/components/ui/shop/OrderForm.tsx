@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PaymentMethods } from "@/utils/enums/wallet_enums";
 import { getTotalAmountInCurrencyFromSGD, getTotalPrice } from "@/utils/wallet";
+import OrderFormSubmitButton from "@/components/ui/shop/OrderFormSubmitButton";
 
 interface OrdersFormProps {
   className?: string;
@@ -45,20 +46,12 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   }, []);
 
-  const handlePaymentMethodChange = (value: PaymentMethods) => {
+  const handlePaymentMethodChange = useCallback((value: PaymentMethods) => {
     setPaymentMethod(value);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission logic here
-  };
+  }, []);
 
   return (
-    <form
-      className={cn("grid items-start gap-4", className)}
-      onSubmit={handleSubmit}
-    >
+    <div className={cn("grid items-start gap-4", className)}>
       <div className="flex items-center gap-4">
         <Image
           src={image}
@@ -99,7 +92,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
         <span>S${SHIPPING_COST}</span>
       </div>
       <div className="flex items-center justify-between font-bold">
-        <Label>Total (USD)</Label>
+        <Label>Total (SGD)</Label>
         <span>S${totalPriceInSGD.toFixed(2)}</span>
       </div>
 
@@ -178,22 +171,13 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
             />
           </div>
         </RadioGroup>
-        <div className="mt-2">
-          <Typography variant="body1" className="font-bold">
-            Total ({paymentMethod})
-          </Typography>
-          <span>
-            {paymentMethod === PaymentMethods.SOL
-              ? `${totalPriceInPaymentMethodCurrency.toFixed(
-                  4
-                )} ${paymentMethod}`
-              : `${totalPriceInPaymentMethodCurrency.toFixed(
-                  2
-                )} ${paymentMethod}`}
-          </span>
-        </div>
+        <OrderFormSubmitButton
+          totalQuantity={quantity}
+          totalPrice={totalPriceInPaymentMethodCurrency}
+          paymentMethod={paymentMethod}
+        />
       </div>
-    </form>
+    </div>
   );
 };
 

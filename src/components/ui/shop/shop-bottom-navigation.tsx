@@ -23,6 +23,8 @@ import OrdersForm from "@/components/ui/shop/OrderForm";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { ShopItem } from "@/utils/types/shop_types";
+import { Typography } from "@mui/material";
+import { PaymentMethods } from "@/utils/enums/wallet_enums";
 
 interface ShopBottomNavigationProps {
   selectedItem: ShopItem | null;
@@ -32,6 +34,13 @@ const ShopBottomNavigation: React.FC<ShopBottomNavigationProps> = ({
   selectedItem,
 }) => {
   const [open, setOpen] = useState(false);
+  const [quantitySelected, setQuantitySelected] = useState<number>(1);
+  const [totalPrice, setTotalPrice] = useState<number | undefined>(
+    selectedItem?.price
+  );
+  const [selectedCurrency, setSelectedCurrency] = useState<PaymentMethods>(
+    PaymentMethods.USDC
+  ); // Default to USDC
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const theme = useTheme();
 
@@ -39,7 +48,7 @@ const ShopBottomNavigation: React.FC<ShopBottomNavigationProps> = ({
 
   return (
     <div>
-      {!open ? (
+      {!open && (
         <div
           className="fixed bottom-0 left-0 w-full h-14 p-2 shadow-lg z-[999] flex items-center border-t border-gray-300"
           style={{
@@ -90,27 +99,6 @@ const ShopBottomNavigation: React.FC<ShopBottomNavigationProps> = ({
             </Button>
           </div>
         </div>
-      ) : (
-        <div
-          className="fixed bottom-0 left-0 w-full h-14 p-2 shadow-lg z-[999] flex items-center border-t border-gray-300"
-          style={{
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? theme.palette.background.default
-                : "white",
-            color:
-              theme.palette.mode === "dark"
-                ? theme.palette.text.primary
-                : "black",
-          }}
-        >
-          <Button
-            type="submit"
-            className="w-full bg-red-500 text-white hover:bg-red-600"
-          >
-            Place Order
-          </Button>
-        </div>
       )}
 
       {/* Dialog for Desktop */}
@@ -159,19 +147,7 @@ const ShopBottomNavigation: React.FC<ShopBottomNavigationProps> = ({
               </DrawerDescription>
             </DrawerHeader>
             <OrdersForm className="px-4" selectedItem={selectedItem} />
-            <DrawerFooter className="pt-2">
-              {/* <DrawerClose asChild>
-                <Button
-                  variant="outline"
-                  style={{
-                    borderColor: theme.palette.text.primary,
-                    color: theme.palette.text.primary,
-                  }}
-                >
-                  Cancel
-                </Button>
-              </DrawerClose> */}
-            </DrawerFooter>
+            <DrawerFooter className="pt-8"></DrawerFooter>
           </DrawerContent>
         </Drawer>
       )}
