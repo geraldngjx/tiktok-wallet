@@ -7,12 +7,16 @@ import qrFrame from "./qr-frame.svg";
 import Image from "next/image";
 import "./QrStyles.css";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import dayjs from "dayjs";
 
 function Page() {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const scannerRef = useRef<QrScanner>();
     const qrBoxRef = useRef<HTMLDivElement>(null);
     const [qrOn, setQrOn] = useState<boolean>(true);
+
+    const { toast } = useToast();
 
     const [scannedResult, setScannedResult] = useState<string | undefined>("");
 
@@ -60,16 +64,30 @@ function Page() {
 
         const received = new URLSearchParams(decodeURIComponent(scannedResult!));
 
-        if (received.has("byteSecure") && received.get("byteSecure") === "true") {
-            const email = received.get("email");
+        if (received.has("byteSecure") && received.get("byteSecure") === "true" && received.has("email") && received.get("email") !== "undefined") {
+            const time = received.get("time");
 
-            if (email === "undefined" || !email) {
+            if (dayjs().diff(dayjs(parseInt(time!)), "minute") > 10) {
+                toast({
+                    title: "QR code has expired",
+                    style: {
+                        top: "50px",
+                    },
+                });
+
                 return;
             }
 
             router.push(`/wallet/transfer?${received.toString()}`);
+        } else {
+            toast({
+                title: "Invalid Tiktok Wallet Payment QR code",
+                style: {
+                    top: "50px",
+                },
+            });
         }
-    }, [router, scannedResult]);
+    }, [router, scannedResult, toast]);
 
     return (
         <div className="qr-reader">

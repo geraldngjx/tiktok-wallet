@@ -16,6 +16,7 @@ import { isEmpty } from "lodash";
 import { useQuery } from "@tanstack/react-query";
 import useMagicUserQuery from "@/app/hooks/useMagicUserQuery";
 import { Disc3Icon } from "lucide-react";
+import dayjs from "dayjs";
 
 function Page() {
     const [open, setOpen] = useState(false);
@@ -25,6 +26,8 @@ function Page() {
         staleTime: 0,
     });
 
+    const [time, setTime] = useState(dayjs());
+
     const [amount, setAmount] = useState("");
     const [acceptedCurrencies, setAcceptedCurrencies] = useState(["Solana", "EURC", "USDC"]);
 
@@ -32,7 +35,9 @@ function Page() {
 
     useEffect(() => {
         if (status === "success" && magicUser) {
-            setQrCodeValue(encodeURIComponent(`byteSecure=true&email=${magicUser.email}`.replaceAll("+", "%2B")));
+            setQrCodeValue(encodeURIComponent(`byteSecure=true&email=${magicUser.email}&time=${new Date().getTime()}`.replaceAll("+", "%2B")));
+
+            setTime(dayjs());
         }
     }, [magicUser, status]);
 
@@ -50,6 +55,10 @@ function Page() {
                     >
                         <QRCode style={{ height: "auto", maxWidth: "100%", width: "100%" }} value={qrCodeValue} viewBox={`0 0 256 256`} />
                     </ShineBorder>
+
+                    <p className="text-center text-slate-700">
+                        This QR code is valid until {time.add(10, "minute").format("DD MMM YYYY, H:mm:ss A")}
+                    </p>
 
                     <Drawer
                         open={open}
@@ -103,11 +112,12 @@ function Page() {
                                     disabled={amount === "" || isEmpty(acceptedCurrencies)}
                                     onClick={() => {
                                         setOpen(false);
+                                        setTime(dayjs());
                                         setQrCodeValue(
                                             encodeURIComponent(
                                                 `byteSecure=true&email=${magicUser?.email}&amount=${amount}&currencies=${acceptedCurrencies.join(
                                                     ","
-                                                )}`.replaceAll("+", "%2B")
+                                                )}&time=${new Date().getTime()}`.replaceAll("+", "%2B")
                                             )
                                         );
                                     }}
