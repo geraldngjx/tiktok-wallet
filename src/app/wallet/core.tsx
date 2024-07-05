@@ -14,7 +14,7 @@ import { useSolanaTokenBalanceQuery } from "../hooks/useTokenBalanceQuery";
 import More from "./more";
 
 export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: boolean; setIsRefreshing: Dispatch<SetStateAction<boolean>> }) {
-    const { publicAddress, setPublicAddress } = useMagicTokenStore();
+    const { publicAddress, setPublicAddress, setEmail } = useMagicTokenStore();
 
     const { magic, connection } = useMagic();
 
@@ -46,9 +46,9 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
                     if (metadata) {
                         localStorage.setItem("user", metadata?.publicAddress!);
                         setPublicAddress(metadata?.publicAddress!);
-                        setPublicAddress(metadata?.publicAddress!);
 
                         if (metadata.email) {
+                            setEmail(metadata.email);
                             await saveToSupabase({ email: metadata.email, publicAddress: metadata.publicAddress! });
                         }
                     }
@@ -58,7 +58,7 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
             }
         };
         setTimeout(() => checkLoginandGetBalance(), 5000);
-    }, [magic?.user, saveToSupabase, setPublicAddress]);
+    }, [magic?.user, saveToSupabase, setEmail, setPublicAddress]);
 
     const { solanaBalance, setSolanaBalance } = useAccountBalanceStore();
     const { data, isFetching, refetch } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }) });
@@ -101,12 +101,12 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
                     </div>
 
                     <div className="flex items-center justify-center space-x-6 w-full">
-                        <div className="flex flex-col space-y-1 justify-center items-center">
+                        <Link href="/wallet/scan" className="flex flex-col space-y-1 justify-center items-center">
                             <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">
                                 <ScanLineIcon color="white" size={22} />
                             </Button>
                             <span className="text-sm">Scan</span>
-                        </div>
+                        </Link>
 
                         <Link href="/wallet/transfer" className="flex flex-col space-y-1 justify-center items-center">
                             <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">
@@ -115,7 +115,7 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
                             <span className="text-sm">Send</span>
                         </Link>
 
-                        <Link href="/wallet/topup" className="flex flex-col space-y-1 justify-center items-center">
+                        <Link href="/wallet/receive" className="flex flex-col space-y-1 justify-center items-center">
                             <Button size="icon" className="rounded-full size-12 bg-[#0f172a] hover:bg-[#0f172a]/90">
                                 <MoveDownLeftIcon color="white" size={22} />
                             </Button>
