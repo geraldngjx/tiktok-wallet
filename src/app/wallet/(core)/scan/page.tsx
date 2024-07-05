@@ -3,9 +3,8 @@
 import { withAuthMagic } from "@/lib/hoc/withAuth";
 import QrScanner from "qr-scanner";
 import { useEffect, useRef, useState } from "react";
-import qrFrame from "./qr-frame.svg";
+import qrFrame from "../../../../../public/qr-frame.svg";
 import Image from "next/image";
-import "./QrStyles.css";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import dayjs from "dayjs";
@@ -90,11 +89,17 @@ function Page() {
     }, [router, scannedResult, toast]);
 
     return (
-        <div className="qr-reader">
-            <video ref={videoRef}></video>
+        <div className="relative w-[430px] h-screen my-0 mx-auto sm:w-full">
+            <video ref={videoRef} className="h-full w-full object-cover" />
 
-            <div ref={qrBoxRef} className="qr-box">
-                <Image src={qrFrame} alt="Qr Frame" width={256} height={256} className="qr-frame" />
+            <div ref={qrBoxRef} className="!w-full !left-0">
+                <Image
+                    src={qrFrame}
+                    alt="Qr Frame"
+                    width={256}
+                    height={256}
+                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 fill-none"
+                />
             </div>
         </div>
     );
