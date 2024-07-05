@@ -85,7 +85,6 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
                 switch (currency) {
                     case "Solana":
                         const lamportsAmount = Number(amount) * LAMPORTS_PER_SOL;
-                        console.log("amount: " + lamportsAmount);
                         const transfer = SystemProgram.transfer({
                             fromPubkey: fromPublicKey,
                             toPubkey: toPublicKey,
@@ -95,7 +94,6 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
 
                         break;
                     case "USDC":
-                        console.log("send USDC");
                         try {
                             let usdcSourceAccount = await getOrCreateAssociatedTokenAccount(
                                 connection!,
@@ -103,8 +101,6 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
                                 new PublicKey(SolanaDevnetTokenAddress.USDC),
                                 fromPublicKey
                             );
-
-                            console.log("usdcSourceAccount: " + usdcSourceAccount.address.toBase58());
 
                             let usdcDestinationAccount = await getOrCreateAssociatedTokenAccount(
                                 connection!,

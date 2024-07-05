@@ -5,6 +5,7 @@ import { getTxBalance } from "@/utils/getTxBalance";
 import { LAMPORTS_PER_SOL, ParsedTransactionWithMeta } from "@solana/web3.js";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { Separator } from "../ui/separator";
 
 export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMeta & { signature: string }) | null }) {
     const { publicAddress } = useMagicTokenStore();

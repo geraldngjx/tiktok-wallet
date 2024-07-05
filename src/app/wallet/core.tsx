@@ -29,7 +29,6 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
                     return;
                 } else {
                     const res = await supabase.from("users").insert([{ email, publicAddress }]).select();
-                    console.log("SUPABASE: ", res);
                 }
             } catch (e) {
                 console.log("error in saving to supabase: " + e);

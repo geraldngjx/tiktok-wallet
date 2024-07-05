@@ -75,7 +75,6 @@ export const useTransactionQuery = ({ signature }: { signature: string }) => {
     return {
         queryKey: ["getTransaction", signature],
         queryFn: async () => {
-            console.log("calling useTransactionQuery on: ", signature);
             const tx = await connection?.getParsedTransaction(signature, {
                 maxSupportedTransactionVersion: 10,
             });
@@ -91,7 +90,6 @@ export const useTransactionStatusQuery = ({ signature }: { signature: string }) 
     return {
         queryKey: ["getTransactionStatus", signature],
         queryFn: async () => {
-            console.log("calling useTransactionQuery on: ", signature);
             const status = await connection?.getSignatureStatus(signature, {
                 searchTransactionHistory: true,
             });

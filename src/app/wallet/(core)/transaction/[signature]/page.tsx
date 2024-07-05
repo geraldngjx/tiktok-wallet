@@ -36,8 +36,6 @@ export default function Page({ params }: { params: { signature: string } }) {
         ...useTiktokWalletUserEmail({ publicAddress: publicAddress === fromAddress ? toAddress! : fromAddress! }),
     });
 
-    console.log(tx);
-
     const { data: statusData, isPending: isPendingStatus } = useQuery({ ...useTransactionStatusQuery({ signature: params.signature }) });
     const { confirmationStatus: status } = statusData?.value || {};
 
