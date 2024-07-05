@@ -23,13 +23,12 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
     const saveToSupabase = useCallback(
         async ({ email, publicAddress }: { email: string; publicAddress: string }) => {
             try {
-                const { data: user } = await supabase.from("user").select("*").eq("email", email).single();
+                const { data: user } = await supabase.from("users").select("*").eq("email", email).single();
                 if (user) {
                     // user already exists
                     return;
                 } else {
-                    const res = await supabase.from("user").insert([{ email, publicAddress }]).select();
-                    console.log("SUPABASE: ", res);
+                    const res = await supabase.from("users").insert([{ email, publicAddress }]).select();
                 }
             } catch (e) {
                 console.log("error in saving to supabase: " + e);

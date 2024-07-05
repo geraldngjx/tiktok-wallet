@@ -11,11 +11,12 @@ import {
     sendAndConfirmTransaction,
     SystemProgram,
     Transaction,
+    TransactionInstruction,
 } from "@solana/web3.js";
 import { useMutation } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useContext } from "react";
 import spl, { getOrCreateAssociatedTokenAccount, createTransferInstruction } from "@solana/spl-token";
-import { SolanaDevnetTokenAddress } from "@/constants/tokenAddress";
+import { SolanaDevnetProgramAddress, SolanaDevnetTokenAddress } from "@/constants/tokenAddress";
 import bs58 from "bs58";
 
 async function getNumberDecimals({ connection, currency }: { connection: Connection; currency: "USDC" | "EURC" }) {
@@ -35,7 +36,17 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
     const { toast } = useToast();
     return useMutation({
         mutationKey: ["sendTransactionMutation"],
-        mutationFn: async ({ currency, toAddress, amount }: { currency: "Solana" | "USDC" | "EURC"; toAddress: string; amount: number }) => {
+        mutationFn: async ({
+            currency,
+            toAddress,
+            amount,
+            memo,
+        }: {
+            currency: "Solana" | "USDC" | "EURC";
+            toAddress: string;
+            amount: number;
+            memo?: string;
+        }) => {
             const fromPublicKey = new PublicKey(publicAddress);
             const toPublicKey = new PublicKey(toAddress);
 
@@ -74,7 +85,6 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
                 switch (currency) {
                     case "Solana":
                         const lamportsAmount = Number(amount) * LAMPORTS_PER_SOL;
-                        console.log("amount: " + lamportsAmount);
                         const transfer = SystemProgram.transfer({
                             fromPubkey: fromPublicKey,
                             toPubkey: toPublicKey,
@@ -84,7 +94,6 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
 
                         break;
                     case "USDC":
-                        console.log("send USDC");
                         try {
                             let usdcSourceAccount = await getOrCreateAssociatedTokenAccount(
                                 connection!,
@@ -92,8 +101,6 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
                                 new PublicKey(SolanaDevnetTokenAddress.USDC),
                                 fromPublicKey
                             );
-
-                            console.log("usdcSourceAccount: " + usdcSourceAccount.address.toBase58());
 
                             let usdcDestinationAccount = await getOrCreateAssociatedTokenAccount(
                                 connection!,
@@ -147,6 +154,16 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
                         break;
                     default:
                         throw new Error("Invalid currency");
+                }
+
+                if (memo) {
+                    transaction.add(
+                        new TransactionInstruction({
+                            keys: [{ pubkey: fromPublicKey, isSigner: false, isWritable: true }],
+                            data: Buffer.from(memo, "utf-8"),
+                            programId: new PublicKey(SolanaDevnetProgramAddress.MEMO),
+                        })
+                    );
                 }
 
                 const signedTransaction = await magic?.solana.signTransaction(transaction, {
