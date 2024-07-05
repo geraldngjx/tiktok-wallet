@@ -28,7 +28,7 @@ async function getNumberDecimals({ connection, currency }: { connection: Connect
     return result;
 }
 
-export function useSendTransactionMutation({ setSignature }: { setSignature: Dispatch<SetStateAction<string>> }) {
+export function useSendTransactionMutation({ setSignature }: { setSignature?: Dispatch<SetStateAction<string>> }) {
     const { connection } = useContext(SolanaContext);
     const { magic } = useMagic();
     const { publicAddress } = useMagicTokenStore();
@@ -179,7 +179,9 @@ export function useSendTransactionMutation({ setSignature }: { setSignature: Dis
                     throw new Error("Transaction failed");
                 }
 
-                setSignature(txSignature);
+                if (setSignature) {
+                    setSignature(txSignature);
+                }
             } catch (e: any) {
                 toast({
                     title: "Transaction failed",
