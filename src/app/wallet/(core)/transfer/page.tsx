@@ -20,8 +20,12 @@ import { getIconByCurrency } from "@/utils/currencyIcon";
 import { isEmpty } from "lodash";
 import { ChevronRightIcon, Disc3Icon } from "lucide-react";
 import TransactionSuccess from "./success";
+import { useSearchParams } from "next/navigation";
+import { CURRENCY } from "@/utils/types/currency";
 
 function Transfer() {
+    const searchParams = useSearchParams();
+
     const supabase = useContext(SupabaseBrowserContext);
 
     const [ringColor, setRingColor] = useState(["#2775CA", "#fff"]);
@@ -41,7 +45,14 @@ function Transfer() {
         email: "",
         toAddress: "",
     });
-    const [currency, setCurrency] = useState<"Solana" | "USDC" | "EURC">("USDC");
+
+    const [availableCurrencies, setAvailableCurrencies] = useState<[CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]>([
+        CURRENCY.SOLANA,
+        CURRENCY.USDC,
+        CURRENCY.EURC,
+    ]);
+
+    const [currency, setCurrency] = useState<CURRENCY>(availableCurrencies.includes(CURRENCY.USDC) ? CURRENCY.USDC : availableCurrencies[0]);
 
     const [amount, setAmount] = useState("");
 
@@ -90,6 +101,35 @@ function Transfer() {
         }
     }, [currency]);
 
+    useEffect(() => {
+        const getScanDetails = async () => {
+            if (searchParams.get("email")) {
+                const { data: users } = await supabase.rpc("search_users", { prefix: searchParams.get("email") });
+
+                setInput(searchParams.get("email")!);
+
+                setRecipient({
+                    email: searchParams.get("email")!,
+                    toAddress: users[0].publicAddress,
+                });
+            }
+
+            if (searchParams.get("amount")) {
+                setAmount(searchParams.get("amount")!);
+            }
+
+            if (searchParams.get("currencies")) {
+                const tempCurrency = searchParams.get("currencies")?.split(",");
+                console.log(tempCurrency);
+
+                setAvailableCurrencies(tempCurrency as [CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]);
+                setCurrency(tempCurrency?.includes(CURRENCY.USDC) ? CURRENCY.USDC : (tempCurrency![0] as CURRENCY));
+            }
+        };
+
+        getScanDetails();
+    }, [searchParams, supabase]);
+
     const { mutateAsync: sendTransaction, isError, isSuccess, isPending } = useSendTransactionMutation({ setSignature });
 
     return (
@@ -105,7 +145,7 @@ function Transfer() {
                                 role="combobox"
                                 aria-expanded={open}
                                 className={`${isPending ? "grayscale" : ""} w-[80vw] justify-between`}
-                                disabled={isPending}
+                                disabled={isPending || searchParams.get("email") !== undefined}
                             >
                                 {recipient.toAddress !== ""
                                     ? searchResults.find((result) => result.publicAddress === recipient.toAddress)?.email
@@ -115,7 +155,12 @@ function Transfer() {
                         </PopoverTrigger>
                         <PopoverContent className="p-0 w-[80vw] border-0">
                             <Command>
-                                <CommandInput placeholder="Search user..." value={input} onValueChange={setInput} />
+                                <CommandInput
+                                    placeholder="Search user..."
+                                    value={input}
+                                    onValueChange={setInput}
+                                    disabled={isPending || searchParams.get("email") !== undefined}
+                                />
 
                                 <CommandList className="drop-shadow-xl">
                                     {loading ? (
@@ -171,14 +216,12 @@ function Transfer() {
                                     placeholder="0.00"
                                     type="number"
                                     className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
+                                    disabled={isPending || searchParams.get("amount") !== undefined}
+                                    value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
                                 />
 
-                                <Select
-                                    defaultValue="USDC"
-                                    value={currency}
-                                    onValueChange={(value: "Solana" | "USDC" | "EURC") => setCurrency(value)}
-                                >
+                                <Select defaultValue="USDC" value={currency} onValueChange={(value: CURRENCY) => setCurrency(value)}>
                                     <ShineBorder
                                         className="text-center min-w-[80px] p-0 pl-[3px] size-[86px] text-2xl font-bold capitalize"
                                         color={ringColor as TColorProp}
@@ -190,13 +233,13 @@ function Transfer() {
                                     </ShineBorder>
 
                                     <SelectContent className="min-w-[80px] w-[80px]" side="bottom">
-                                        {["Solana", "USDC", "EURC"].map((currency) => (
+                                        {availableCurrencies.map((currency) => (
                                             <SelectItem
                                                 key={currency}
                                                 value={currency}
                                                 className="w-[80px] min-w-[80px] px-0 flex justify-center items-center"
                                             >
-                                                {getIconByCurrency(currency)} <span>{currency}</span>
+                                                {getIconByCurrency(currency as "Solana" | "USDC" | "EURC")} <span>{currency}</span>
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

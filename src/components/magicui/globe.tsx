@@ -65,6 +65,7 @@ export default function Globe({ className, config = GLOBE_CONFIG }: { className?
 
     const onRender = useCallback(
         (state: Record<string, any>) => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             if (!pointerInteracting.current) phi += 0.005;
             state.phi = phi + r.get();
             state.width = width * 2;
@@ -73,11 +74,12 @@ export default function Globe({ className, config = GLOBE_CONFIG }: { className?
         [pointerInteracting, phi, r]
     );
 
-    const onResize = () => {
+    const onResize = useCallback(() => {
         if (canvasRef.current) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             width = canvasRef.current.offsetWidth;
         }
-    };
+    }, []);
 
     useEffect(() => {
         window.addEventListener("resize", onResize);
@@ -92,7 +94,7 @@ export default function Globe({ className, config = GLOBE_CONFIG }: { className?
 
         setTimeout(() => (canvasRef.current!.style.opacity = "1"));
         return () => globe.destroy();
-    }, []);
+    }, [config, onRender, onResize, width]);
 
     return (
         <div className={cn("absolute inset-0 mx-auto aspect-[1/1] w-full max-w-[600px]", className)}>

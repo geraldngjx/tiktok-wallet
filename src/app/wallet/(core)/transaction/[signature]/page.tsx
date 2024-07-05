@@ -16,13 +16,14 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { SolanaDevnetProgramAddress } from "@/constants/tokenAddress";
+import { CURRENCY } from "@/utils/types/currency";
 
 export default function Page({ params }: { params: { signature: string } }) {
     const { publicAddress } = useMagicTokenStore();
 
     const searchParams = useSearchParams();
     const amount = searchParams.get("amount")!;
-    const currency = amount.split(" ")[1];
+    const currency = amount.split(" ")[1] as CURRENCY;
 
     const { data: tx, isPending: isPendingTx } = useQuery({ ...useTransactionQuery({ signature: params.signature }) });
 
@@ -49,7 +50,7 @@ export default function Page({ params }: { params: { signature: string } }) {
                 <>
                     <div className="flex flex-col h-full w-full items-center space-y-10 justify-start">
                         <div className="flex h-full flex-col justify-center items-center max-h-36">
-                            {currency !== "SOL" ? (
+                            {currency !== CURRENCY.SOLANA ? (
                                 getIconByCurrency(currency)
                             ) : (
                                 <div className="bg-gray-900 scale-90 h-full aspect-square flex rounded-full items-center justify-center">
