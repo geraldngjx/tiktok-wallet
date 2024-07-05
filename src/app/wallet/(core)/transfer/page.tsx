@@ -21,6 +21,7 @@ import { isEmpty } from "lodash";
 import { ChevronRightIcon, Disc3Icon } from "lucide-react";
 import TransactionSuccess from "./success";
 import { useSearchParams } from "next/navigation";
+import { CURRENCY } from "@/utils/types/currency";
 
 function Transfer() {
     const searchParams = useSearchParams();
@@ -45,9 +46,13 @@ function Transfer() {
         toAddress: "",
     });
 
-    const [availableCurrencies, setAvailableCurrencies] = useState<["Solana", "USDC", "EURC"]>(["Solana", "USDC", "EURC"]);
+    const [availableCurrencies, setAvailableCurrencies] = useState<[CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]>([
+        CURRENCY.SOLANA,
+        CURRENCY.USDC,
+        CURRENCY.EURC,
+    ]);
 
-    const [currency, setCurrency] = useState<"Solana" | "USDC" | "EURC">(availableCurrencies.includes("USDC") ? "USDC" : availableCurrencies[0]);
+    const [currency, setCurrency] = useState<CURRENCY>(availableCurrencies.includes(CURRENCY.USDC) ? CURRENCY.USDC : availableCurrencies[0]);
 
     const [amount, setAmount] = useState("");
 
@@ -117,8 +122,8 @@ function Transfer() {
                 const tempCurrency = searchParams.get("currencies")?.split(",");
                 console.log(tempCurrency);
 
-                setAvailableCurrencies(tempCurrency as ["Solana", "USDC", "EURC"]);
-                setCurrency(tempCurrency?.includes("USDC") ? "USDC" : (tempCurrency![0] as "Solana" | "USDC" | "EURC"));
+                setAvailableCurrencies(tempCurrency as [CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]);
+                setCurrency(tempCurrency?.includes(CURRENCY.USDC) ? CURRENCY.USDC : (tempCurrency![0] as CURRENCY));
             }
         };
 
@@ -216,11 +221,7 @@ function Transfer() {
                                     onChange={(e) => setAmount(e.target.value)}
                                 />
 
-                                <Select
-                                    defaultValue="USDC"
-                                    value={currency}
-                                    onValueChange={(value: "Solana" | "USDC" | "EURC") => setCurrency(value)}
-                                >
+                                <Select defaultValue="USDC" value={currency} onValueChange={(value: CURRENCY) => setCurrency(value)}>
                                     <ShineBorder
                                         className="text-center min-w-[80px] p-0 pl-[3px] size-[86px] text-2xl font-bold capitalize"
                                         color={ringColor as TColorProp}

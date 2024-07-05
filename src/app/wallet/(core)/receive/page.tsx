@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import useMagicUserQuery from "@/app/hooks/useMagicUserQuery";
 import { Disc3Icon } from "lucide-react";
 import dayjs from "dayjs";
+import { CURRENCY } from "@/utils/types/currency";
 
 function Page() {
     const [open, setOpen] = useState(false);
@@ -29,7 +30,7 @@ function Page() {
     const [time, setTime] = useState(dayjs());
 
     const [amount, setAmount] = useState("");
-    const [acceptedCurrencies, setAcceptedCurrencies] = useState(["Solana", "EURC", "USDC"]);
+    const [acceptedCurrencies, setAcceptedCurrencies] = useState([CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]);
 
     const [qrCodeValue, setQrCodeValue] = useState("");
 
@@ -65,7 +66,7 @@ function Page() {
                         onOpenChange={(open) => {
                             if (!open) {
                                 setAmount("");
-                                setAcceptedCurrencies(["Solana", "EURC", "USDC"]);
+                                setAcceptedCurrencies([CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]);
                             }
                             setOpen(open);
                         }}
@@ -84,9 +85,9 @@ function Page() {
                                     <ToggleGroup
                                         type="multiple"
                                         className="space-x-2"
-                                        defaultValue={["Solana", "EURC", "USDC"]}
+                                        defaultValue={[CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]}
                                         value={acceptedCurrencies}
-                                        onValueChange={(values) => setAcceptedCurrencies(values)}
+                                        onValueChange={(values: CURRENCY[]) => setAcceptedCurrencies(values)}
                                     >
                                         <ToggleGroupItem className="rounded-full pl-1 pr-2" value="Solana">
                                             {getIconByCurrency("Solana")}Solana
