@@ -1,9 +1,8 @@
 import { SolanaDevnetTokenAddress } from "@/constants/tokenAddress";
 import { SolanaContext } from "@/providers/SolanaProvider";
-import { LAMPORTS_PER_SOL, ParsedTransactionWithMeta, PublicKey } from "@solana/web3.js";
+import { ParsedTransactionWithMeta, PublicKey } from "@solana/web3.js";
+import { isEmpty, isNull, isUndefined, orderBy, uniqBy } from "lodash";
 import { useContext } from "react";
-import { isEmpty, isNull, isUndefined, orderBy, uniq, uniqBy } from "lodash";
-import { getTxBalance } from "@/utils/getTxBalance";
 
 export const useTransactionsQuery = ({ publicAddress }: { publicAddress: string }) => {
     const { connection } = useContext(SolanaContext);

@@ -1,18 +1,17 @@
 "use client";
+import { useEURCTokenBalanceQuery, useUSDCTokenBalanceQuery } from "@/app/hooks/useTokenBalanceQuery";
 import { useTransactionsQuery } from "@/app/hooks/useTransactionsQuery";
 import DotPattern from "@/components/magicui/dot-pattern";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { SolanaContext } from "@/providers/SolanaProvider";
+import { useAccountBalanceStore } from "@/store/accountBalanceStore";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Disc3Icon } from "lucide-react";
+import Image from "next/image";
 import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import TransactionEntry from "./transactionEntry";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEURCTokenBalanceQuery, useUSDCTokenBalanceQuery } from "@/app/hooks/useTokenBalanceQuery";
-import Image from "next/image";
-import { useAccountBalanceStore } from "@/store/accountBalanceStore";
-import { isEmpty } from "lodash";
 
 export default function TransactionList({
     isRefreshing,
@@ -33,7 +32,7 @@ export default function TransactionList({
         ...useTransactionsQuery({ publicAddress }),
         enabled: !!connection && !!publicAddress,
         placeholderData: keepPreviousData,
-        refetchInterval: 20000,
+        // refetchInterval: 20000,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
     });
