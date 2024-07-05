@@ -13,10 +13,10 @@ import {
 import StarIcon from "@mui/icons-material/Star";
 import { Separator } from "@/components/ui/separator";
 import { NavigateNext } from "@mui/icons-material";
-import ShopBottomNavigation from "@/components/ui/shop/shop-bottom-navigation";
 import { ShopItem, ShopItemDeal } from "@/utils/types/shop_types";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { useSearchParams } from "next/navigation";
+import ShopBottomNavigation from "@/components/ui/shop/shop-bottom-navigation";
 
 const BOTTOM_NAV_HEIGHT = 56;
 const IMAGE_HEIGHT = `calc(70vh - ${BOTTOM_NAV_HEIGHT}px)`;
@@ -149,7 +149,7 @@ const ShopItemPage = () => {
                   (deal: ShopItemDeal, index: number) => (
                     <div key={index}>
                       <Separator />
-                      <div className="flex mt-2">
+                      <div className="flex my-2">
                         <Typography
                           variant="subtitle1"
                           fontWeight="700"
