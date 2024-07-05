@@ -196,7 +196,7 @@ function Transfer() {
                                                 value={currency}
                                                 className="w-[80px] min-w-[80px] px-0 flex justify-center items-center"
                                             >
-                                                {getIconByCurrency(currency)} <span>{currency}</span>
+                                                {getIconByCurrency(currency as "Solana" | "USDC" | "EURC")} <span>{currency}</span>
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

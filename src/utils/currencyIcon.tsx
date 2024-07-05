@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-export const getIconByCurrency = (currency: string) => {
+export const getIconByCurrency = (currency: "Solana" | "USDC" | "EURC") => {
     switch (currency) {
         case "Solana":
             return (
-                <div className="bg-black scale-90 h-full aspect-square flex rounded-full items-center justify-center">
+                <div className="bg-black h-[80%] aspect-square flex rounded-full items-center justify-center">
                     <Image src="/solana.svg" width={20} height={20} alt="Solana" />
                 </div>
             );
