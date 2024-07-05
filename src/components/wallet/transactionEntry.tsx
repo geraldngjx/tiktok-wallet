@@ -9,6 +9,9 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
 
     const fromAddress = tx?.transaction?.message.accountKeys[0]?.pubkey.toBase58();
     const toAddress = tx?.transaction?.message.accountKeys[1]?.pubkey.toBase58();
+
+    // console.table(tx);
+
     const solanaAmount = (tx?.meta!.postBalances[1]! - tx?.meta!.preBalances[1]!) / LAMPORTS_PER_SOL;
 
     const usdcAmount = getTxBalance({ stableCoin: "usdc", tx: tx!, publicAddress: publicAddress! });
@@ -48,7 +51,7 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
 
     return (
         <Link
-            href={`/wallet/transaction/${tx?.signature}`}
+            href={`/wallet/transaction/${tx?.signature}?amount=${amount}`}
             className="p-4 bg-neutral-900/80 h-20 rounded-md text-white flex justify-between w-full items-center overflow-hidden"
         >
             <div className="flex flex-col max-w-[70%]">

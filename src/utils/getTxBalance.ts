@@ -7,7 +7,7 @@ export function getTxBalance({
     publicAddress,
 }: {
     stableCoin: "usdc" | "eurc";
-    tx: ParsedTransactionWithMeta & { signature: string };
+    tx: ParsedTransactionWithMeta & { signature?: string };
     publicAddress: string;
 }) {
     const meta = tx.meta;

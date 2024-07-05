@@ -1,8 +1,9 @@
 import { SolanaDevnetTokenAddress } from "@/constants/tokenAddress";
 import { SolanaContext } from "@/providers/SolanaProvider";
-import { ParsedTransactionWithMeta, PublicKey } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, ParsedTransactionWithMeta, PublicKey } from "@solana/web3.js";
 import { useContext } from "react";
 import { isEmpty, isNull, isUndefined, orderBy, uniq, uniqBy } from "lodash";
+import { getTxBalance } from "@/utils/getTxBalance";
 
 export const useTransactionsQuery = ({ publicAddress }: { publicAddress: string }) => {
     const { connection } = useContext(SolanaContext);
@@ -66,6 +67,38 @@ export const useTransactionsQuery = ({ publicAddress }: { publicAddress: string 
                 }
             }
             return [];
+        },
+    };
+};
+
+export const useTransactionQuery = ({ signature }: { signature: string }) => {
+    const { connection } = useContext(SolanaContext);
+
+    return {
+        queryKey: ["getTransaction", signature],
+        queryFn: async () => {
+            console.log("calling useTransactionQuery on: ", signature);
+            const tx = await connection?.getParsedTransaction(signature, {
+                maxSupportedTransactionVersion: 10,
+            });
+
+            return tx;
+        },
+    };
+};
+
+export const useTransactionStatusQuery = ({ signature }: { signature: string }) => {
+    const { connection } = useContext(SolanaContext);
+
+    return {
+        queryKey: ["getTransactionStatus", signature],
+        queryFn: async () => {
+            console.log("calling useTransactionQuery on: ", signature);
+            const status = await connection?.getSignatureStatus(signature, {
+                searchTransactionHistory: true,
+            });
+
+            return status;
         },
     };
 };
