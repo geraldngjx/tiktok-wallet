@@ -145,7 +145,7 @@ function Transfer() {
                                 role="combobox"
                                 aria-expanded={open}
                                 className={`${isPending ? "grayscale" : ""} w-[80vw] justify-between`}
-                                disabled={isPending || searchParams.get("email") !== undefined}
+                                disabled={isPending || (searchParams.has("email") && searchParams.get("email") !== undefined)}
                             >
                                 {recipient.toAddress !== ""
                                     ? searchResults.find((result) => result.publicAddress === recipient.toAddress)?.email
@@ -159,7 +159,7 @@ function Transfer() {
                                     placeholder="Search user..."
                                     value={input}
                                     onValueChange={setInput}
-                                    disabled={isPending || searchParams.get("email") !== undefined}
+                                    disabled={isPending || (searchParams.has("email") && searchParams.get("email") !== undefined)}
                                 />
 
                                 <CommandList className="drop-shadow-xl">
