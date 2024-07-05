@@ -170,7 +170,7 @@ const ShopItemPage = () => {
           </CardContent>
         </Card>
       </div>
-      <ShopBottomNavigation />
+      <ShopBottomNavigation selectedItem={selectedItem} />
     </Box>
   );
 };

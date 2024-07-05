@@ -1,7 +1,7 @@
 export interface ShopItem {
     id: string;
     image: string;
-    price: string;
+    price: number;
     name: string;
     rating: number;
     deals: ShopItemDeal[];

@@ -12,7 +12,7 @@ import StarIcon from "@mui/icons-material/Star";
 interface ShopItemProps {
   id: string;
   image: string;
-  price: string;
+  price: number;
   name: string;
   rating: number;
   onClick: () => void;
