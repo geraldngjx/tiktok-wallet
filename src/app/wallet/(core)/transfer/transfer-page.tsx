@@ -1,13 +1,3 @@
-"use client";
-
-import { Input } from "@/components/ui/input";
-import { withAuthMagic } from "@/lib/hoc/withAuth";
-import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
-import { debounce } from "@mui/material";
-import { useCallback, useContext, useEffect, useState } from "react";
-
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-
 import { useSendTransactionMutation } from "@/app/hooks/useSendTransactionMutation";
 import ShineBorder, { TColorProp } from "@/components/magicui/shine-border";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -34,11 +24,16 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { getIconByCurrency } from "@/utils/currencyIcon";
-import { isEmpty } from "lodash";
+import { debounce, isEmpty } from "lodash";
 import { ChevronRightIcon, Disc3Icon } from "lucide-react";
 import TransactionSuccess from "./success";
 import { useSearchParams } from "next/navigation";
 import { CURRENCY } from "@/utils/types/currency";
+import { z } from "zod";
+import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
+import { Input } from "@mui/material";
+import { useContext, useState, useCallback, useEffect } from "react";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 
 function Transfer() {
   const searchParams = useSearchParams();
@@ -98,13 +93,6 @@ function Transfer() {
     [supabase]
   );
 
-  const {
-    mutateAsync: sendTransaction,
-    isError,
-    isSuccess,
-    isPending,
-  } = useSendTransactionMutation({ setSignature });
-
   useEffect(() => {
     if (input !== "") {
       searchEmail({ email: input });
@@ -131,68 +119,65 @@ function Transfer() {
 
   useEffect(() => {
     const getScanDetails = async () => {
-      if (searchParams.get("email")) {
-        const { data: users } = await supabase.rpc("search_users", {
-          prefix: searchParams.get("email"),
-        });
-        console.log("Users: ", users);
+      if (searchParams.has("email")) {
+        try {
+          z.string().email().parse(searchParams.get("email")!);
 
-        setInput(searchParams.get("email")!);
+          const { data: users } = await supabase.rpc("search_users", {
+            prefix: searchParams.get("email"),
+          });
 
-        setRecipient({
-          email: searchParams.get("email")!,
-          toAddress: users[0].publicAddress,
-        });
+          setInput(searchParams.get("email")!);
+
+          setRecipient({
+            email: searchParams.get("email")!,
+            toAddress: users[0].publicAddress,
+          });
+        } catch (e) {
+          console.log(e);
+          return;
+        }
       }
 
-      if (searchParams.get("amount")) {
-        setAmount(searchParams.get("amount")!);
+      if (searchParams.has("amount")) {
+        try {
+          z.number().parse(parseFloat(searchParams.get("amount")!));
+
+          setAmount(searchParams.get("amount")!);
+        } catch (e) {
+          console.log(e);
+        }
       }
 
-      if (searchParams.get("currencies")) {
-        const tempCurrency = searchParams.get("currencies")?.split(",");
-        console.log(tempCurrency);
+      if (searchParams.has("currencies")) {
+        try {
+          const currencies = searchParams.get("currencies")?.split(",");
 
-        setAvailableCurrencies(
-          tempCurrency as [CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]
-        );
-        setCurrency(
-          tempCurrency?.includes(CURRENCY.USDC)
-            ? CURRENCY.USDC
-            : (tempCurrency![0] as CURRENCY)
-        );
+          z.array(z.enum(["Solana", "USDC", "EURC"])).parse(currencies);
+
+          setAvailableCurrencies(
+            currencies as [CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]
+          );
+          setCurrency(
+            currencies?.includes(CURRENCY.USDC)
+              ? CURRENCY.USDC
+              : (currencies![0] as CURRENCY)
+          );
+        } catch (e) {
+          console.log(e);
+        }
       }
     };
 
     getScanDetails();
-  }, [
-    amount,
-    currency,
-    memo,
-    recipient.toAddress,
-    searchParams,
-    sendTransaction,
-    supabase,
-  ]);
+  }, [searchParams, supabase]);
 
-  // useEffect(() => {
-  //   async function sendImmediately() {
-  //     if (
-  //       recipient &&
-  //       recipient.toAddress &&
-  //       searchParams.get("now") &&
-  //       searchParams.get("now") === "true"
-  //     ) {
-  //       await sendTransaction({
-  //         currency,
-  //         toAddress: recipient.toAddress,
-  //         amount: parseFloat(amount),
-  //         memo,
-  //       });
-  //     }
-  //   }
-  //   sendImmediately();
-  // }, [recipient, searchParams, sendTransaction, currency, amount, memo]);
+  const {
+    mutateAsync: sendTransaction,
+    isError,
+    isSuccess,
+    isPending,
+  } = useSendTransactionMutation({ setSignature });
 
   return (
     <div className="flex flex-col w-full h-full space-y-10 items-center p-4">
@@ -304,7 +289,9 @@ function Transfer() {
                   type="number"
                   className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
                   disabled={
-                    isPending || searchParams.get("amount") !== undefined
+                    isPending ||
+                    (searchParams.has("amount") &&
+                      searchParams.get("amount") !== undefined)
                   }
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
@@ -399,5 +386,3 @@ function Transfer() {
     </div>
   );
 }
-
-export default withAuthMagic(Transfer);
