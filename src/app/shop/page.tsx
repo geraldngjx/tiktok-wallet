@@ -24,6 +24,7 @@ import ShopItemPanel from "@/components/ui/shop/ShopItemPanel";
 import { ShopContext } from "@/providers/ShopProvider";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { ShopItem } from "@/utils/types/shop_types";
+import Link from "next/link";
 
 // Constants for the layout calculations
 const NAVBAR_HEIGHT = 56;
@@ -86,7 +87,12 @@ export default function Shop() {
       </div>
       <Box>
         <BottomNavigation showLabels>
-          <BottomNavigationAction label="Orders" icon={<Menu />} />
+          <BottomNavigationAction
+            component={Link}
+            href="/shop/orders"
+            label="Orders"
+            icon={<Menu />}
+          />
           <BottomNavigationAction label="Coupons" icon={<Ticket />} />
           <BottomNavigationAction label="Messages" icon={<MessageSharp />} />
           <BottomNavigationAction label="Favorites" icon={<Bookmark />} />
