@@ -16,15 +16,15 @@ import {
   TextField,
 } from "@mui/material";
 import { Ticket } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import ShopItemPanel from "@/components/ui/shop/ShopItemPanel";
 import { ShopContext } from "@/providers/ShopProvider";
-import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { ShopItem } from "@/utils/types/shop_types";
 import Link from "next/link";
+import { AnimatedList } from "@/components/magicui/animated-list";
 
 // Constants for the layout calculations
 const NAVBAR_HEIGHT = 56;
@@ -32,31 +32,33 @@ const OTHER_ELEMENTS_HEIGHT = 100;
 const TAB_LABELS_HEIGHT = 80;
 
 export default function Shop() {
-  const [value, setValue] = useState("0");
-  const { state, dispatch } = useContext(ShopContext);
-  const supabase = useContext(SupabaseBrowserContext);
-
-  useEffect(() => {
-    const fetchItems = async () => {
-      const { data, error } = await supabase.from("shopitem").select("*");
-      console.log("data", data, "error", error);
-      if (error) {
-        console.error("Error fetching shop items:", error);
-      } else {
-        dispatch({ type: "SET_ITEMS", payload: data });
-      }
-    };
-
-    fetchItems();
-  }, [supabase, dispatch]);
+  const [value, setValue] = useState("all");
+  const { state } = useContext(ShopContext);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
   const handleItemClick = (item: ShopItem) => {
-    dispatch({ type: "SELECT_ITEM", payload: item.id });
+    console.log("Selected item:", item);
   };
+
+  const renderShopItems = (items: ShopItem[]) => (
+    <Grid container spacing={1}>
+      {items.map((item, index) => (
+        <Grid item xs={6} sm={6} md={6} lg={6} key={index}>
+          <ShopItemPanel
+            id={item.id}
+            image={item.image}
+            price={item.price}
+            name={item.name}
+            rating={item.rating}
+            onClick={() => handleItemClick(item)}
+          />
+        </Grid>
+      ))}
+    </Grid>
+  );
 
   return (
     <div className="flex flex-col">
@@ -122,71 +124,55 @@ export default function Shop() {
               <Tab
                 label="All"
                 sx={{
-                  color: value === "0" ? "black" : "grey",
+                  color: value === "all" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
-                value="0"
+                value="all"
               />
               <Tab
                 label="Beauty"
                 sx={{
-                  color: value === "1" ? "black" : "grey",
+                  color: value === "beauty" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
-                value="1"
-              />
-              <Tab
-                label="Toys"
-                sx={{
-                  color: value === "2" ? "black" : "grey",
-                  "&.Mui-selected": { color: "black" },
-                }}
-                value="2"
-              />
-              <Tab
-                label="Jewelry"
-                sx={{
-                  color: value === "3" ? "black" : "grey",
-                  "&.Mui-selected": { color: "black" },
-                }}
-                value="3"
-              />
-              <Tab
-                label="Food"
-                sx={{
-                  color: value === "4" ? "black" : "grey",
-                  "&.Mui-selected": { color: "black" },
-                }}
-                value="4"
+                value="beauty"
               />
               <Tab
                 label="Household"
                 sx={{
-                  color: value === "5" ? "black" : "grey",
+                  color: value === "household" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
-                value="5"
+                value="household"
               />
               <Tab
-                label="Entertainment"
+                label="Electronics"
                 sx={{
-                  color: value === "6" ? "black" : "grey",
+                  color: value === "electronics" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
-                value="6"
+                value="electronics"
               />
               <Tab
                 label="Accessories"
                 sx={{
-                  color: value === "7" ? "black" : "grey",
+                  color: value === "accessories" ? "black" : "grey",
                   "&.Mui-selected": { color: "black" },
                 }}
-                value="7"
+                value="accessories"
+              />
+              <Tab
+                label="Entertainment"
+                sx={{
+                  color: value === "entertainment" ? "black" : "grey",
+                  "&.Mui-selected": { color: "black" },
+                }}
+                value="entertainment"
               />
             </TabList>
           </Box>
           <TabPanel
-            value="0"
+            value="all"
             sx={{
               overflowY: "auto",
               height: `calc(100vh - ${
@@ -195,25 +181,68 @@ export default function Shop() {
               padding: 1,
             }}
           >
-            {/* Grid configuration for a maximum of 2 panels per row */}
-            <Grid container spacing={1}>
-              {state.items?.map((item, index) => (
-                <Grid item xs={6} sm={6} md={6} lg={6} key={index}>
-                  <ShopItemPanel
-                    id={item.id}
-                    image={item.image}
-                    price={item.price}
-                    name={item.name}
-                    rating={item.rating}
-                    onClick={() => handleItemClick(item)}
-                  />
-                </Grid>
-              ))}
-            </Grid>
+            {renderShopItems(state.all)}
           </TabPanel>
-          <TabPanel value="1">Item One</TabPanel>
-          <TabPanel value="2">Item Two</TabPanel>
-          <TabPanel value="3">Item Three</TabPanel>
+          <TabPanel
+            value="beauty"
+            sx={{
+              overflowY: "auto",
+              height: `calc(100vh - ${
+                NAVBAR_HEIGHT + OTHER_ELEMENTS_HEIGHT + TAB_LABELS_HEIGHT
+              }px)`,
+              padding: 1,
+            }}
+          >
+            {renderShopItems(state.beauty)}
+          </TabPanel>
+          <TabPanel
+            value="household"
+            sx={{
+              overflowY: "auto",
+              height: `calc(100vh - ${
+                NAVBAR_HEIGHT + OTHER_ELEMENTS_HEIGHT + TAB_LABELS_HEIGHT
+              }px)`,
+              padding: 1,
+            }}
+          >
+            {renderShopItems(state.household)}
+          </TabPanel>
+          <TabPanel
+            value="electronics"
+            sx={{
+              overflowY: "auto",
+              height: `calc(100vh - ${
+                NAVBAR_HEIGHT + OTHER_ELEMENTS_HEIGHT + TAB_LABELS_HEIGHT
+              }px)`,
+              padding: 1,
+            }}
+          >
+            {renderShopItems(state.electronics)}
+          </TabPanel>
+          <TabPanel
+            value="accessories"
+            sx={{
+              overflowY: "auto",
+              height: `calc(100vh - ${
+                NAVBAR_HEIGHT + OTHER_ELEMENTS_HEIGHT + TAB_LABELS_HEIGHT
+              }px)`,
+              padding: 1,
+            }}
+          >
+            {renderShopItems(state.accessories)}
+          </TabPanel>
+          <TabPanel
+            value="entertainment"
+            sx={{
+              overflowY: "auto",
+              height: `calc(100vh - ${
+                NAVBAR_HEIGHT + OTHER_ELEMENTS_HEIGHT + TAB_LABELS_HEIGHT
+              }px)`,
+              padding: 1,
+            }}
+          >
+            {renderShopItems(state.entertainment)}
+          </TabPanel>
         </TabContext>
       </Box>
     </div>

@@ -8,17 +8,9 @@ export interface ShopItem {
   rating: number;
   deals: ShopItemDeal[];
   description: string;
+  category: string;
+  merchantEmail: string;
 }
-
-export interface ShopState {
-  items: ShopItem[];
-  selectedItem: ShopItem | null;
-}
-
-export type ShopAction =
-  | { type: "SET_ITEMS"; payload: ShopItem[] }
-  // String is the id of the selected item
-  | { type: "SELECT_ITEM"; payload: number };
 
 export interface ShopItemDeal {
   description: string;
