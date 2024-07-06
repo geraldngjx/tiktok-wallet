@@ -54,16 +54,17 @@ export function useSendTransactionMutation({ setSignature }: { setSignature?: Di
             const fromPublicKey = new PublicKey(publicAddress);
             const toPublicKey = new PublicKey(toAddress);
 
-            if (!PublicKey.isOnCurve(toPublicKey.toBuffer())) {
-                toast({
-                    title: "Invalid user address",
-                    style: {
-                        top: "50px",
-                        color: "red",
-                    },
-                });
-                return;
-            }
+            // if (!PublicKey.isOnCurve(toPublicKey.toBuffer())) {
+            //     toast({
+            //         title: "Invalid user address",
+            //         style: {
+            //             top: "50px",
+            //             color: "red",
+            //         },
+            //     });
+            //     return;
+            // }
+
             if (isNaN(Number(amount))) {
                 toast({
                     title: "Invalid amount",
