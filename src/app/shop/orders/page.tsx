@@ -1,43 +1,47 @@
 "use client";
 
-import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
-import { SupabaseOrder } from "@/utils/types/shop_types";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
+import { ShopContext } from "@/providers/ShopProvider";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedList } from "@/components/magicui/animated-list";
+import { Button } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const ITEMS_PER_PAGE = 5;
 
 const OrdersPage = () => {
-  const [orders, setOrders] = useState<SupabaseOrder[]>([]);
-  const [loading, setLoading] = useState(true);
-  const supabase = useContext(SupabaseBrowserContext);
+  const { state } = useContext(ShopContext);
+  const orders = state.orders;
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const { data, error } = await supabase
-        .from("Orders")
-        .select("*")
-        .order("created_at", { ascending: false });
+  const [currentPage, setCurrentPage] = useState(1);
 
-      if (error) {
-        console.error("Error fetching orders:", error);
-      } else {
-        setOrders(data);
-      }
-      setLoading(false);
-    };
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(orders.length / ITEMS_PER_PAGE);
 
-    fetchOrders();
-  }, [supabase]);
+  // Calculate the start and end indices for slicing orders
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
 
-  if (loading) {
-    return <p className="text-gray-500 dark:text-gray-300">Loading...</p>;
+  // Slice the orders array to get only the current page's orders
+  const currentOrders = orders.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  if (orders.length === 0) {
+    return (
+      <p className="text-gray-500 dark:text-gray-300">No orders available.</p>
+    );
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
+    <div className="max-w-3xl mx-auto p-4 overflow-y-auto">
       <AnimatedList delay={100} className="flex flex-col gap-2">
-        {orders.map((order) => (
+        {currentOrders.map((order) => (
           <div
             key={order.id}
             className="flex items-center bg-white shadow rounded-sm p-4"
@@ -59,12 +63,9 @@ const OrdersPage = () => {
                     x{order.item_quantity}
                   </div>
                   <div className="text-sm text-gray-600 font-bold">
-                    {order.total_price.toFixed(2)} {order.currency}
+                    {order.total_price?.toFixed(2)} {order.currency}
                   </div>
                   <Badge
-                    // className={`text-sm mt-2 ${
-                    //   order.status ? "text-green-500" : "text-red-500"
-                    // }`}
                     variant={order.status ? "default" : "destructive"}
                     className={`px-2 mt-1 ${
                       order.status ? "bg-black text-white" : "bg-red-600"
@@ -77,6 +78,25 @@ const OrdersPage = () => {
             </div>
           </div>
         ))}
+        <div className="flex text-black justify-between items-center">
+          <Button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-300 text-black rounded disabled:bg-gray-200"
+          >
+            <ChevronLeft />
+          </Button>
+          <div className="text-sm text-gray-600">
+            Page {currentPage} of {totalPages}
+          </div>
+          <Button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-300 text-black rounded disabled:bg-gray-200"
+          >
+            <ChevronRight />
+          </Button>
+        </div>
       </AnimatedList>
     </div>
   );

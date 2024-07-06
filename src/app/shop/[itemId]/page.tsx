@@ -98,7 +98,7 @@ const ShopItemPage = () => {
               fontWeight="900"
               sx={{ color: theme.palette.text.primary }} // Text color based on theme
             >
-              {displayValue(selectedItem?.price, "Price not available")}
+              S${displayValue(selectedItem?.price, "Price not available")}
             </Typography>
           )}
         </div>
