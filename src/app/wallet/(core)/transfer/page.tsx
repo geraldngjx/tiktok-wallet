@@ -22,6 +22,7 @@ import { ChevronRightIcon, Disc3Icon } from "lucide-react";
 import TransactionSuccess from "./success";
 import { useSearchParams } from "next/navigation";
 import { CURRENCY } from "@/utils/types/currency";
+import { z } from "zod";
 
 function Transfer() {
     const searchParams = useSearchParams();
@@ -103,27 +104,46 @@ function Transfer() {
 
     useEffect(() => {
         const getScanDetails = async () => {
-            if (searchParams.get("email")) {
-                const { data: users } = await supabase.rpc("search_users", { prefix: searchParams.get("email") });
+            if (searchParams.has("email")) {
+                try {
+                    z.string().email().parse(searchParams.get("email")!);
 
-                setInput(searchParams.get("email")!);
+                    const { data: users } = await supabase.rpc("search_users", { prefix: searchParams.get("email") });
 
-                setRecipient({
-                    email: searchParams.get("email")!,
-                    toAddress: users[0].publicAddress,
-                });
+                    setInput(searchParams.get("email")!);
+
+                    setRecipient({
+                        email: searchParams.get("email")!,
+                        toAddress: users[0].publicAddress,
+                    });
+                } catch (e) {
+                    console.log(e);
+                    return;
+                }
             }
 
-            if (searchParams.get("amount")) {
-                setAmount(searchParams.get("amount")!);
+            if (searchParams.has("amount")) {
+                try {
+                    z.number().parse(searchParams.get("amount")!);
+                    z.number().parse(searchParams.get("amount")!);
+
+                    setAmount(searchParams.get("amount")!);
+                } catch (e) {
+                    console.log(e);
+                }
             }
 
-            if (searchParams.get("currencies")) {
-                const tempCurrency = searchParams.get("currencies")?.split(",");
-                console.log(tempCurrency);
+            if (searchParams.has("currencies")) {
+                try {
+                    const currencies = searchParams.get("currencies")?.split(",");
 
-                setAvailableCurrencies(tempCurrency as [CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]);
-                setCurrency(tempCurrency?.includes(CURRENCY.USDC) ? CURRENCY.USDC : (tempCurrency![0] as CURRENCY));
+                    z.array(z.enum(["Solana", "USDC", "EURC"])).parse(currencies);
+
+                    setAvailableCurrencies(currencies as [CURRENCY.SOLANA, CURRENCY.USDC, CURRENCY.EURC]);
+                    setCurrency(currencies?.includes(CURRENCY.USDC) ? CURRENCY.USDC : (currencies![0] as CURRENCY));
+                } catch (e) {
+                    console.log(e);
+                }
             }
         };
 
@@ -216,7 +236,7 @@ function Transfer() {
                                     placeholder="0.00"
                                     type="number"
                                     className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
-                                    disabled={isPending || searchParams.get("amount") !== undefined}
+                                    disabled={isPending || (searchParams.has("amount") && searchParams.get("amount") !== undefined)}
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
                                 />
