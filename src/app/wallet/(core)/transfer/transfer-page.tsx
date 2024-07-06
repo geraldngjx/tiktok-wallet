@@ -31,9 +31,10 @@ import { useSearchParams } from "next/navigation";
 import { CURRENCY } from "@/utils/types/currency";
 import { z } from "zod";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
-import { Input } from "@mui/material";
+
 import { useContext, useState, useCallback, useEffect } from "react";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { Input } from "@/components/ui/input";
 
 export default function Transfer() {
   const searchParams = useSearchParams();
@@ -179,6 +180,28 @@ export default function Transfer() {
     isPending,
   } = useSendTransactionMutation({ setSignature });
 
+  useEffect(() => {
+    if (
+      recipient.toAddress !== "" &&
+      searchParams.has("now") &&
+      searchParams.get("now") === "true"
+    ) {
+      sendTransaction({
+        currency,
+        toAddress: recipient.toAddress,
+        amount: parseFloat(amount),
+        memo: memo !== "" ? memo : undefined,
+      });
+    }
+  }, [
+    amount,
+    currency,
+    memo,
+    recipient.toAddress,
+    searchParams,
+    sendTransaction,
+  ]);
+
   return (
     <div className="flex flex-col w-full h-full space-y-10 items-center p-4">
       {isSuccess && !isError ? (
@@ -287,7 +310,7 @@ export default function Transfer() {
                 <Input
                   placeholder="0.00"
                   type="number"
-                  className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500 text-white"
+                  className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
                   disabled={
                     isPending ||
                     (searchParams.has("amount") &&
@@ -352,7 +375,7 @@ export default function Transfer() {
                         currency,
                         toAddress: recipient.toAddress,
                         amount: parseFloat(amount),
-                        memo,
+                        memo: memo !== "" ? memo : undefined,
                       });
                     }}
                     disabled={
