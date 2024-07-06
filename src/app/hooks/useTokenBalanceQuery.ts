@@ -1,4 +1,5 @@
 import { SolanaDevnetTokenAddress } from "@/constants/tokenAddress";
+import requestAirdrop from "@/lib/faucet";
 import { useMagic } from "@/providers/MagicProvider";
 import { SolanaContext } from "@/providers/SolanaProvider";
 import { useAccountBalanceStore } from "@/store/accountBalanceStore";
@@ -16,17 +17,19 @@ export const useSolanaTokenBalanceQuery = ({ publicAddress }: { publicAddress: s
 
             const balance = connection && (await connection.getBalance(pubKey));
 
-            // TODO: request airdrop if balance is 0
-            // if (!balance || balance === 0) {
-            //     console.log("requesting airdrop");
+            if (!balance || balance < 0.1) {
+                try {
+                    const res = await requestAirdrop({ publicAddress });
 
-            //     try {
-            //         const requestAirdropSignature = await solanaConnection?.requestAirdrop(pubKey, 1 * LAMPORTS_PER_SOL);
-            //         console.log("requestAirdropSignature", requestAirdropSignature);
-            //     } catch (e) {
-            //         console.log("error requesting airdrop", e);
-            //     }
-            // }
+                    console.log("res", res);
+
+                    if (res?.signature) {
+                        setTimeout(() => {}, 2000);
+                    }
+                } catch (e) {
+                    console.log("error requesting airdrop", e);
+                }
+            }
 
             const solanaBalance = !balance || balance === 0 ? "0" : (balance / LAMPORTS_PER_SOL).toFixed(2);
 
