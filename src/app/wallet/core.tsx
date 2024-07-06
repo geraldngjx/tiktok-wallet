@@ -91,7 +91,7 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
                         <h1 className="font-medium">Your balance</h1>
 
                         <span className="text-5xl font-semibold flex items-center text-center min-h-20">
-                            {isRefreshing || isFetching ? <Disc3Icon className="animate-spin mr-2" size={40} /> : `${solanaBalance} SOL`}
+                            {isRefreshing || isFetching ? <Disc3Icon className="animate-spin mr-2" size={40} /> : `${solanaBalance ?? "..."} SOL`}
                         </span>
                     </div>
 

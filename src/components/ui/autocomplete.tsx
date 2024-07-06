@@ -105,7 +105,7 @@ export const AutoComplete = ({
                 <div
                     className={cn("animate-in fade-in-0 zoom-in-95 absolute top-0 z-10 w-full rounded-xl outline-none", isOpen ? "block" : "hidden")}
                 >
-                    <CommandList className="rounded-lg ring-1 ring-slate-800">
+                    <CommandList className="rounded-lg ring-1 ring-slate-800 bg-popover">
                         {isLoading ? (
                             <CommandPrimitive.Loading>
                                 <div className="p-1">

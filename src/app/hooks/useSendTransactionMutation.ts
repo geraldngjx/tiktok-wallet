@@ -54,16 +54,16 @@ export function useSendTransactionMutation({ setSignature }: { setSignature?: Di
             const fromPublicKey = new PublicKey(publicAddress);
             const toPublicKey = new PublicKey(toAddress);
 
-            // if (!PublicKey.isOnCurve(toPublicKey.toBuffer())) {
-            //     toast({
-            //         title: "Invalid user address",
-            //         style: {
-            //             top: "50px",
-            //             color: "red",
-            //         },
-            //     });
-            //     return;
-            // }
+            if (!PublicKey.isOnCurve(toPublicKey.toBuffer())) {
+                toast({
+                    title: "Invalid user address",
+                    style: {
+                        top: "50px",
+                        color: "red",
+                    },
+                });
+                return;
+            }
 
             if (isNaN(Number(amount))) {
                 toast({
@@ -83,7 +83,7 @@ export function useSendTransactionMutation({ setSignature }: { setSignature?: Di
                 const paymasterKeypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_MY_SOLANA_DEVNET_PRIVATE_KEY as string));
 
                 const transaction = new Transaction({
-                    feePayer: paymasterKeypair.publicKey,
+                    feePayer: fromPublicKey,
                     ...hash,
                 });
 
@@ -181,9 +181,11 @@ export function useSendTransactionMutation({ setSignature }: { setSignature?: Di
                     );
                 }
 
+                // transaction.sign(paymasterKeypair);
+
                 const signedTransaction = await magic?.solana.signTransaction(transaction, {
                     requireAllSignatures: false,
-                    verifySignatures: false,
+                    verifySignatures: true,
                 });
 
                 const txSignature = await connection?.sendRawTransaction(

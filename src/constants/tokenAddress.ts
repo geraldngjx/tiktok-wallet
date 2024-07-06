@@ -5,4 +5,9 @@ export enum SolanaDevnetTokenAddress {
 
 export enum SolanaDevnetProgramAddress {
     MEMO = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+    SYSTEM = "11111111111111111111111111111111",
+}
+
+export enum SolanaDevnetMyPaymasterAddress {
+    PAYMASTER = "fr2rXjk7CZWQZYXC1M4xuY34Q8vmK2Q8yZMhhaBoin1",
 }
