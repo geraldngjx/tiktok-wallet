@@ -35,7 +35,7 @@ import { Input } from "@mui/material";
 import { useContext, useState, useCallback, useEffect } from "react";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 
-function Transfer() {
+export default function Transfer() {
   const searchParams = useSearchParams();
 
   const supabase = useContext(SupabaseBrowserContext);
@@ -287,7 +287,7 @@ function Transfer() {
                 <Input
                   placeholder="0.00"
                   type="number"
-                  className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500"
+                  className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500 text-white"
                   disabled={
                     isPending ||
                     (searchParams.has("amount") &&
