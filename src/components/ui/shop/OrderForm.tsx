@@ -172,9 +172,13 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
           </div>
         </RadioGroup>
         <OrderFormSubmitButton
+          itemId={selectedItem.id}
           totalQuantity={quantity}
           totalPrice={totalPriceInPaymentMethodCurrency}
           paymentMethod={paymentMethod}
+          itemImage={image}
+          itemName={name}
+          merchantEmail="wangzihao139+tiktokwallet2@gmail.com"
         />
       </div>
     </div>

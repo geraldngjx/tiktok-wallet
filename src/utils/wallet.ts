@@ -25,13 +25,14 @@ export function getTotalPrice(price: number, quantity: number, shipping: number)
     return price * quantity + shipping;
 }
 
-export function constructTransferUrl(email: string, amount: number, currencies: string[], transferNow: boolean): string {
+export function constructTransferUrl(email: string, amount: number, currencies: string[], transferNow: boolean, orderId: number): string {
     const urlParams = new URLSearchParams();
 
     urlParams.set("email", email);
     urlParams.set("amount", amount.toString());
     urlParams.set("currencies", currencies.join(","));
     urlParams.set("now", transferNow.toString());
+    urlParams.set("orderId", orderId.toString());
 
     return `/wallet/transfer?${urlParams.toString()}`.replaceAll("+", "%2B");
 }
