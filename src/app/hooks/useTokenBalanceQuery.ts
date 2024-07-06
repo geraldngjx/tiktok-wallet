@@ -16,8 +16,25 @@ export const useSolanaTokenBalanceQuery = ({ publicAddress }: { publicAddress: s
 
             const balance = connection && (await connection.getBalance(pubKey));
 
-            setSolanaBalance(!balance || balance === 0 ? "0" : (balance / LAMPORTS_PER_SOL).toFixed(2));
-            return balance;
+            // TODO: request airdrop if balance is 0
+            // if (!balance || balance === 0) {
+            //     console.log("requesting airdrop");
+
+            //     try {
+            //         const requestAirdropSignature = await solanaConnection?.requestAirdrop(pubKey, 1 * LAMPORTS_PER_SOL);
+            //         console.log("requestAirdropSignature", requestAirdropSignature);
+            //     } catch (e) {
+            //         console.log("error requesting airdrop", e);
+            //     }
+            // }
+
+            const solanaBalance = !balance || balance === 0 ? "0" : (balance / LAMPORTS_PER_SOL).toFixed(2);
+
+            console.log("solanaBalance", solanaBalance);
+
+            setSolanaBalance(solanaBalance);
+
+            return solanaBalance;
         },
     };
 };

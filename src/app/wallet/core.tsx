@@ -60,14 +60,13 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
         setTimeout(() => checkLoginandGetBalance(), 5000);
     }, [magic?.user, saveToSupabase, setEmail, setPublicAddress]);
 
-    const { solanaBalance, setSolanaBalance } = useAccountBalanceStore();
-    const { data, isFetching, refetch } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }) });
+    const { data: solanaBalance, isFetching, refetch } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }) });
 
     const refresh = useCallback(async () => {
         await refetch();
         setTimeout(() => {
             setIsRefreshing(false);
-        }, 500);
+        }, 1000);
     }, [refetch, setIsRefreshing]);
 
     useEffect(() => {
@@ -82,21 +81,17 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
         }
     }, [connection, refresh]);
 
-    useEffect(() => {
-        setSolanaBalance("...");
-    }, [magic, setSolanaBalance]);
-
     return (
         <section className="h-fit flex flex-col p-4 mb-4">
             <Meteors />
 
             <div className="z-50">
-                <div className="text-white w-full flex flex-col h-full justify-center items-center px-4 space-y-8">
-                    <div className="flex flex-col space-y-2 justify-center items-center">
-                        <h1>Your balance</h1>
+                <div className="text-white w-full flex flex-col h-full justify-center items-center px-4 space-y-4">
+                    <div className="flex flex-col space-y-3 justify-center items-center">
+                        <h1 className="font-medium">Your balance</h1>
 
-                        <span className="text-5xl font-semibold flex items-center text-center">
-                            {isRefreshing ? <Disc3Icon className="animate-spin mr-2" size={40} /> : solanaBalance} SOL
+                        <span className="text-5xl font-semibold flex items-center text-center min-h-20">
+                            {isRefreshing || isFetching ? <Disc3Icon className="animate-spin mr-2" size={40} /> : `${solanaBalance} SOL`}
                         </span>
                     </div>
 
