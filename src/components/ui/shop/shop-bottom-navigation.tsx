@@ -25,6 +25,7 @@ import { useTheme } from "@mui/material/styles";
 import { ShopItem } from "@/utils/types/shop_types";
 import { Typography } from "@mui/material";
 import { PaymentMethods } from "@/utils/enums/wallet_enums";
+import { MAX_WIDTH } from "@/utils/constants";
 
 interface ShopBottomNavigationProps {
   selectedItem: ShopItem | null;
@@ -34,13 +35,6 @@ const ShopBottomNavigation: React.FC<ShopBottomNavigationProps> = ({
   selectedItem,
 }) => {
   const [open, setOpen] = useState(false);
-  const [quantitySelected, setQuantitySelected] = useState<number>(1);
-  const [totalPrice, setTotalPrice] = useState<number | undefined>(
-    selectedItem?.price
-  );
-  const [selectedCurrency, setSelectedCurrency] = useState<PaymentMethods>(
-    PaymentMethods.USDC
-  ); // Default to USDC
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const theme = useTheme();
 
@@ -50,7 +44,7 @@ const ShopBottomNavigation: React.FC<ShopBottomNavigationProps> = ({
     <div>
       {!open && (
         <div
-          className="fixed bottom-0 left-0 w-full h-14 p-2 shadow-lg z-[999] flex items-center border-t border-gray-300"
+          className={`fixed bottom-0 left-0 w-full h-14 p-2 shadow-lg z-[999] flex items-center border-t border-gray-300`}
           style={{
             backgroundColor:
               theme.palette.mode === "dark"

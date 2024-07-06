@@ -18,14 +18,14 @@ interface OrdersFormProps {
   selectedItem: ShopItem;
 }
 
-const SHIPPING_COST = 1.5;
+const SHIPPING_COST = 0.001;
 
 const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
   const [quantity, setQuantity] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>(
     PaymentMethods.USDC
   );
-  const { price, name, image } = selectedItem;
+  const { id, price, name, image } = selectedItem;
 
   const totalPriceInSGD = getTotalPrice(price, quantity, SHIPPING_COST);
 
@@ -172,9 +172,13 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
           </div>
         </RadioGroup>
         <OrderFormSubmitButton
+          itemId={id}
           totalQuantity={quantity}
           totalPrice={totalPriceInPaymentMethodCurrency}
           paymentMethod={paymentMethod}
+          itemImage={image}
+          itemName={name}
+          merchantEmail="wangzihao139+tiktokwallet2@gmail.com"
         />
       </div>
     </div>

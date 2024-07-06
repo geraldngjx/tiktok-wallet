@@ -186,14 +186,13 @@ export default function Shop() {
               height: `calc(100vh - ${
                 NAVBAR_HEIGHT + OTHER_ELEMENTS_HEIGHT + TAB_LABELS_HEIGHT
               }px)`,
-              // Padding from the edge of screen (align with Tiktok Shop)
               padding: 1,
             }}
           >
-            {/* Spacing between ShopItem Card */}
+            {/* Grid configuration for a maximum of 2 panels per row */}
             <Grid container spacing={1}>
               {state.items?.map((item, index) => (
-                <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
+                <Grid item xs={6} sm={6} md={6} lg={6} key={index}>
                   <ShopItemPanel
                     id={item.id}
                     image={item.image}

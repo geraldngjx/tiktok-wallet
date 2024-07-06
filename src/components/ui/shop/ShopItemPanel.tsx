@@ -10,7 +10,7 @@ import Link from "next/link";
 import StarIcon from "@mui/icons-material/Star";
 
 interface ShopItemProps {
-  id: string;
+  id: number;
   image: string;
   price: number;
   name: string;
