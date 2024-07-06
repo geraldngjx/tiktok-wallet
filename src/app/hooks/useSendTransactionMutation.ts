@@ -182,6 +182,7 @@ export function useSendTransactionMutation({ setSignature }: { setSignature?: Di
                 if (setSignature) {
                     setSignature(txSignature);
                 }
+                
             } catch (e: any) {
                 toast({
                     title: "Transaction failed",

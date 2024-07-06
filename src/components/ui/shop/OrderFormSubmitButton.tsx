@@ -2,6 +2,9 @@ import { Typography, useTheme } from "@mui/material";
 import React from "react";
 import { Button } from "../button";
 import { PaymentMethods } from "@/utils/enums/wallet_enums";
+import { useRouter } from "next/navigation";
+import { constructTransferUrl } from "@/utils/wallet";
+import { transfer } from "@solana/spl-token";
 
 interface OrderFormSubmitButton {
   totalQuantity: number;
@@ -15,6 +18,22 @@ export default function OrderFormSubmitButton({
   paymentMethod,
 }: OrderFormSubmitButton) {
   const theme = useTheme();
+  const router = useRouter();
+
+  const handleTransferRedirect = () => {
+    const email = "wangzihao139+tiktokwallet@gmail.com";
+    const currencies = [paymentMethod];
+    const transferNow = true;
+
+    const transferUrl = constructTransferUrl(
+      email,
+      totalPrice,
+      currencies,
+      transferNow
+    );
+    router.push(transferUrl);
+  };
+
   return (
     <div
       className="fixed bottom-0 left-0 w-full h-24 p-2 shadow-lg z-[999] flex items-center border-t border-gray-300"
@@ -42,6 +61,7 @@ export default function OrderFormSubmitButton({
         <Button
           type="submit"
           className="w-full bg-red-500 text-white hover:bg-red-600"
+          onClick={handleTransferRedirect}
         >
           Place Order
         </Button>

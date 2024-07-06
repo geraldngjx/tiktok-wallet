@@ -18,7 +18,7 @@ interface OrdersFormProps {
   selectedItem: ShopItem;
 }
 
-const SHIPPING_COST = 1.5;
+const SHIPPING_COST = 0.001;
 
 const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
   const [quantity, setQuantity] = useState(1);

@@ -5,67 +5,70 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
 
+// This is not in use
 const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
-    const AuthenticatedComponent = (props: P) => {
-        const [isLoading, setIsLoading] = useState(true);
-        const router = useRouter();
+  const AuthenticatedComponent = (props: P) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
-        useEffect(() => {
-            async function authenticate() {
-                const supabase = createClient();
-                const {
-                    data: { user },
-                } = await supabase.auth.getUser();
-                if (!user) {
-                    router.push("/wallet/login");
-                } else {
-                    setIsLoading(false);
-                }
-            }
-            authenticate();
-        }, [router]);
-
-        if (isLoading) {
-            return (
-                <Box className="flex items-center justify-center min-h-screen">
-                    <CircularProgress />
-                </Box>
-            );
+    useEffect(() => {
+      async function authenticate() {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+          router.push("/wallet/login");
+        } else {
+          setIsLoading(false);
         }
+      }
+      authenticate();
+    }, [router]);
 
-        return <WrappedComponent {...props} />;
-    };
+    if (isLoading) {
+      return (
+        <Box className="flex items-center justify-center min-h-screen">
+          <CircularProgress />
+        </Box>
+      );
+    }
 
-    return AuthenticatedComponent;
+    return <WrappedComponent {...props} />;
+  };
+
+  return AuthenticatedComponent;
 };
 
-const withAuthMagic = <P extends object>(WrappedComponent: ComponentType<P>) => {
-    const AuthenticatedComponent = (props: P) => {
-        const [isLoading, setIsLoading] = useState(true);
-        const router = useRouter();
+const withAuthMagic = <P extends object>(
+  WrappedComponent: ComponentType<P>
+) => {
+  const AuthenticatedComponent = (props: P) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
-        useEffect(() => {
-            const token = localStorage.getItem("token") ?? "";
+    useEffect(() => {
+      const token = localStorage.getItem("token") ?? "";
 
-            if (token === "") {
-                router.push("/wallet");
-            } else {
-                setIsLoading(false);
-            }
-        }, [router]);
+      if (token === "") {
+        router.push("/wallet");
+      } else {
+        setIsLoading(false);
+      }
+    }, [router]);
 
-        if (isLoading) {
-            return (
-                <Box className="flex items-center justify-center min-h-screen">
-                    <CircularProgress />
-                </Box>
-            );
-        }
+    if (isLoading) {
+      return (
+        <Box className="flex items-center justify-center min-h-screen">
+          <CircularProgress />
+        </Box>
+      );
+    }
 
-        return <WrappedComponent {...props} />;
-    };
+    return <WrappedComponent {...props} />;
+  };
 
-    return AuthenticatedComponent;
+  return AuthenticatedComponent;
 };
 
 export { withAuth, withAuthMagic };
