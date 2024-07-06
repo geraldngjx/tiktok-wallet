@@ -56,7 +56,7 @@ export default async function requestAirdrop({ publicAddress }: { publicAddress:
         const transfer = SystemProgram.transfer({
             fromPubkey: paymasterKeypair.publicKey,
             toPubkey: recipient,
-            lamports: LAMPORTS_PER_SOL * 0.1,
+            lamports: LAMPORTS_PER_SOL * 0.01,
         });
 
         transaction.add(transfer);
