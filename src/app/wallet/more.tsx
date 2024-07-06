@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useMagic } from "@/providers/MagicProvider";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { logout } from "@/utils/common";
-import { ChevronRightIcon, EllipsisIcon, LogOutIcon, ScrollTextIcon, WalletIcon } from "lucide-react";
+import { ChevronRightIcon, EllipsisIcon, LogOutIcon, ReceiptIcon, ScrollTextIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
 
@@ -34,7 +34,7 @@ export default function More() {
                 </div>
             </DrawerTrigger>
 
-            <DrawerContent className="px-6 min-h-[50vh] bg-neutral-900 border-0">
+            <DrawerContent className="px-6 min-h-[55vh] bg-neutral-900 border-0">
                 <DialogTitle className="hidden">More</DialogTitle>
 
                 <div className="flex flex-col w-full space-y-2 mt-8">
@@ -57,6 +57,13 @@ export default function More() {
                         <ChevronRightIcon className="right-4 absolute" />
                     </div>
 
+                    <div className="h-12 bg-transparent flex rounded-lg items-center justify-start text-white space-x-4 w-full">
+                        <ReceiptIcon strokeWidth={1} />
+                        <span>Tax report</span>
+
+                        <ChevronRightIcon className="right-4 absolute" />
+                    </div>
+
                     <Separator className="bg-muted/20" />
 
                     <div
@@ -68,7 +75,7 @@ export default function More() {
                     </div>
                 </div>
 
-                <Globe className="top-64" />
+                <Globe className="top-80" />
                 <div className="pointer-events-none absolute inset-0 h-full bg-[radial-gradient(circle_at_50%_200%,rgba(0,0,0,0.2),rgba(255,255,255,0))]" />
             </DrawerContent>
         </Drawer>
