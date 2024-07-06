@@ -124,8 +124,7 @@ function Transfer() {
 
             if (searchParams.has("amount")) {
                 try {
-                    z.number().parse(searchParams.get("amount")!);
-                    z.number().parse(searchParams.get("amount")!);
+                    z.number().parse(parseFloat(searchParams.get("amount")!));
 
                     setAmount(searchParams.get("amount")!);
                 } catch (e) {
