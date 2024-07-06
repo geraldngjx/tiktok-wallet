@@ -17,7 +17,7 @@ export const useSolanaTokenBalanceQuery = ({ publicAddress }: { publicAddress: s
 
             const balance = connection && (await connection.getBalance(pubKey));
 
-            if (!balance || balance === 0 || balance / LAMPORTS_PER_SOL < 0.1) {
+            if (!balance || balance === 0 || balance / LAMPORTS_PER_SOL < 0.01) {
                 try {
                     const res = await requestAirdrop({ publicAddress });
 

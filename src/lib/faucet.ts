@@ -19,8 +19,8 @@ export default async function requestAirdrop({ publicAddress }: { publicAddress:
 
     console.log(`${recipient.toBase58()}'s current balance`, balance);
 
-    if (balance >= 0.1 * LAMPORTS_PER_SOL) {
-        console.log("Balance is greater than or equal to 0.1 SOL");
+    if (balance >= 0.01 * LAMPORTS_PER_SOL) {
+        console.log("Balance is greater than or equal to 0.01 SOL");
         return null;
     }
 
