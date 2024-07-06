@@ -17,6 +17,7 @@ import { ShopItem, ShopItemDeal } from "@/utils/types/shop_types";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { usePathname, useSearchParams } from "next/navigation";
 import ShopBottomNavigation from "@/components/ui/shop/shop-bottom-navigation";
+import { MAX_WIDTH } from "@/utils/constants";
 
 const BOTTOM_NAV_HEIGHT = 56;
 const IMAGE_HEIGHT = `calc(70vh - ${BOTTOM_NAV_HEIGHT}px)`;

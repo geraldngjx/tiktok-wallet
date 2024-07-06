@@ -184,13 +184,16 @@ export default function Transfer() {
     if (
       recipient.toAddress !== "" &&
       searchParams.has("now") &&
-      searchParams.get("now") === "true"
+      searchParams.get("now") === "true" &&
+      searchParams.get("orderId")
     ) {
+      const orderId = parseInt(searchParams.get("orderId")!);
       sendTransaction({
         currency,
         toAddress: recipient.toAddress,
         amount: parseFloat(amount),
         memo: memo !== "" ? memo : undefined,
+        orderId,
       });
     }
   }, [

@@ -18,7 +18,7 @@ export interface ShopState {
 export type ShopAction =
   | { type: "SET_ITEMS"; payload: ShopItem[] }
   // String is the id of the selected item
-  | { type: "SELECT_ITEM"; payload: string };
+  | { type: "SELECT_ITEM"; payload: number };
 
 export interface ShopItemDeal {
   description: string;

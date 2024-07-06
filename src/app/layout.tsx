@@ -5,6 +5,7 @@ import Providers from "@/providers/providers";
 import type { Metadata, Viewport } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
+import { MAX_WIDTH } from "@/utils/constants";
 
 const APP_NAME = "ByteSecure";
 const APP_DEFAULT_TITLE = "ByteSecure";
@@ -52,13 +53,15 @@ export default function RootLayout({
 
       <body
         className={cn(
-          "min-h-screen w-screen bg-background font-sans antialiased",
+          // Removed bg-background to change to bg-grey-800 and added max width
+          `max-w-[${MAX_WIDTH}] mx-auto bg-grey-800 min-h-screen w-screen font-sans antialiased`,
           fontSans.variable
         )}
       >
         <Providers>
           <Toaster />
-          <main className="h-[calc(100vh-56px)] overflow-y-hidden">
+          {/* Add overflow-x-hidden to prevent horizontal scrolling */}
+          <main className="h-[calc(100vh-56px)] overflow-x-hidden overflow-y-hidden">
             {children}
           </main>
           <BottomNavbar />

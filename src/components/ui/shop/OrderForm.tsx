@@ -25,7 +25,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>(
     PaymentMethods.USDC
   );
-  const { price, name, image } = selectedItem;
+  const { id, price, name, image } = selectedItem;
 
   const totalPriceInSGD = getTotalPrice(price, quantity, SHIPPING_COST);
 
@@ -172,7 +172,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
           </div>
         </RadioGroup>
         <OrderFormSubmitButton
-          itemId={selectedItem.id}
+          itemId={id}
           totalQuantity={quantity}
           totalPrice={totalPriceInPaymentMethodCurrency}
           paymentMethod={paymentMethod}

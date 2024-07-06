@@ -22,7 +22,10 @@ export default function ShopTopNavigation() {
         variant="ghost"
         className="pl-2"
         onClick={() => router.back()}
-        style={{ color: theme.palette.text.primary }} // Icon color based on theme
+        style={{
+          color: theme.palette.text.primary, // Icon color based on theme
+          backgroundColor: "transparent", // Ensure background is transparent
+        }}
       >
         <ChevronLeftIcon />
       </Button>
@@ -30,21 +33,30 @@ export default function ShopTopNavigation() {
         <Button
           variant="ghost"
           className="p-0"
-          style={{ color: theme.palette.text.primary }} // Icon color based on theme
+          style={{
+            color: theme.palette.text.primary, // Icon color based on theme
+            backgroundColor: "transparent", // Ensure background is transparent
+          }}
         >
           <SendIcon />
         </Button>
         <Button
           variant="ghost"
           className="p-0"
-          style={{ color: theme.palette.text.primary }} // Icon color based on theme
+          style={{
+            color: theme.palette.text.primary, // Icon color based on theme
+            backgroundColor: "transparent", // Ensure background is transparent
+          }}
         >
           <ShoppingCartOutlined />
         </Button>
         <Button
           variant="ghost"
           className="p-0"
-          style={{ color: theme.palette.text.primary }} // Icon color based on theme
+          style={{
+            color: theme.palette.text.primary, // Icon color based on theme
+            backgroundColor: "transparent", // Ensure background is transparent
+          }}
         >
           <MoreHoriz />
         </Button>

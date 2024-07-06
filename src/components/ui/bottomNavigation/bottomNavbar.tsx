@@ -1,5 +1,6 @@
 "use client";
 
+import { MAX_WIDTH } from "@/utils/constants";
 import CustomVideoIcon from "@/components/ui/bottomNavigation/customVideoIcon";
 import { PersonOutline } from "@mui/icons-material";
 import Home from "@mui/icons-material/Home";
@@ -9,13 +10,38 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Paper from "@mui/material/Paper";
 import Link from "next/link";
-import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const BOTTOM_NAVBAR_HEIGHT = "56px"; // Adjust to match the height of BottomNavigation
 
 export default function BottomNavbar() {
-  const [value, setValue] = useState(0);
+  const pathname = usePathname();
+  const [value, setValue] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Determine the value based on pathname
+    // pathname.startsWith("/shop/") && !pathname.match(/^\/shop\/[^\/]+$/)
+    if (pathname === "/") {
+      setValue(0);
+    } else if (pathname === "/shop") {
+      setValue(1);
+    } else if (pathname.startsWith("/shop/") && !pathname.includes("/orders")) {
+      setValue(-1);
+    } else if (pathname === "/wallet") {
+      setValue(3);
+    } else if (pathname === "/profile") {
+      setValue(4);
+    } else {
+      setValue(null);
+    }
+  }, [pathname]);
+
+  // Hide the navbar if the pathname matches /shop/[id] format
+  // Assuming /shop/[id] is used for dynamic routing
+  if (value === -1) {
+    return null;
+  }
 
   return (
     <Paper
@@ -26,6 +52,9 @@ export default function BottomNavbar() {
         left: 0,
         right: 0,
         height: BOTTOM_NAVBAR_HEIGHT,
+        // Added max width to restrict desktop view
+        marginX: "auto",
+        maxWidth: MAX_WIDTH,
       }}
       elevation={3}
     >
@@ -84,9 +113,9 @@ export default function BottomNavbar() {
           }}
         />
         <BottomNavigationAction
+          component={Link}
           href="/profile"
           label="Profile"
-          component={Link}
           icon={<PersonOutline />}
           sx={{
             color: value === 4 ? "white" : "grey",
