@@ -149,7 +149,7 @@ export default function Transfer() {
         getScanDetails();
     }, [searchParams, supabase]);
 
-    const { mutateAsync: sendTransaction, isError, isSuccess, isPending } = useSendTransactionMutation({ setSignature });
+    const { mutateAsync: sendTransaction, error, isError, isSuccess, isPending } = useSendTransactionMutation({ setSignature });
 
     useEffect(() => {
         if (recipient.toAddress !== "" && searchParams.has("now") && searchParams.get("now") === "true" && searchParams.get("orderId")) {
@@ -170,7 +170,7 @@ export default function Transfer() {
                 <div className="w-full h-full flex justify-center items-center">
                     <Disc3Icon className="animate-spin text-gray-400" size={24} />
                 </div>
-            ) : isSuccess && !isError ? (
+            ) : isSuccess && !isError && !error ? (
                 <TransactionSuccess signature={signature} toEmail={recipient.email} amount={amount} currency={currency} />
             ) : (
                 <>
@@ -281,12 +281,16 @@ export default function Transfer() {
                                         <Button
                                             className="size-16 rounded-full bg-background disabled:bg-background"
                                             onClick={async () => {
-                                                await sendTransaction({
-                                                    currency,
-                                                    toAddress: recipient.toAddress,
-                                                    amount: parseFloat(amount),
-                                                    memo: memo !== "" ? memo : undefined,
-                                                });
+                                                try {
+                                                    await sendTransaction({
+                                                        currency,
+                                                        toAddress: recipient.toAddress,
+                                                        amount: parseFloat(amount),
+                                                        memo: memo !== "" ? memo : undefined,
+                                                    });
+                                                } catch (e) {
+                                                    console.log(e);
+                                                }
                                             }}
                                             disabled={isPending || amount === "" || parseFloat(amount) <= 0 || recipient.toAddress === ""}
                                         >

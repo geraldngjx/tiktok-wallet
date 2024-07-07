@@ -216,8 +216,9 @@ export function useSendTransactionMutation({ setSignature }: { setSignature?: Di
                         top: "50px",
                         color: "red",
                     },
+                    duration: 5000,
                 });
-                console.log(e);
+                throw new Error(e);
             }
         },
     });
