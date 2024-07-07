@@ -6,7 +6,8 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 const nextConfig = {
   images: {
     domains: ['images.unsplash.com',
-      'pldphpgxyiuevonrkpas.supabase.co'
+      'pldphpgxyiuevonrkpas.supabase.co',
+      "images.pexels.com"
     ],
   }
 };
