@@ -1,23 +1,24 @@
 import { useToast } from "@/components/ui/use-toast";
-import { SolanaDevnetProgramAddress, SolanaDevnetTokenAddress } from "@/constants/tokenAddress";
 import { useMagic } from "@/providers/MagicProvider";
 import { SolanaContext } from "@/providers/SolanaProvider";
-import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
-import { createTransferInstruction, getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import {
     Connection,
     Keypair,
     LAMPORTS_PER_SOL,
     ParsedAccountData,
     PublicKey,
+    sendAndConfirmTransaction,
     SystemProgram,
     Transaction,
     TransactionInstruction,
 } from "@solana/web3.js";
 import { useMutation } from "@tanstack/react-query";
-import bs58 from "bs58";
 import { Dispatch, SetStateAction, useContext } from "react";
+import spl, { getOrCreateAssociatedTokenAccount, createTransferInstruction } from "@solana/spl-token";
+import { SolanaDevnetProgramAddress, SolanaDevnetTokenAddress } from "@/constants/tokenAddress";
+import bs58 from "bs58";
+import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 
 async function getNumberDecimals({ connection, currency }: { connection: Connection; currency: "USDC" | "EURC" }) {
     const mintAddress = currency === "USDC" ? SolanaDevnetTokenAddress.USDC : currency === "EURC" ? SolanaDevnetTokenAddress.EURC : "";
@@ -215,9 +216,8 @@ export function useSendTransactionMutation({ setSignature }: { setSignature?: Di
                         top: "50px",
                         color: "red",
                     },
-                    duration: 5000,
                 });
-                throw new Error(e);
+                console.log(e);
             }
         },
     });
