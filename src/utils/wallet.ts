@@ -7,10 +7,10 @@ export function getTotalAmountInCurrencyFromSGD(
   currency: PaymentMethods
 ) {
   // Pull from exchange?
-  const exchangeRatesFromSGD: Record<string, number> = {
+  const exchangeRatesFromSGD: Record<PaymentMethods, number> = {
     USDC: 0.7415573694133842,
     EURC: 0.6856426662239425,
-    SOL: 0.005487115400853194,
+    Solana: 0.005487115400853194,
   };
 
   switch (currency) {
@@ -43,7 +43,7 @@ export function constructTransferUrl(
   amount: number,
   currencies: string[],
   transferNow: boolean,
-  orderId: number
+  orderId: number,
 ): string {
   const urlParams = new URLSearchParams();
 
@@ -52,6 +52,7 @@ export function constructTransferUrl(
   urlParams.set("currencies", currencies.join(","));
   urlParams.set("now", transferNow.toString());
   urlParams.set("orderId", orderId.toString());
+  urlParams.set("memo", "Payment for order #" + orderId.toString());
 
   return `/wallet/transfer?${urlParams.toString()}`.replaceAll("+", "%2B");
 }

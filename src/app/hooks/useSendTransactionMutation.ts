@@ -50,7 +50,7 @@ export function useSendTransactionMutation({ setSignature }: { setSignature?: Di
             memo?: string;
             orderId?: number;
         }) => {
-            const fromPublicKey = new PublicKey(publicAddress);
+            const fromPublicKey = new PublicKey(publicAddress ?? localStorage.getItem("token") as string);
             const toPublicKey = new PublicKey(toAddress);
 
             if (!PublicKey.isOnCurve(toPublicKey.toBuffer())) {
