@@ -16,7 +16,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Ticket } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
@@ -24,6 +24,7 @@ import ShopItemPanel from "@/components/ui/shop/ShopItemPanel";
 import { ShopContext } from "@/providers/ShopProvider";
 import { ShopItem } from "@/utils/types/shop_types";
 import Link from "next/link";
+import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 
 // Constants for the layout calculations
 const NAVBAR_HEIGHT = 56;
@@ -32,7 +33,37 @@ const TAB_LABELS_HEIGHT = 80;
 
 export default function Shop() {
   const [value, setValue] = useState("all");
-  const { state } = useContext(ShopContext);
+  const { state, dispatch } = useContext(ShopContext);
+  const supabase = useContext(SupabaseBrowserContext);
+
+  useEffect(() => {
+    // Fetch shop items
+    const fetchItems = async () => {
+      const { data, error } = await supabase.from("shopitem").select("*");
+      if (error) {
+        console.error("Error fetching shop items:", error);
+      } else {
+        const categories = {
+          all: data,
+          beauty: data.filter((item: ShopItem) => item.category === "beauty"),
+          household: data.filter(
+            (item: ShopItem) => item.category === "household"
+          ),
+          electronics: data.filter(
+            (item: ShopItem) => item.category === "electronics"
+          ),
+          accessories: data.filter(
+            (item: ShopItem) => item.category === "accessories"
+          ),
+          entertainment: data.filter(
+            (item: ShopItem) => item.category === "entertainment"
+          ),
+        };
+        dispatch({ type: "SET_ITEMS", payload: categories });
+      }
+    };
+    fetchItems();
+  }, [supabase, dispatch]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);

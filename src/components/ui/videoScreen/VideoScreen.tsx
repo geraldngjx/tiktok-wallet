@@ -121,7 +121,7 @@ export default function VideoScreen() {
               </div>
             </div>
             {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
-            <div className="w-24 flex flex-col items-center space-y-6 mb-20">
+            <div className="w-24 flex flex-col items-end space-y-6 mb-20">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -130,7 +130,8 @@ export default function VideoScreen() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="text-white flex flex-col items-center space-y-1">
+              {/* Shift like button away from right side*/}
+              <div className="mr-2 text-white flex flex-col items-center space-y-1">
                 <button onClick={() => handleLike(videoData.id)}>
                   <Favorite
                     className={`w-10 h-10 ${
@@ -140,13 +141,15 @@ export default function VideoScreen() {
                 </button>
                 <span className="text-xl">{videoData.likes.length}</span>
               </div>
-              <div className="text-white flex flex-col items-center space-y-1">
+              {/* Shift comment button away from right side*/}
+              <div className="mr-2 text-white flex flex-col items-center space-y-1">
                 <button>
                   <Comment className="w-10 h-10" />
                 </button>
                 <span className="text-xl">{videoData.commentCount}</span>
               </div>
-              <div className="text-white flex flex-col items-center space-y-1">
+              {/* Shift share button away from right side*/}
+              <div className="mr-2 text-white flex flex-col items-center space-y-1">
                 <button>
                   <Share className="w-10 h-10" />
                 </button>

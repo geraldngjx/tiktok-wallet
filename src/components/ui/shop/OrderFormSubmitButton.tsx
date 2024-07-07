@@ -9,6 +9,7 @@ import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { useMagic } from "@/providers/MagicProvider";
 import { logout } from "@/utils/common";
 import { Disc3Icon } from "lucide-react";
+import { Payment } from "@mui/icons-material";
 
 interface OrderFormSubmitButton {
   itemId: number;
@@ -82,6 +83,7 @@ export default function OrderFormSubmitButton({
         totalPrice,
         currencies,
         transferNow,
+        // Order ID
         data.id
       );
       router.push(transferUrl);
@@ -131,7 +133,7 @@ export default function OrderFormSubmitButton({
               {paymentMethod == PaymentMethods.SOL
                 ? totalPrice.toFixed(4)
                 : totalPrice.toFixed(2)}{" "}
-              {paymentMethod}
+              {paymentMethod == PaymentMethods.SOL ? "SOL" : paymentMethod}
             </Typography>
           </div>
           <Button
