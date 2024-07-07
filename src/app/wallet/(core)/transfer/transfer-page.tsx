@@ -235,8 +235,8 @@ export default function Transfer() {
                     </div>
 
                     {!isEmpty(recipient.toAddress) ? (
-                        <div className="flex h-[80%] mt-8 w-[80vw] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
-                            <div className={`flex items-center w-full flex-col space-y-4 space-x-1 justify-center ${isPending && "grayscale"}`}>
+                        <div className="flex h-[70%] mt-8 w-[80vw] py-20 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
+                            <div className={`flex items-center w-full mb-10 flex-col space-y-8 space-x-1 justify-center ${isPending && "grayscale"}`}>
                                 <Input
                                     placeholder="0.00"
                                     type="number"
