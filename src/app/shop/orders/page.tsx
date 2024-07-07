@@ -6,16 +6,17 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedList } from "@/components/magicui/animated-list";
 import { Button } from "@mui/material";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Disc3Icon, List } from "lucide-react";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { SupabaseOrder } from "@/utils/types/shop_types";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useRouter } from "next/navigation";
 
 const ITEMS_PER_PAGE = 8;
 
 const OrdersPage = () => {
   const supabase = useContext(SupabaseBrowserContext);
   const { state, dispatch } = useContext(ShopContext);
+  const router = useRouter();
   const orders = state.orders;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,14 +60,31 @@ const OrdersPage = () => {
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-        <CircularProgress />
+        <Disc3Icon />
       </div>
     );
   }
 
-  if (orders.length === 0) {
+  if (orders.length > 0) {
     return (
-      <p className="text-gray-500 dark:text-gray-300">No orders available.</p>
+      <div className="flex flex-col gap-3 items-center justify-center h-screen text-center text-gray-500 dark:text-gray-300">
+        <List size={96} className="text-black" />
+        <h2 className="text-xl text-black font-semibold mb-2">
+          No Orders Available
+        </h2>
+        <p className="text-sm text-black mb-4">
+          It looks like you have not placed any orders yet.
+        </p>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            router.push("/shop");
+          }}
+        >
+          Shop Now
+        </Button>
+      </div>
     );
   }
 
