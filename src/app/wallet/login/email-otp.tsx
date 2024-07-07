@@ -20,7 +20,7 @@ const loginFormSchema = z.object({
     email: z.string().email(),
 });
 
-export default function EmailOTP() {
+export default function EmailOTP({ isFromShop = false }: { isFromShop?: boolean }) {
     const { token, setToken } = useMagicTokenStore();
 
     const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -82,7 +82,7 @@ export default function EmailOTP() {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email OTP Login</FormLabel>
+                                <FormLabel>{isFromShop ? "For security reason, please validate its you" : "Email OTP Login"}</FormLabel>
                                 <FormControl>
                                     <Input {...field} placeholder={token.length > 0 ? "Already logged in" : "Email"} />
                                 </FormControl>
@@ -96,7 +96,7 @@ export default function EmailOTP() {
                         className="w-full login-button"
                         disabled={isLoginInProgress || (token.length > 0 ? false : form.getValues("email").length == 0)}
                     >
-                        {isLoginInProgress ? <Disc3Icon /> : "Log in / Sign up"}
+                        {isLoginInProgress ? <Disc3Icon className="animate-spin" /> : isFromShop ? "Validate" : "Log in / Sign up"}
                     </Button>
                 </form>
             </Form>

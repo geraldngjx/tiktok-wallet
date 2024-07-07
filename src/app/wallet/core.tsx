@@ -136,15 +136,26 @@ export default function Core({
                                                     <p>EURC</p>
                                                 </div>
                                             )}
+                                            {parseFloat(usdcBalance) <= 0 && parseFloat(eurcBalance) <= 0 && (
+                                                <div className="flex items-center space-x-2 justify-between w-full text-2xl text-slate-600">
+                                                    <p>Stable coin balance is empty</p>
+                                                </div>
+                                            )}
                                         </div>
                                     ) : balanceToDisplay === "cryptoOnly" ? (
-                                        `${
-                                            solanaBalance
-                                                ? convertToFiat
-                                                    ? (parseFloat(solanaBalance) * (usdPerSol ?? 1)).toFixed(2)
-                                                    : solanaBalance
-                                                : "..."
-                                        } ${convertToFiat ? "USD" : "SOL"}`
+                                        solanaBalance && parseFloat(solanaBalance) <= 0 ? (
+                                            <div className="flex items-center space-x-2 justify-between w-full text-2xl text-slate-600">
+                                                <p>SOL balance is empty</p>
+                                            </div>
+                                        ) : (
+                                            `${
+                                                solanaBalance
+                                                    ? convertToFiat
+                                                        ? (parseFloat(solanaBalance) * (usdPerSol ?? 1)).toFixed(4)
+                                                        : solanaBalance
+                                                    : "..."
+                                            } ${convertToFiat ? "USD" : "SOL"}`
+                                        )
                                     ) : null}
                                 </>
                             )}
