@@ -92,69 +92,60 @@ export default function VideoScreen() {
 
   const isLiked = videoData.likes.includes(currentUserId);
 
-  return (
-    <div className="relative h-screen w-screen overflow-hidden">
-      {hasWindow && (
-        <ReactPlayer
-          url={videoData.videoUrl}
-          playing
-          loop
-          width="100%"
-          height="100%"
-          style={{ position: "absolute", top: 0, left: 0, objectFit: "cover" }}
-        />
-      )}
-      <div className="absolute inset-0 flex flex-col justify-between p-4">
-        <div className="flex flex-col justify-end h-full">
-          <div className="flex items-end justify-between">
-            {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
-            <div className="flex-1 space-y-4 mb-20">
-              <div className="text-white font-bold text-2xl">
-                {videoData.username}
-              </div>
-              <div className="flex items-center text-white text-base">
-                {videoData.caption}
-              </div>
-              <div className="flex items-center text-white text-base">
-                <span className="mr-2">🎵</span>
-                {videoData.songName}
-              </div>
-            </div>
-            {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
-            <div className="w-24 flex flex-col items-end space-y-6 mb-20">
-              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={videoData.profilePhoto}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
+    return (
+        <div className="relative h-screen w-screen overflow-hidden">
+            {hasWindow && (
+                <ReactPlayer
+                    url={videoData.videoUrl}
+                    playing
+                    loop
+                    width="100%"
+                    height="100%"
+                    style={{ position: "absolute", top: 0, left: 0, objectFit: "cover" }}
                 />
-              </div>
-              {/* Shift like button away from right side*/}
-              <div className="mr-2 text-white flex flex-col items-center space-y-1">
-                <button onClick={() => handleLike(videoData.id)}>
-                  <Favorite
-                    className={`w-10 h-10 ${
-                      isLiked ? "text-red-500" : "text-white"
-                    }`}
-                  />
-                </button>
-                <span className="text-xl">{videoData.likes.length}</span>
-              </div>
-              {/* Shift comment button away from right side*/}
-              <div className="mr-2 text-white flex flex-col items-center space-y-1">
-                <button>
-                  <Comment className="w-10 h-10" />
-                </button>
-                <span className="text-xl">{videoData.commentCount}</span>
-              </div>
-              {/* Shift share button away from right side*/}
-              <div className="mr-2 text-white flex flex-col items-center space-y-1">
-                <button>
-                  <Share className="w-10 h-10" />
-                </button>
-                <span className="text-xl">{videoData.shareCount}</span>
-              </div>
+            )}
+            <div className="absolute inset-0 flex flex-col justify-between p-4">
+                <div className="flex flex-col justify-end h-full">
+                    <div className="flex items-end justify-between">
+                        {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
+                        <div className="flex-1 space-y-4 mb-20">
+                            <div className="text-white font-bold text-2xl">{videoData.username}</div>
+                            <div className="flex items-center text-white text-base">{videoData.caption}</div>
+                            <div className="flex items-center text-white text-base">
+                                <span className="mr-2">🎵</span>
+                                {videoData.songName}
+                            </div>
+                        </div>
+                        {/* Temporarily set margin bottom 20px to avoid overlap with bottom nav */}
+                        <div className="w-24 flex flex-col items-end space-y-6 mb-20">
+                            <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={videoData.profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                            </div>
+                            {/* Shift like button away from right side*/}
+                            <div className="mr-2 text-white flex flex-col items-center space-y-1">
+                                <button onClick={() => handleLike(videoData.id)}>
+                                    <Favorite className={`w-10 h-10 ${isLiked ? "text-red-500" : "text-white"}`} />
+                                </button>
+                                <span className="text-xl">{videoData.likes.length}</span>
+                            </div>
+                            {/* Shift comment button away from right side*/}
+                            <div className="mr-2 text-white flex flex-col items-center space-y-1">
+                                <button>
+                                    <Comment className="w-10 h-10" />
+                                </button>
+                                <span className="text-xl">{videoData.commentCount}</span>
+                            </div>
+                            {/* Shift share button away from right side*/}
+                            <div className="mr-2 text-white flex flex-col items-center space-y-1">
+                                <button>
+                                    <Share className="w-10 h-10" />
+                                </button>
+                                <span className="text-xl">{videoData.shareCount}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
