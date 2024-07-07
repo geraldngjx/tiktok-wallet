@@ -69,7 +69,7 @@ export async function aggregateGasFees(connection: Connection, publicAddress: st
             amountLeft: (totalReceivedAmountFromPaymaster - totalGasFees) / LAMPORTS_PER_SOL,
         };
     } catch (error) {
-        console.error("Error aggregating gas fees:", error);
+        console.log("Error aggregating gas fees:", error);
         throw error;
     }
 }

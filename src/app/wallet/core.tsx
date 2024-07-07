@@ -57,7 +57,8 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
                 }
             }
         };
-        setTimeout(() => checkLoginandGetBalance(), 5000);
+        // setTimeout(() => checkLoginandGetBalance(), 5000);
+        checkLoginandGetBalance();
     }, [magic?.user, saveToSupabase, setEmail, setPublicAddress]);
 
     const { data: solanaBalance, isFetching, refetch } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }) });

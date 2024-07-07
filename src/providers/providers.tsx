@@ -9,23 +9,18 @@ import { ThemeProvider } from "./ThemeProvider";
 import { ShopProvider } from "./ShopProvider";
 
 export default function Providers({ children }: { children: ReactNode }) {
-  return (
-    <ReactQueryProvider>
-      <SupabaseBrowserProvider>
-        <MagicProvider>
-          <SolanaProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem={false}
-              forcedTheme="dark"
-            >
-              {/* ShopProvider to manage shop state */}
-              <ShopProvider>{children}</ShopProvider>
-            </ThemeProvider>
-          </SolanaProvider>
-        </MagicProvider>
-      </SupabaseBrowserProvider>
-    </ReactQueryProvider>
-  );
+    return (
+        <ReactQueryProvider>
+            <SupabaseBrowserProvider>
+                <SolanaProvider>
+                    <MagicProvider>
+                        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} forcedTheme="dark">
+                            {/* ShopProvider to manage shop state */}
+                            <ShopProvider>{children}</ShopProvider>
+                        </ThemeProvider>
+                    </MagicProvider>
+                </SolanaProvider>
+            </SupabaseBrowserProvider>
+        </ReactQueryProvider>
+    );
 }

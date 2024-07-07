@@ -1,27 +1,25 @@
 import { useSendTransactionMutation } from "@/app/hooks/useSendTransactionMutation";
 import ShineBorder, { TColorProp } from "@/components/magicui/shine-border";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { getIconByCurrency } from "@/utils/currencyIcon";
+import { CURRENCY } from "@/utils/types/currency";
 import { debounce, isEmpty } from "lodash";
 import { ChevronRightIcon, Disc3Icon } from "lucide-react";
-import TransactionSuccess from "./success";
 import { useSearchParams } from "next/navigation";
-import { CURRENCY } from "@/utils/types/currency";
 import { z } from "zod";
-import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
+import TransactionSuccess from "./success";
 
-import { useContext, useState, useCallback, useEffect } from "react";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { Input } from "@/components/ui/input";
 import { AutoComplete } from "@/components/ui/autocomplete";
+import { Input } from "@/components/ui/input";
+import { useAccountBalanceStore } from "@/store/accountBalanceStore";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 export default function Transfer() {
     const searchParams = useSearchParams();
+
+    const { solanaBalance, usdcBalance, eurcBalance, isLoadingEurcBalance, isLoadingSolanaBalance, isLoadingUsdcBalance } = useAccountBalanceStore();
 
     const supabase = useContext(SupabaseBrowserContext);
 
@@ -168,81 +166,14 @@ export default function Transfer() {
 
     return (
         <div className="flex flex-col w-full h-full space-y-10 items-center p-4">
-            {isSuccess && !isError ? (
+            {isEmpty(recipient.toAddress) && isLoadingEurcBalance && isLoadingSolanaBalance && isLoadingUsdcBalance ? (
+                <div className="w-full h-full flex justify-center items-center">
+                    <Disc3Icon className="animate-spin text-gray-400" size={24} />
+                </div>
+            ) : isSuccess && !isError ? (
                 <TransactionSuccess signature={signature} toEmail={recipient.email} amount={amount} currency={currency} />
             ) : (
                 <>
-                    {/* <Popover open={open} onOpenChange={setOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={open}
-                                className={`${isPending ? "grayscale" : ""} w-[80vw] justify-between`}
-                                disabled={isPending || (searchParams.has("email") && searchParams.get("email") !== undefined)}
-                            >
-                                {recipient.toAddress !== ""
-                                    ? searchResults.find((result) => result.publicAddress === recipient.toAddress)?.email
-                                    : "Select recipient"}
-                                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="p-0 w-[80vw] border-0">
-                            <Command>
-                                <CommandInput
-                                    placeholder="Search user..."
-                                    value={input}
-                                    onValueChange={setInput}
-                                    disabled={isPending || (searchParams.has("email") && searchParams.get("email") !== undefined)}
-                                />
-
-                                <CommandList className="drop-shadow-xl">
-                                    {loading ? (
-                                        <CommandEmpty>Searching user...</CommandEmpty>
-                                    ) : (
-                                        <>
-                                            <CommandEmpty>No user found.</CommandEmpty>
-                                            <CommandGroup>
-                                                {searchResults.map((result) => (
-                                                    <CommandItem
-                                                        className="space-x-2"
-                                                        key={result.id}
-                                                        value={result.publicAddress}
-                                                        onSelect={(currentValue) => {
-                                                            setRecipient(
-                                                                currentValue === recipient.toAddress
-                                                                    ? {
-                                                                          email: "",
-                                                                          toAddress: "",
-                                                                      }
-                                                                    : {
-                                                                          email: result.email,
-                                                                          toAddress: currentValue,
-                                                                      }
-                                                            );
-                                                            setOpen(false);
-                                                        }}
-                                                    >
-                                                        <Avatar>
-                                                            <AvatarFallback className="bg-slate-600">{result.email.substring(0, 2)}</AvatarFallback>
-                                                        </Avatar>
-                                                        <span>{result.email}</span>
-                                                        <CheckIcon
-                                                            className={cn(
-                                                                "ml-auto h-4 w-4",
-                                                                recipient.toAddress === result.publicAddress ? "opacity-100" : "opacity-0"
-                                                            )}
-                                                        />
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </>
-                                    )}
-                                </CommandList>
-                            </Command>
-                        </PopoverContent>
-                    </Popover> */}
-
                     <AutoComplete
                         options={searchResults.map((result) => ({
                             label: result.email,
@@ -284,31 +215,54 @@ export default function Transfer() {
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
                                 />
-
-                                <Select defaultValue="USDC" value={currency} onValueChange={(value: CURRENCY) => setCurrency(value)}>
-                                    <ShineBorder
-                                        className="text-center min-w-[80px] p-0 pl-[3px] size-[86px] text-2xl font-bold capitalize"
-                                        color={ringColor as TColorProp}
-                                        borderWidth={2}
-                                    >
-                                        <SelectTrigger className="size-[80px] border-0 flex flex-row justify-center items-center text-white focus:ring-0 focus:ring-offset-0 focus:border-0">
-                                            <SelectValue placeholder="Currency" />
-                                        </SelectTrigger>
-                                    </ShineBorder>
-
-                                    <SelectContent className="min-w-[80px] w-[80px]" side="bottom">
-                                        {availableCurrencies.map((currency) => (
-                                            <SelectItem
-                                                key={currency}
-                                                value={currency}
-                                                className="w-[80px] min-w-[80px] px-0 flex justify-center items-center"
-                                            >
-                                                {getIconByCurrency(currency as "Solana" | "USDC" | "EURC")} <span>{currency}</span>
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
                             </div>
+
+                            <Select defaultValue="USDC" value={currency} onValueChange={(value: CURRENCY) => setCurrency(value)}>
+                                <ShineBorder
+                                    className="text-center min-w-[60%] w-[60%] p-0 px-[3px] h-[86px] text-2xl font-bold capitalize"
+                                    color={ringColor as TColorProp}
+                                    borderWidth={2}
+                                >
+                                    <SelectTrigger className="w-full h-20 border-0 flex flex-row justify-center items-center text-white focus:ring-0 focus:ring-offset-0 focus:border-0">
+                                        <div className="w-full items-center flex px-2 justify-between">
+                                            <SelectValue placeholder="Currency" />
+
+                                            <span className="ml-auto text-xl text-muted-foreground">
+                                                {currency === "Solana"
+                                                    ? solanaBalance
+                                                    : currency === "USDC"
+                                                    ? usdcBalance
+                                                    : currency === "EURC"
+                                                    ? eurcBalance
+                                                    : undefined}
+                                            </span>
+                                        </div>
+                                    </SelectTrigger>
+                                </ShineBorder>
+
+                                <SelectContent className="w-full" side="bottom">
+                                    {availableCurrencies.map((currency) => (
+                                        <SelectItem
+                                            key={currency}
+                                            value={currency}
+                                            className="w-full min-w-[80px] px-0 flex justify-center items-center"
+                                            balance={
+                                                currency === "Solana"
+                                                    ? solanaBalance
+                                                    : currency === "USDC"
+                                                    ? usdcBalance
+                                                    : currency === "EURC"
+                                                    ? eurcBalance
+                                                    : undefined
+                                            }
+                                        >
+                                            <>
+                                                {getIconByCurrency(currency as "Solana" | "USDC" | "EURC")} <span>{currency}</span>
+                                            </>
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
 
                             <Input
                                 placeholder="Add a note (Optional)"
