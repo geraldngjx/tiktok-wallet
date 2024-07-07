@@ -30,7 +30,9 @@ function Page() {
   const [time, setTime] = useState(dayjs());
 
   const [amount, setAmount] = useState("");
-  const [acceptedCurrency, setAcceptedCurrency] = useState(CURRENCY.SOLANA);
+  const [acceptedCurrency, setAcceptedCurrency] = useState<
+    [CURRENCY.SOLANA | CURRENCY.USDC | CURRENCY.EURC]
+  >([CURRENCY.SOLANA]);
 
   const [qrCodeValue, setQrCodeValue] = useState("");
 
@@ -80,7 +82,7 @@ function Page() {
             onOpenChange={(open) => {
               if (!open) {
                 setAmount("");
-                setAcceptedCurrency(CURRENCY.SOLANA);
+                setAcceptedCurrency([CURRENCY.SOLANA]);
               }
               setOpen(open);
             }}
@@ -102,9 +104,9 @@ function Page() {
                     type="single"
                     className="space-x-2"
                     defaultValue={CURRENCY.USDC}
-                    value={acceptedCurrency}
+                    value={acceptedCurrency[0]}
                     onValueChange={(value: CURRENCY) =>
-                      setAcceptedCurrency(value)
+                      setAcceptedCurrency([value])
                     }
                   >
                     <ToggleGroupItem
@@ -145,10 +147,9 @@ function Page() {
                       encodeURIComponent(
                         `byteSecure=true&email=${
                           magicUser?.email
-                        }&amount=${amount}&currency=${acceptedCurrency}&time=${new Date().getTime()}`.replaceAll(
-                          "+",
-                          "%2B"
-                        )
+                        }&amount=${amount}&currencies=${acceptedCurrency.join(
+                          ","
+                        )}&time=${new Date().getTime()}`.replaceAll("+", "%2B")
                       )
                     );
                   }}

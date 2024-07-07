@@ -25,7 +25,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>(
     PaymentMethods.USDC
   );
-  const { id, price, name, image } = selectedItem;
+  const { id, price, name, image, merchantEmail } = selectedItem;
 
   const totalPriceInSGD = getTotalPrice(price, quantity, SHIPPING_COST);
 
@@ -173,7 +173,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
           paymentMethod={paymentMethod}
           itemImage={image}
           itemName={name}
-          merchantEmail="wangzihao139+tiktokwallet2@gmail.com"
+          merchantEmail={merchantEmail}
         />
       </div>
     </div>
