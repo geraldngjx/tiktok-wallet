@@ -96,8 +96,8 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
 const SelectItem = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.Item>,
-    React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & { balance?: string }
->(({ className, children, balance, ...props }, ref) => (
+    React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & { balance?: string; isInsufficientBalance?: boolean }
+>(({ className, children, balance, isInsufficientBalance, ...props }, ref) => (
     <SelectPrimitive.Item
         ref={ref}
         className={cn(
@@ -115,7 +115,7 @@ const SelectItem = React.forwardRef<
         <div className="w-full items-center flex px-4 justify-between">
             <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
 
-            {balance && <span className="ml-auto text-xl text-muted-foreground">{balance}</span>}
+            {balance && <span className={cn("ml-auto text-xl text-muted-foreground", isInsufficientBalance && "text-red-400")}>{balance}</span>}
         </div>
     </SelectPrimitive.Item>
 ));
