@@ -44,7 +44,7 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
 
     switch (largestAmount) {
         case solanaAmount:
-            amount = `${solanaAmount.toFixed(2)} SOL`;
+            amount = `${solanaAmount.toFixed(4)} SOL`;
             break;
         case Math.abs(usdcAmount):
             amount = `${Math.abs(usdcAmount).toFixed(2)} USDC`;

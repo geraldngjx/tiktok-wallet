@@ -146,7 +146,7 @@ export default function Core({
                                         `${
                                             solanaBalance
                                                 ? convertToFiat
-                                                    ? (parseFloat(solanaBalance) * (usdPerSol ?? 1)).toFixed(2)
+                                                    ? (parseFloat(solanaBalance) * (usdPerSol ?? 1)).toFixed(4)
                                                     : solanaBalance
                                                 : "..."
                                         } ${convertToFiat ? "USD" : "SOL"}`
