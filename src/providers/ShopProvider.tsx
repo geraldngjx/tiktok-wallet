@@ -6,7 +6,7 @@ import {
   useContext,
 } from "react";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
-import { ShopItem, Order, SupabaseOrder } from "@/utils/types/shop_types";
+import { ShopItem, SupabaseOrder } from "@/utils/types/shop_types";
 
 interface ShopState {
   all: ShopItem[];
@@ -90,7 +90,12 @@ export const ShopProvider = ({ children }: { children: ReactNode }) => {
       if (error) {
         console.error("Error fetching orders:", error);
       } else {
-        dispatch({ type: "SET_ORDERS", payload: data });
+        // Sort orders by date with the latest one first
+        const sortedOrders = data.sort(
+          (a: SupabaseOrder, b: SupabaseOrder) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        dispatch({ type: "SET_ORDERS", payload: sortedOrders });
       }
     };
 

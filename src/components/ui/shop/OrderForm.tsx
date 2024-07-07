@@ -34,10 +34,6 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
     paymentMethod
   );
 
-  const handleQuantityChange = useCallback((newQuantity: number) => {
-    setQuantity(newQuantity);
-  }, []);
-
   const decrementQuantity = useCallback(() => {
     setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
   }, []);
@@ -77,7 +73,6 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
             type="number"
             id="quantity"
             value={quantity}
-            onChange={(e) => handleQuantityChange(Number(e.target.value))}
             className="w-16 text-center"
           />
           <Button onClick={incrementQuantity}>+</Button>
@@ -85,7 +80,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
       </div>
       <div className="flex items-center justify-between">
         <Label>Subtotal</Label>
-        <span>S${price * quantity}</span>
+        <span>S${(price * quantity).toFixed(2)}</span>
       </div>
       <div className="flex items-center justify-between">
         <Label>Shipping</Label>

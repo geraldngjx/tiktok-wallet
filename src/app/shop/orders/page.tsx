@@ -1,20 +1,25 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "@/providers/ShopProvider";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedList } from "@/components/magicui/animated-list";
 import { Button } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
+import { SupabaseOrder } from "@/utils/types/shop_types";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 8;
 
 const OrdersPage = () => {
-  const { state } = useContext(ShopContext);
+  const supabase = useContext(SupabaseBrowserContext);
+  const { state, dispatch } = useContext(ShopContext);
   const orders = state.orders;
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(orders.length / ITEMS_PER_PAGE);
@@ -26,11 +31,38 @@ const OrdersPage = () => {
   // Slice the orders array to get only the current page's orders
   const currentOrders = orders.slice(startIndex, endIndex);
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setLoading(true);
+      const { data: orders, error } = await supabase.from("Orders").select("*");
+      if (error) {
+        console.error("Error fetching orders:", error.message);
+      } else {
+        // Sort orders by date with the latest one first
+        const sortedOrders = orders.sort(
+          (a: SupabaseOrder, b: SupabaseOrder) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        dispatch({ type: "SET_ORDERS", payload: sortedOrders });
+      }
+      setLoading(false);
+    };
+    fetchOrders();
+  }, [supabase, dispatch]);
+
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   if (orders.length === 0) {
     return (

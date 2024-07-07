@@ -1,5 +1,3 @@
-// components/VideoScreen.tsx
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -21,7 +19,8 @@ interface VideoData {
 const mockVideoList: VideoData[] = [
   {
     id: "1",
-    videoUrl: "/typo_1.mp4",
+    videoUrl:
+      "https://pldphpgxyiuevonrkpas.supabase.co/storage/v1/object/public/shopitem/typo_1.mp4",
     username: "user1",
     caption: "Sample caption",
     songName: "Sample Song",

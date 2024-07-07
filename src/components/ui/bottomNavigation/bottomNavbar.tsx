@@ -117,6 +117,7 @@ export default function BottomNavbar() {
           href="/profile"
           label="Profile"
           icon={<PersonOutline />}
+          disabled={true}
           sx={{
             color: value === 4 ? "white" : "grey",
             "& .MuiBottomNavigationAction-label": {

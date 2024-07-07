@@ -24,7 +24,6 @@ import ShopItemPanel from "@/components/ui/shop/ShopItemPanel";
 import { ShopContext } from "@/providers/ShopProvider";
 import { ShopItem } from "@/utils/types/shop_types";
 import Link from "next/link";
-import { AnimatedList } from "@/components/magicui/animated-list";
 
 // Constants for the layout calculations
 const NAVBAR_HEIGHT = 56;
@@ -95,10 +94,26 @@ export default function Shop() {
             label="Orders"
             icon={<Menu />}
           />
-          <BottomNavigationAction label="Coupons" icon={<Ticket />} />
-          <BottomNavigationAction label="Messages" icon={<MessageSharp />} />
-          <BottomNavigationAction label="Favorites" icon={<Bookmark />} />
-          <BottomNavigationAction label="History" icon={<History />} />
+          <BottomNavigationAction
+            label="Coupons"
+            icon={<Ticket />}
+            disabled={true}
+          />
+          <BottomNavigationAction
+            label="Messages"
+            icon={<MessageSharp />}
+            disabled={true}
+          />
+          <BottomNavigationAction
+            label="Favorites"
+            icon={<Bookmark />}
+            disabled={true}
+          />
+          <BottomNavigationAction
+            label="History"
+            icon={<History />}
+            disabled={true}
+          />
         </BottomNavigation>
       </Box>
       <Box
@@ -160,6 +175,7 @@ export default function Shop() {
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="accessories"
+                disabled={true}
               />
               <Tab
                 label="Entertainment"
@@ -168,6 +184,7 @@ export default function Shop() {
                   "&.Mui-selected": { color: "black" },
                 }}
                 value="entertainment"
+                disabled={true}
               />
             </TabList>
           </Box>
