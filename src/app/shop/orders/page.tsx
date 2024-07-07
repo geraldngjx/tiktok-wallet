@@ -123,6 +123,11 @@ const OrdersPage = () => {
                   >
                     {order.status ? "Payment Accepted" : "Payment Failed"}
                   </Badge>
+                  <div>
+                    <small className="text-xs text-gray-500">
+                      {new Date(order.created_at).toLocaleString()}
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
