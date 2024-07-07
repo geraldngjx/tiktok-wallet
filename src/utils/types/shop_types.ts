@@ -10,6 +10,7 @@ export interface ShopItem {
   description: string;
   category: string;
   merchantEmail: string;
+  merchant_email?: string;
 }
 
 export interface ShopItemDeal {

@@ -25,7 +25,9 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>(
     PaymentMethods.USDC
   );
-  const { id, price, name, image, merchantEmail } = selectedItem;
+  const { id, price, name, image } = selectedItem;
+
+  console.log("merchantEmail:", selectedItem.merchantEmail);
 
   const totalPriceInSGD = getTotalPrice(price, quantity, SHIPPING_COST);
 
@@ -173,7 +175,8 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
           paymentMethod={paymentMethod}
           itemImage={image}
           itemName={name}
-          merchantEmail={merchantEmail}
+          // Due to the way the data is structured in the database
+          merchantEmail={selectedItem.merchant_email ?? ""}
         />
       </div>
     </div>
