@@ -1,6 +1,6 @@
 import { PaymentMethods } from "@/utils/enums/wallet_enums";
 import { constructTransferUrl } from "@/utils/wallet";
-import { Typography, useTheme, CircularProgress } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Button } from "../button";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
@@ -8,6 +8,7 @@ import { useCallback, useContext, useState } from "react";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
 import { useMagic } from "@/providers/MagicProvider";
 import { logout } from "@/utils/common";
+import { Disc3Icon } from "lucide-react";
 
 interface OrderFormSubmitButton {
   itemId: number;
@@ -105,7 +106,7 @@ export default function OrderFormSubmitButton({
     <>
       {loading && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50">
-          <CircularProgress color="inherit" />
+          <Disc3Icon className="w-50 h-50 text-black animate-spin" />
         </div>
       )}
       <div
