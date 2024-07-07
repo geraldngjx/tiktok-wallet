@@ -5,89 +5,92 @@ import ReactPlayer from "react-player";
 import { Favorite, Comment, Share } from "@mui/icons-material";
 
 interface VideoData {
-    id: string;
-    videoUrl: string;
-    username: string;
-    caption: string;
-    songName: string;
-    profilePhoto: string;
-    likes: string[];
-    commentCount: number;
-    shareCount: number;
+  id: string;
+  videoUrl: string;
+  username: string;
+  caption: string;
+  songName: string;
+  profilePhoto: string;
+  likes: string[];
+  commentCount: number;
+  shareCount: number;
 }
 
 const mockVideoList: VideoData[] = [
-    {
-        id: "1",
-        videoUrl: "https://pldphpgxyiuevonrkpas.supabase.co/storage/v1/object/public/shopitem/typo_1.mp4",
-        username: "user1",
-        caption: "Sample caption",
-        songName: "Sample Song",
-        profilePhoto: "/sample_profile.jpg",
-        likes: [],
-        commentCount: 10,
-        shareCount: 5,
-    },
+  {
+    id: "1",
+    videoUrl:
+      "https://pldphpgxyiuevonrkpas.supabase.co/storage/v1/object/public/shopitem/typo_1.mp4",
+    username: "user1",
+    caption: "Sample caption",
+    songName: "Sample Song",
+    profilePhoto: "/sample_profile.jpg",
+    likes: [],
+    commentCount: 10,
+    shareCount: 5,
+  },
 ];
 
 const getCurrentUserId = () => "currentUserId";
 
 export default function VideoScreen() {
-    const [videoState, setVideoState] = useState({
-        currentVideoIndex: 0,
-        videos: mockVideoList,
-    });
-    const [hasWindow, setHasWindow] = useState(false);
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            setHasWindow(true);
-        }
-    }, []);
+  const [videoState, setVideoState] = useState({
+    currentVideoIndex: 0,
+    videos: mockVideoList,
+  });
+  const [hasWindow, setHasWindow] = useState(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setHasWindow(true);
+    }
+  }, []);
 
-    const videoData = videoState.videos[videoState.currentVideoIndex];
-    const currentUserId = getCurrentUserId();
+  const videoData = videoState.videos[videoState.currentVideoIndex];
+  const currentUserId = getCurrentUserId();
 
-    useEffect(() => {
-        // Disable scrolling on body and html
-        document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
+  useEffect(() => {
+    // Disable scrolling on body and html
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
-        // Ensure the container takes up full viewport height
-        document.documentElement.style.height = "100%";
-        document.body.style.height = "100%";
+    // Ensure the container takes up full viewport height
+    document.documentElement.style.height = "100%";
+    document.body.style.height = "100%";
 
-        // Cleanup function to re-enable scrolling
-        return () => {
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-            document.documentElement.style.height = "";
-            document.body.style.height = "";
-        };
-    }, []);
-
-    const handleLike = (id: string) => {
-        setVideoState((prevState) => {
-            const updatedVideos = prevState.videos.map((video) => {
-                if (video.id === id) {
-                    const hasLiked = video.likes.includes(currentUserId);
-                    const newLikes = hasLiked ? video.likes.filter((like) => like !== currentUserId) : [...video.likes, currentUserId];
-
-                    return {
-                        ...video,
-                        likes: newLikes,
-                    };
-                }
-                return video;
-            });
-
-            return {
-                ...prevState,
-                videos: updatedVideos,
-            };
-        });
+    // Cleanup function to re-enable scrolling
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.height = "";
+      document.body.style.height = "";
     };
+  }, []);
 
-    const isLiked = videoData.likes.includes(currentUserId);
+  const handleLike = (id: string) => {
+    setVideoState((prevState) => {
+      const updatedVideos = prevState.videos.map((video) => {
+        if (video.id === id) {
+          const hasLiked = video.likes.includes(currentUserId);
+          const newLikes = hasLiked
+            ? video.likes.filter((like) => like !== currentUserId)
+            : [...video.likes, currentUserId];
+
+          return {
+            ...video,
+            likes: newLikes,
+          };
+        }
+        return video;
+      });
+
+      return {
+        ...prevState,
+        videos: updatedVideos,
+      };
+    });
+  };
+
+  const isLiked = videoData.likes.includes(currentUserId);
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
@@ -153,6 +156,9 @@ export default function VideoScreen() {
                 <span className="text-xl">{videoData.shareCount}</span>
               </div>
             </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
