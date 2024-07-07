@@ -45,7 +45,7 @@ function Page() {
                     <span className="font-semibold">Email</span>
 
                     <span className="w-full break-all">
-                        {publicAddress?.length == 0 ? <Disc3Icon color="#ff0050" className="animate-spin mt-2 stroke-1" size={40} /> : email}
+                        {publicAddress?.length == 0 ? <Disc3Icon color="white" className="animate-spin mt-2 stroke-1" size={40} /> : email}
                     </span>
                 </div>
 
@@ -57,7 +57,7 @@ function Page() {
                         </Button>
                     </div>
                     <span className="w-full break-all">
-                        {publicAddress?.length == 0 ? <Disc3Icon color="#ff0050" className="animate-spin mt-2 stroke-1" size={40} /> : publicAddress}
+                        {publicAddress?.length == 0 ? <Disc3Icon color="white" className="animate-spin mt-2 stroke-1" size={40} /> : publicAddress}
                     </span>
                 </div>
             </div>
