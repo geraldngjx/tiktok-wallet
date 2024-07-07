@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, Disc3Icon, List } from "lucide-react";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { SupabaseOrder } from "@/utils/types/shop_types";
 import { useRouter } from "next/navigation";
+import { PaymentMethods } from "@/utils/enums/wallet_enums";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -113,7 +114,12 @@ const OrdersPage = () => {
                     x{order.item_quantity}
                   </div>
                   <div className="text-sm text-gray-600 font-bold">
-                    {order.total_price?.toFixed(2)} {order.currency}
+                    {order.currency === PaymentMethods.SOL
+                      ? order.total_price?.toFixed(4)
+                      : order.total_price?.toFixed(2)}
+                    {order.currency === PaymentMethods.SOL
+                      ? " SOL"
+                      : " " + order.currency}
                   </div>
                   <Badge
                     variant={order.status ? "default" : "destructive"}

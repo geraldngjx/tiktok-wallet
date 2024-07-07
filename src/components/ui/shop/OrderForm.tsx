@@ -103,7 +103,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
         >
           <div className="flex items-center gap-2">
             <Label
-              htmlFor="USDC"
+              htmlFor={PaymentMethods.USDC}
               className="flex items-center gap-2 cursor-pointer"
             >
               <Image src="/usdc.png" alt="USDC" width={24} height={24} />
@@ -111,7 +111,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
             </Label>
             <RadioGroupItem
               value={PaymentMethods.USDC}
-              id="USDC"
+              id={PaymentMethods.USDC}
               className={cn(
                 "w-4 h-4 border dark:border-gray-600 ml-auto",
                 paymentMethod === PaymentMethods.USDC
@@ -123,7 +123,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
 
           <div className="flex items-center gap-2">
             <Label
-              htmlFor="EURC"
+              htmlFor={PaymentMethods.EURC}
               className="flex items-center gap-2 cursor-pointer"
             >
               <Image src="/eurc.png" alt="EURC" width={24} height={24} />
@@ -131,7 +131,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
             </Label>
             <RadioGroupItem
               value={PaymentMethods.EURC}
-              id="EURC"
+              id={PaymentMethods.EURC}
               className={cn(
                 "w-4 h-4 border dark:border-gray-600 ml-auto",
                 paymentMethod === PaymentMethods.EURC
@@ -143,12 +143,12 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
 
           <div className="flex items-center gap-2">
             <Label
-              htmlFor="SOL"
+              htmlFor={PaymentMethods.SOL}
               className="flex items-center gap-2 cursor-pointer"
             >
               <Image
                 src="/solana_payment.png"
-                alt="SOL"
+                alt={PaymentMethods.SOL}
                 width={24}
                 height={24}
               />
@@ -156,7 +156,7 @@ const OrdersForm: React.FC<OrdersFormProps> = ({ className, selectedItem }) => {
             </Label>
             <RadioGroupItem
               value={PaymentMethods.SOL}
-              id="SOL"
+              id={PaymentMethods.SOL}
               className={cn(
                 "w-4 h-4 border dark:border-gray-600 ml-auto",
                 paymentMethod === PaymentMethods.SOL
