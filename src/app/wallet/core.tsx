@@ -12,9 +12,25 @@ import Link from "next/link";
 import { Dispatch, SetStateAction, useCallback, useContext, useEffect } from "react";
 import { useSolanaTokenBalanceQuery } from "../hooks/useTokenBalanceQuery";
 import More from "./more";
+import { useSolanaPriceQuery } from "../hooks/useSolanaPriceQuery";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import "swiper/css";
+// import "swiper/css/pagination";
+// import { Pagination } from "swiper/modules";
 
-export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: boolean; setIsRefreshing: Dispatch<SetStateAction<boolean>> }) {
+export default function Core({
+    isRefreshing,
+    setIsRefreshing,
+    balanceToDisplay,
+    convertToFiat,
+}: {
+    isRefreshing: boolean;
+    setIsRefreshing: Dispatch<SetStateAction<boolean>>;
+    balanceToDisplay: "stableCoinsOnly" | "cryptoOnly" | "both";
+    convertToFiat: boolean;
+}) {
     const { publicAddress, setPublicAddress, setEmail } = useMagicTokenStore();
+    const { usdcBalance, eurcBalance } = useAccountBalanceStore();
 
     const { magic, connection } = useMagic();
 
@@ -37,6 +53,11 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
         [supabase]
     );
 
+    const { data: usdPerSol } = useQuery({
+        ...useSolanaPriceQuery(),
+        enabled: convertToFiat,
+    });
+
     useEffect(() => {
         const checkLoginandGetBalance = async () => {
             const isLoggedIn = await magic?.user.isLoggedIn();
@@ -57,17 +78,17 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
                 }
             }
         };
-        setTimeout(() => checkLoginandGetBalance(), 5000);
+        // setTimeout(() => checkLoginandGetBalance(), 5000);
+        checkLoginandGetBalance();
     }, [magic?.user, saveToSupabase, setEmail, setPublicAddress]);
 
-    const { solanaBalance, setSolanaBalance } = useAccountBalanceStore();
-    const { data, isFetching, refetch } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }) });
+    const { data: solanaBalance, isFetching, refetch } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }) });
 
     const refresh = useCallback(async () => {
         await refetch();
         setTimeout(() => {
             setIsRefreshing(false);
-        }, 500);
+        }, 1000);
     }, [refetch, setIsRefreshing]);
 
     useEffect(() => {
@@ -82,21 +103,51 @@ export default function Core({ isRefreshing, setIsRefreshing }: { isRefreshing: 
         }
     }, [connection, refresh]);
 
-    useEffect(() => {
-        setSolanaBalance("...");
-    }, [magic, setSolanaBalance]);
-
     return (
         <section className="h-fit flex flex-col p-4 mb-4">
             <Meteors />
 
             <div className="z-50">
-                <div className="text-white w-full flex flex-col h-full justify-center items-center px-4 space-y-8">
-                    <div className="flex flex-col space-y-2 justify-center items-center">
-                        <h1>Your balance</h1>
+                <div className="text-white w-full flex flex-col h-full justify-center items-center px-4 space-y-4">
+                    <div className="flex flex-col space-y-3 justify-center items-center">
+                        <h1 className="font-medium">Your balance</h1>
 
-                        <span className="text-5xl font-semibold flex items-center text-center">
-                            {isRefreshing ? <Disc3Icon className="animate-spin mr-2" size={40} /> : solanaBalance} SOL
+                        <span className="text-5xl font-semibold flex items-center text-center min-h-20">
+                            {isRefreshing || isFetching ? (
+                                <Disc3Icon className="animate-spin mr-2" size={40} />
+                            ) : (
+                                <>
+                                    {balanceToDisplay === "stableCoinsOnly" ? (
+                                        <div
+                                            className={`flex flex-col w-full ${
+                                                parseFloat(usdcBalance) === 0 || parseFloat(eurcBalance) ? "text-4xl" : "text-5xl"
+                                            }`}
+                                        >
+                                            {parseFloat(usdcBalance) > 0 && (
+                                                <div className="flex items-center space-x-2 justify-between w-full">
+                                                    <p>{usdcBalance ?? "..."}</p>
+                                                    <p>USDC</p>
+                                                </div>
+                                            )}
+
+                                            {parseFloat(eurcBalance) > 0 && (
+                                                <div className="flex items-center space-x-2 justify-between w-full">
+                                                    <p>{eurcBalance ?? "..."}</p>
+                                                    <p>EURC</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : balanceToDisplay === "cryptoOnly" ? (
+                                        `${
+                                            solanaBalance
+                                                ? convertToFiat
+                                                    ? (parseFloat(solanaBalance) * (usdPerSol ?? 1)).toFixed(2)
+                                                    : solanaBalance
+                                                : "..."
+                                        } ${convertToFiat ? "USD" : "SOL"}`
+                                    ) : null}
+                                </>
+                            )}
                         </span>
                     </div>
 

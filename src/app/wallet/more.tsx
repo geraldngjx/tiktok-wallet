@@ -34,7 +34,7 @@ export default function More() {
                 </div>
             </DrawerTrigger>
 
-            <DrawerContent className="px-6 min-h-[55vh] bg-neutral-900 border-0">
+            <DrawerContent className="px-6 min-h-[60vh] bg-neutral-900 border-0">
                 <DialogTitle className="hidden">More</DialogTitle>
 
                 <div className="flex flex-col w-full space-y-2 mt-8">
@@ -75,7 +75,14 @@ export default function More() {
                     </div>
                 </div>
 
-                <Globe className="top-80" />
+                <p className="text-center text-slate-600 text-sm mt-8">
+                    by{" "}
+                    <a href="https://devpost.com/software/bytesecure" target="_blank" className="underline">
+                        ByteSecure
+                    </a>
+                </p>
+
+                <Globe className="top-[350px]" />
                 <div className="pointer-events-none absolute inset-0 h-full bg-[radial-gradient(circle_at_50%_200%,rgba(0,0,0,0.2),rgba(255,255,255,0))]" />
             </DrawerContent>
         </Drawer>

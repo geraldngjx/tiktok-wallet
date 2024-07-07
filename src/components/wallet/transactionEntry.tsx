@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
 import { MoveDownLeftIcon, MoveUpRightIcon } from "lucide-react";
+import { SolanaDevnetMyPaymasterAddress } from "@/constants/tokenAddress";
 
 export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMeta & { signature: string }) | null }) {
     const { publicAddress } = useMagicTokenStore();
@@ -18,9 +19,13 @@ export default function TransactionEntry({ tx }: { tx: (ParsedTransactionWithMet
         ...useTiktokWalletUserEmail({ publicAddress: publicAddress === fromAddress ? toAddress! : fromAddress! }),
     });
 
+    if (fromAddress === SolanaDevnetMyPaymasterAddress.PAYMASTER) return null;
+
     // console.table(tx);
 
     const solanaAmount = (tx?.meta!.postBalances[1]! - tx?.meta!.preBalances[1]!) / LAMPORTS_PER_SOL;
+
+    // console.log("solanaAmount: ", solanaAmount);
 
     const usdcAmount = getTxBalance({ stableCoin: "usdc", tx: tx!, publicAddress: publicAddress! });
     const eurcAmount = getTxBalance({ stableCoin: "eurc", tx: tx!, publicAddress: publicAddress! });

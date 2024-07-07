@@ -33,9 +33,9 @@ export default function TransactionList({
         ...useTransactionsQuery({ publicAddress }),
         enabled: !!connection && !!publicAddress,
         placeholderData: keepPreviousData,
-        // refetchInterval: 20000,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
     });
 
     const {

@@ -13,7 +13,7 @@ import Image from "next/image";
 function Page() {
     const { toast } = useToast();
 
-    const { publicAddress } = useMagicTokenStore();
+    const { publicAddress, email } = useMagicTokenStore();
 
     const copy = useCallback(() => {
         if (publicAddress) {
@@ -41,6 +41,13 @@ function Page() {
                         <div className="bg-green-400 size-2 rounded-full animate-ping" />
                     </div>
                 </div>
+                <div className="flex flex-col w-full space-y-1">
+                    <span className="font-semibold">Email</span>
+
+                    <span className="w-full break-all">
+                        {publicAddress?.length == 0 ? <Disc3Icon color="white" className="animate-spin mt-2 stroke-1" size={40} /> : email}
+                    </span>
+                </div>
 
                 <div className="flex flex-col w-full space-y-1">
                     <div className="flex items-center space-x-4">
@@ -50,7 +57,7 @@ function Page() {
                         </Button>
                     </div>
                     <span className="w-full break-all">
-                        {publicAddress?.length == 0 ? <Disc3Icon color="#ff0050" className="animate-spin mt-2 stroke-1" size={40} /> : publicAddress}
+                        {publicAddress?.length == 0 ? <Disc3Icon color="white" className="animate-spin mt-2 stroke-1" size={40} /> : publicAddress}
                     </span>
                 </div>
             </div>
