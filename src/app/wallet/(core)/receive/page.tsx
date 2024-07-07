@@ -147,7 +147,7 @@ function Page() {
                       encodeURIComponent(
                         `byteSecure=true&email=${
                           magicUser?.email
-                        }&amount=${amount}&currency=${acceptedCurrency.join(
+                        }&amount=${amount}&currencies=${acceptedCurrency.join(
                           ","
                         )}&time=${new Date().getTime()}`.replaceAll("+", "%2B")
                       )
