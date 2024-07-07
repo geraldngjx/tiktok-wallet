@@ -133,7 +133,7 @@ function Page() {
                 <Input
                   placeholder="0.00"
                   type="number"
-                  className="h-14 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500 px-0"
+                  className="h-20 w-40 text-6xl font-bold text-center border-0 focus-visible:ring-0 focus-visible:placeholder:opacity-0 caret-slate-500 px-0"
                   onChange={(e) => setAmount(e.target.value)}
                 />
 
