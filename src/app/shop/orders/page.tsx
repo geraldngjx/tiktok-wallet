@@ -65,7 +65,7 @@ const OrdersPage = () => {
     );
   }
 
-  if (orders.length > 0) {
+  if (orders.length === 0) {
     return (
       <div className="flex flex-col gap-3 items-center justify-center h-screen text-center text-gray-500 dark:text-gray-300">
         <List size={96} className="text-black" />
