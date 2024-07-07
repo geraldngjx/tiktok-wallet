@@ -96,7 +96,7 @@ export default function EmailOTP() {
                         className="w-full login-button"
                         disabled={isLoginInProgress || (token.length > 0 ? false : form.getValues("email").length == 0)}
                     >
-                        {isLoginInProgress ? <Disc3Icon /> : "Log in / Sign up"}
+                        {isLoginInProgress ? <Disc3Icon className="animate-spin" /> : "Log in / Sign up"}
                     </Button>
                 </form>
             </Form>
