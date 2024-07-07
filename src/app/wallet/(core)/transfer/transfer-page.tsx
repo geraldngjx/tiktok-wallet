@@ -193,7 +193,7 @@ export default function Transfer() {
     }, [amount, currency, isInsufficientBalance, memo, recipient.toAddress, searchParams, sendTransaction]);
 
     return (
-        <div className="flex flex-col w-full h-full space-y-10 items-center p-4">
+        <div className="flex flex-col w-full h-full items-center p-4">
             {isEmpty(recipient.toAddress) && isLoadingEurcBalance && isLoadingSolanaBalance && isLoadingUsdcBalance ? (
                 <div className="w-full h-full flex justify-center items-center">
                     <Disc3Icon className="animate-spin text-gray-400" size={24} />
@@ -202,39 +202,41 @@ export default function Transfer() {
                 <TransactionSuccess signature={signature} toEmail={recipient.email} amount={amount} currency={currency} />
             ) : (
                 <>
-                    <AutoComplete
-                        options={searchResults.map((result) => ({
-                            label: result.email,
-                            value: result.publicAddress,
-                        }))}
-                        inputValue={input}
-                        setInputValue={setInput}
-                        value={{
-                            label: recipient.email,
-                            value: recipient.toAddress,
-                        }}
-                        onValueChange={(value) => {
-                            setRecipient(
-                                value.value === recipient.toAddress
-                                    ? {
-                                          email: "",
-                                          toAddress: "",
-                                      }
-                                    : {
-                                          email: value.label,
-                                          toAddress: value.value,
-                                      }
-                            );
-                        }}
-                        emptyMessage="No results"
-                        placeholder="Search user"
-                        isLoading={loading}
-                        disabled={isPending || (searchParams.has("email") && searchParams.get("email") !== undefined)}
-                    />
+                    <div className="h-fit w-full">
+                        <AutoComplete
+                            options={searchResults.map((result) => ({
+                                label: result.email,
+                                value: result.publicAddress,
+                            }))}
+                            inputValue={input}
+                            setInputValue={setInput}
+                            value={{
+                                label: recipient.email,
+                                value: recipient.toAddress,
+                            }}
+                            onValueChange={(value) => {
+                                setRecipient(
+                                    value.value === recipient.toAddress
+                                        ? {
+                                              email: "",
+                                              toAddress: "",
+                                          }
+                                        : {
+                                              email: value.label,
+                                              toAddress: value.value,
+                                          }
+                                );
+                            }}
+                            emptyMessage="No results"
+                            placeholder="Search user"
+                            isLoading={loading}
+                            disabled={isPending || (searchParams.has("email") && searchParams.get("email") !== undefined)}
+                        />
+                    </div>
 
                     {!isEmpty(recipient.toAddress) ? (
-                        <div className="flex h-[90%] w-[80vw] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
-                            <div className={`flex items-center w-full flex-col space-y-10 space-x-1 justify-center ${isPending && "grayscale"}`}>
+                        <div className="flex h-[80%] mt-8 w-[80vw] py-40 items-center justify-between flex-col absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-0">
+                            <div className={`flex items-center w-full flex-col space-y-4 space-x-1 justify-center ${isPending && "grayscale"}`}>
                                 <Input
                                     placeholder="0.00"
                                     type="number"
@@ -304,7 +306,9 @@ export default function Transfer() {
                             </div>
 
                             {isInsufficientBalance ? (
-                                <span className="text-red-400 text-xl font-semibold">Insufficient balance</span>
+                                <div className="flex flex-col justify-center items-center h-full">
+                                    <span className="text-red-400 text-xl font-semibold">Insufficient balance</span>
+                                </div>
                             ) : (
                                 <div className="flex flex-col justify-center items-center space-y-10">
                                     <Input

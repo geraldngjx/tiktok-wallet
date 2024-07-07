@@ -98,7 +98,7 @@ export const AutoComplete = ({
                     onFocus={() => setOpen(true)}
                     placeholder={placeholder}
                     disabled={disabled}
-                    className="text-base"
+                    className="text-base border-b-0"
                 />
             </div>
             <div className="relative mt-1">
