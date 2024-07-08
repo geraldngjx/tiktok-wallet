@@ -18,7 +18,8 @@ The recent integration of Solana Pay with Shopify has demonstrated the viability
 
 
 ## Sounds good, how can I try?
-- Go to https://tiktok-wallet.vercel.app/ on your mobile phone, add to home screen as a PWA
+- Go to https://tiktok-wallet.vercel.app/ on your GOOGLE CHROME mobile phone -> Click SHARE -> add to home screen as a PWA -> Access the App (For more info: https://developer.chrome.com/blog/getting-started-pwa/)
+![chrome-pwa-button](https://pldphpgxyiuevonrkpas.supabase.co/storage/v1/object/public/shopitem/chrome_pwa_button.jpg)
 - Airdrop yourself some test tokens: Go to Wallet -> More -> Account details and copy your public key
   Faucets:
   - For USDC and EURC: https://faucet.circle.com/ , choose Solana (Devnet)
