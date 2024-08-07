@@ -1,19 +1,18 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
-import TransactionList from "@/components/wallet/transactionList";
-import { withAuthMagic } from "@/lib/hoc/withAuth";
-import Core from "./core";
 import { Button } from "@/components/ui/button";
-import { BellIcon, CircleDollarSignIcon, RefreshCwIcon } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useEURCTokenBalanceQuery, useSolanaTokenBalanceQuery, useUSDCTokenBalanceQuery } from "../hooks/useTokenBalanceQuery";
-import { useMagicTokenStore } from "@/store/magicTokenStore";
+import TransactionList from "@/components/wallet/transactionList";
 import { SolanaContext } from "@/providers/SolanaProvider";
 import { useAccountBalanceStore } from "@/store/accountBalanceStore";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useMagicTokenStore } from "@/store/magicTokenStore";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { BellIcon, CircleDollarSignIcon, RefreshCwIcon } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { useEURCTokenBalanceQuery, useSolanaTokenBalanceQuery, useUSDCTokenBalanceQuery } from "../hooks/useTokenBalanceQuery";
+import Core from "./core";
 
 function WalletDashboard() {
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -29,7 +28,11 @@ function WalletDashboard() {
         data: solanaBalance,
         isFetching,
         refetch,
-    } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }), enabled: !!connection && !!publicAddress, placeholderData: keepPreviousData });
+    } = useQuery({
+        ...useSolanaTokenBalanceQuery({ publicAddress }),
+        enabled: !!connection && !!publicAddress,
+        placeholderData: keepPreviousData,
+    });
 
     const {
         data: usdcBalance,

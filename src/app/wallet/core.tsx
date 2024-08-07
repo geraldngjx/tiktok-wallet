@@ -10,9 +10,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Disc3Icon, MoveDownLeftIcon, MoveUpRightIcon, ScanLineIcon } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useCallback, useContext, useEffect } from "react";
+import { useSolanaPriceQuery } from "../hooks/useSolanaPriceQuery";
 import { useSolanaTokenBalanceQuery } from "../hooks/useTokenBalanceQuery";
 import More from "./more";
-import { useSolanaPriceQuery } from "../hooks/useSolanaPriceQuery";
 // import { Swiper, SwiperSlide } from "swiper/react";
 // import "swiper/css";
 // import "swiper/css/pagination";
@@ -82,7 +82,13 @@ export default function Core({
         checkLoginandGetBalance();
     }, [magic?.user, saveToSupabase, setEmail, setPublicAddress]);
 
-    const { data: solanaBalance, isFetching, refetch } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }) });
+    const {
+        data: solanaBalance,
+        isFetching,
+        refetch,
+    } = useQuery({
+        ...useSolanaTokenBalanceQuery({ publicAddress }),
+    });
 
     const refresh = useCallback(async () => {
         await refetch();
