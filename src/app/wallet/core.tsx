@@ -6,7 +6,7 @@ import { useMagic } from "@/providers/MagicProvider";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { useAccountBalanceStore } from "@/store/accountBalanceStore";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Disc3Icon, MoveDownLeftIcon, MoveUpRightIcon, ScanLineIcon } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useCallback, useContext, useEffect } from "react";
@@ -82,7 +82,16 @@ export default function Core({
         checkLoginandGetBalance();
     }, [magic?.user, saveToSupabase, setEmail, setPublicAddress]);
 
-    const { data: solanaBalance, isFetching, refetch } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }) });
+    const {
+        data: solanaBalance,
+        isFetching,
+        refetch,
+    } = useQuery({
+        ...useSolanaTokenBalanceQuery({ publicAddress }),
+        enabled: !!connection && !!publicAddress,
+        placeholderData: keepPreviousData,
+        refetchOnMount: false,
+    });
 
     const refresh = useCallback(async () => {
         await refetch();

@@ -29,7 +29,12 @@ function WalletDashboard() {
         data: solanaBalance,
         isFetching,
         refetch,
-    } = useQuery({ ...useSolanaTokenBalanceQuery({ publicAddress }), enabled: !!connection && !!publicAddress, placeholderData: keepPreviousData });
+    } = useQuery({
+        ...useSolanaTokenBalanceQuery({ publicAddress }),
+        enabled: !!connection && !!publicAddress,
+        placeholderData: keepPreviousData,
+        refetchOnMount: false,
+    });
 
     const {
         data: usdcBalance,
@@ -39,6 +44,7 @@ function WalletDashboard() {
         ...useUSDCTokenBalanceQuery({ publicAddress }),
         enabled: !!connection && !!publicAddress,
         placeholderData: keepPreviousData,
+        refetchOnMount: false,
     });
 
     const {
@@ -49,6 +55,7 @@ function WalletDashboard() {
         ...useEURCTokenBalanceQuery({ publicAddress }),
         enabled: !!connection && !!publicAddress,
         placeholderData: keepPreviousData,
+        refetchOnMount: false,
     });
 
     useEffect(() => {

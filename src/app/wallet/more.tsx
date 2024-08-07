@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { useMagic } from "@/providers/MagicProvider";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
+import { useIsPaymasterEnabledStore } from "@/store/paymasterStore";
 import { logout } from "@/utils/common";
-import { ChevronRightIcon, EllipsisIcon, LogOutIcon, ReceiptIcon, ScrollTextIcon, WalletIcon } from "lucide-react";
+import { ChevronRightIcon, EllipsisIcon, FuelIcon, LogOutIcon, ReceiptIcon, ScrollTextIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
 
@@ -22,6 +24,8 @@ export default function More() {
             await logout(setToken, magic);
         }
     }, [magic, setToken]);
+
+    const { enabled, setEnabled } = useIsPaymasterEnabledStore();
 
     return (
         <Drawer>
@@ -37,7 +41,7 @@ export default function More() {
             <DrawerContent className="px-6 min-h-[60vh] bg-neutral-900 border-0">
                 <DialogTitle className="hidden">More</DialogTitle>
 
-                <div className="flex flex-col w-full space-y-2 mt-8">
+                <div className="flex flex-col w-full space-y-2 mt-2">
                     <Link
                         href="/wallet/account"
                         className="h-12 bg-transparent flex rounded-lg items-center justify-start text-white space-x-4 w-full"
@@ -47,8 +51,6 @@ export default function More() {
 
                         <ChevronRightIcon className="right-4 absolute" />
                     </Link>
-
-                    <Separator className="bg-muted/20" />
 
                     <div className="h-12 bg-transparent flex rounded-lg items-center justify-start text-white space-x-4 w-full">
                         <ScrollTextIcon strokeWidth={1} />
@@ -64,10 +66,23 @@ export default function More() {
                         <ChevronRightIcon className="right-4 absolute" />
                     </div>
 
+                    <div className="h-12 bg-transparent flex rounded-lg items-center justify-start text-white space-x-4 w-full">
+                        <FuelIcon strokeWidth={1} />
+                        <span>Paymaster</span>
+
+                        <Switch
+                            className="right-4 absolute"
+                            checked={enabled}
+                            onCheckedChange={(checked) => {
+                                setEnabled(checked);
+                            }}
+                        />
+                    </div>
+
                     <Separator className="bg-muted/20" />
 
                     <div
-                        className="h-12 flex rounded-lg items-center justify-start text-red-600 space-x-4 w-full hover:bg-neutral-900/80"
+                        className="h-12 flex rounded-lg items-center justify-start text-red-600 space-x-4 w-full hover:bg-neutral-900/80 cursor-pointer"
                         onClick={disconnect}
                     >
                         <LogOutIcon strokeWidth={1} />
@@ -75,14 +90,14 @@ export default function More() {
                     </div>
                 </div>
 
-                <p className="text-center text-slate-600 text-sm mt-8">
+                <p className="text-center text-slate-600 text-sm mt-4">
                     by{" "}
                     <a href="https://devpost.com/software/bytesecure" target="_blank" className="underline">
                         ByteSecure
                     </a>
                 </p>
 
-                <Globe className="top-[320px]" />
+                <Globe className="top-[340px]" />
                 <div className="pointer-events-none absolute inset-0 h-full bg-[radial-gradient(circle_at_50%_200%,rgba(0,0,0,0.2),rgba(255,255,255,0))]" />
             </DrawerContent>
         </Drawer>
