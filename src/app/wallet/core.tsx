@@ -6,13 +6,13 @@ import { useMagic } from "@/providers/MagicProvider";
 import { SupabaseBrowserContext } from "@/providers/SupabaseBrowserProvider";
 import { useAccountBalanceStore } from "@/store/accountBalanceStore";
 import { useMagicTokenStore } from "@/store/magicTokenStore";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Disc3Icon, MoveDownLeftIcon, MoveUpRightIcon, ScanLineIcon } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useCallback, useContext, useEffect } from "react";
+import { useSolanaPriceQuery } from "../hooks/useSolanaPriceQuery";
 import { useSolanaTokenBalanceQuery } from "../hooks/useTokenBalanceQuery";
 import More from "./more";
-import { useSolanaPriceQuery } from "../hooks/useSolanaPriceQuery";
 // import { Swiper, SwiperSlide } from "swiper/react";
 // import "swiper/css";
 // import "swiper/css/pagination";
@@ -89,8 +89,6 @@ export default function Core({
     } = useQuery({
         ...useSolanaTokenBalanceQuery({ publicAddress }),
         enabled: !!connection && !!publicAddress,
-        placeholderData: keepPreviousData,
-        refetchOnMount: false,
     });
 
     const refresh = useCallback(async () => {
