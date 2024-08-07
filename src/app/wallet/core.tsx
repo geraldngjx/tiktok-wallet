@@ -88,7 +88,6 @@ export default function Core({
         refetch,
     } = useQuery({
         ...useSolanaTokenBalanceQuery({ publicAddress }),
-        enabled: !!connection && !!publicAddress,
     });
 
     const refresh = useCallback(async () => {
